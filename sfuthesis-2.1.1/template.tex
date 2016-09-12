@@ -1,0 +1,151 @@
+\documentclass{sfuthesis}
+
+\title{Numerical Solution to PDEs}
+\thesistype{Dissertation}
+\author{Kevin Chow}
+\previousdegrees{%
+%	M.Sc., Wossamotta University, 1963\\
+	B.Math., University of Waterloo, 2014}
+\degree{Master of Everything}
+\discipline{Mathematics}
+\department{Department of Mathematics}
+\faculty{Faculty of Science}
+\copyrightyear{2016}
+\semester{Fall 2016}
+\date{\today}
+%\date{1 September 2015}
+
+\keywords{Thesis template; Simon Fraser University; time travel paradoxes}
+
+\committee{%
+	\chair{Pamela Isely}{Professor}
+	\member{Steven Ruuth}{Senior Supervisor\\Professor}
+	\member{Bob Brussell}{Supervisor\\Associate Professor}
+	\member{James Moriarty}{Supervisor\\Adjunct Professor}
+%	\member{Kaylee Frye}{Internal Examiner\\Assistant Professor\\School of Engineering Science}
+%	\member{Hubert J.\ Farnsworth}{External Examiner\\Professor\\Department of Quantum Fields\\Mars University}
+}
+
+%   PACKAGES AND CUSTOMIZATIONS  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%   Add any packages or custom commands you need for your thesis here.
+%   You don't need to call the following packages, which are already called in
+%   the sfuthesis class file:
+%
+%   - appendix
+%   - etoolbox
+%   - fontenc
+%   - geometry
+%   - lmodern
+%   - nowidow
+%   - setspace
+%   - tocloft
+%
+%   If you call one of the above packages (or one of their dependencies) with
+%   options, you may get a "Option clash" LaTeX error. If you get this error,
+%   you can fix it by removing your copy of \usepackage and passing the options
+%   you need by adding
+%
+%       \PassOptionsToPackage{<options>}{<package>}
+%
+%   before \documentclass{sfuthesis}.
+%
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[pdfborder={0 0 0}]{hyperref}
+\usepackage{graphicx}
+\usepackage{caption}
+
+\renewcommand{\L}{\mathcal{L}}
+\newcommand{\N}{\mathcal{N}}
+
+
+
+
+
+%   FRONTMATTER  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%   Title page, committee page, copyright declaration, abstract,
+%   dedication, acknowledgements, table of contents, etc.
+%
+
+\begin{document}
+
+\frontmatter
+\maketitle{}
+\makecommittee{}
+
+\begin{abstract}
+	This is a blank document from which you can start writing your thesis.
+\end{abstract}
+
+
+\begin{dedication} % optional
+\end{dedication}
+
+
+\begin{acknowledgements} % optional
+\end{acknowledgements}
+
+\addtoToC{Table of Contents}\tableofcontents\clearpage
+\addtoToC{List of Tables}\listoftables\clearpage
+\addtoToC{List of Figures}\listoffigures
+
+
+
+
+
+%   MAIN MATTER  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%   Start writing your thesis --- or start \include ing chapters --- here.
+%
+
+\mainmatter%
+
+\chapter{Introduction}
+Prior contributions to this subject: Duchemin and Eggers \cite{duchemin2014explicit}, Smereka \cite{smereka2003semi}. Other methods for handling PDEs of this type.
+What are other ways people handle nonlinear stiff equations? 
+
+\chapter{Adding Zero, and a Modified Test Equation}
+In this section, it will be important to give exact details as to the type of equations that I am solving. Then starting from a generic equation of this type, we add zero
+\begin{align*}
+        u_t = \N(u)
+= \underbrace{p\L u}_\text{linear} +\underbrace{ (\N(u) - p\L u)}_\text{nonlinear}, 
+\quad 
+p > 0.
+\end{align*}
+
+We ask for stability for all $\Delta t > 0$. What is a parabolic PDE? Elliptic PDE? More on the history, the result of Duchemin and Eggers \cite{duchemin2014explicit}.
+
+\chapter{IMEX Linear Multistep Methods}
+Some details are in \cite{ascher1995implicit}.
+
+\chapter{Higher Order with Exponential Time Differencing}
+A truly comprehensive review is \cite{hochbruck2010exponential}
+
+\chapter{Numerical Results}
+Oh yeah, lots of neat pictures.
+
+\chapter{Conclusion}
+
+%   BACK MATTER  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%   References and appendices. Appendices come after the bibliography and
+%   should be in the order that they are referred to in the text.
+%
+%   If you include figures, etc. in an appendix, be sure to use
+%
+%       \caption[]{...}
+%
+%   to make sure they are not listed in the List of Figures.
+%
+
+\backmatter%
+	\addtoToC{Bibliography}
+	\bibliographystyle{plain}
+	\bibliography{/home/kjc19/Desktop/master_ref}
+
+\begin{appendices} % optional
+	\chapter{Code}
+\end{appendices}
+\end{document}
