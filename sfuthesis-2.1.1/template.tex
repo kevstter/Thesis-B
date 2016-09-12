@@ -108,16 +108,33 @@ What are other ways people handle nonlinear stiff equations?
 
 \chapter{Adding Zero, and a Modified Test Equation}
 In this section, it will be important to give exact details as to the type of equations that I am solving. Then starting from a generic equation of this type, we add zero
-\begin{align*}
+\begin{align}
         u_t = \N(u)
 = \underbrace{p\L u}_\text{linear} +\underbrace{ (\N(u) - p\L u)}_\text{nonlinear}, 
 \quad 
 p > 0.
-\end{align*}
+\label{generic}
+\end{align}
 
 We ask for stability for all $\Delta t > 0$. What is a parabolic PDE? Elliptic PDE? More on the history, the result of Duchemin and Eggers \cite{duchemin2014explicit}.
 
+
+We can also set up an example to convey our idea. Use the problem from Duchemin and Eggers \cite{duchemin2014explicit}: 
+\begin{align*}
+u_t &= \frac{u_{xx}}{1 + u_x^2} - \frac{1}{u}, 
+\qquad 0 < x < 10, \, t > 0,
+\end{align*}
+with initial and boundary condition
+\begin{align*}
+u(x,0) &= 1 + 0.10\sin\left(\frac{\pi}{5} x \right),
+\\
+u(0,t) &= u(10,t) = 1.
+\end{align*}
+We will this problem throughout this thesis as testing grounds to demonstrate our ideas.
+
 \chapter{IMEX Linear Multistep Methods}
+For equations whose righthand side comprise of a stiff linear part and a nonstiff nonlinear component, a popular class of methods to apply are the implicit-explicit linear multistep methods (IMEX LMMs), with the most simple being an application of forward Euler to the nonlinear component and backward Euler to the linear, stiff component. Apply such an idea to equation \eqref{generic}
+
 Some details are in \cite{ascher1995implicit}.
 
 \chapter{Higher Order with Exponential Time Differencing}
