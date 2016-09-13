@@ -1,0 +1,25 @@
+\chapter{Adding Zero, Absolute Stability and a Modified Test Equation}
+In this section, it will be important to give exact details as to the type of equations that I am solving. Then starting from a generic equation of this type, we add zero
+\begin{align}
+        u_t = \N(u)
+= \underbrace{p\L u}_\text{linear} +\underbrace{ (\N(u) - p\L u)}_\text{nonlinear}, 
+\quad 
+p > 0.
+\label{generic}
+\end{align}
+
+We ask for stability for all $\Delta t > 0$. What is a parabolic PDE? Elliptic PDE? More on the history, the result of Duchemin and Eggers \cite{duchemin2014explicit}.
+
+
+We can also set up an example to convey our idea. Use the problem from Duchemin and Eggers \cite{duchemin2014explicit}: 
+\begin{align*}
+u_t &= \frac{u_{xx}}{1 + u_x^2} - \frac{1}{u}, 
+\qquad 0 < x < 10, \, t > 0,
+\end{align*}
+with initial and boundary condition
+\begin{align*}
+u(x,0) &= 1 + 0.10\sin\left(\frac{\pi}{5} x \right),
+\\
+u(0,t) &= u(10,t) = 1.
+\end{align*}
+We will this problem throughout this thesis as testing grounds to demonstrate our ideas.
