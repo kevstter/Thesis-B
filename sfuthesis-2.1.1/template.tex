@@ -56,6 +56,9 @@
 \usepackage{graphicx}
 \usepackage{caption}
 
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+
 \renewcommand{\L}{\mathcal{L}}
 \newcommand{\N}{\mathcal{N}}
 
@@ -102,104 +105,14 @@
 
 \mainmatter%
 
-\chapter{Introduction}
-Prior contributions to this subject: Duchemin and Eggers \cite{duchemin2014explicit}, Smereka \cite{smereka2003semi}. Other methods for handling PDEs of this type.
-What are other ways people handle nonlinear stiff equations? 
+\include{chapter_intro}
 
-\chapter{Adding Zero, Absolute Stability and a Modified Test Equation}
-In this section, it will be important to give exact details as to the type of equations that I am solving. Then starting from a generic equation of this type, we add zero
-\begin{align}
-        u_t = \N(u)
-= \underbrace{p\L u}_\text{linear} +\underbrace{ (\N(u) - p\L u)}_\text{nonlinear}, 
-\quad 
-p > 0.
-\label{generic}
-\end{align}
+\include{chapter_adding_zero}
 
-We ask for stability for all $\Delta t > 0$. What is a parabolic PDE? Elliptic PDE? More on the history, the result of Duchemin and Eggers \cite{duchemin2014explicit}.
+\include{chapter_imex_lmm}
 
+\include{chapter_etdrk}
 
-We can also set up an example to convey our idea. Use the problem from Duchemin and Eggers \cite{duchemin2014explicit}: 
-\begin{align*}
-u_t &= \frac{u_{xx}}{1 + u_x^2} - \frac{1}{u}, 
-\qquad 0 < x < 10, \, t > 0,
-\end{align*}
-with initial and boundary condition
-\begin{align*}
-u(x,0) &= 1 + 0.10\sin\left(\frac{\pi}{5} x \right),
-\\
-u(0,t) &= u(10,t) = 1.
-\end{align*}
-We will this problem throughout this thesis as testing grounds to demonstrate our ideas.
-
-\chapter{IMEX Linear Multistep Methods}
-For equations whose righthand side comprise of a stiff linear part and a nonstiff nonlinear component, a popular class of methods to apply are the implicit-explicit linear multistep methods (IMEX LMMs), with the most simple being an application of forward Euler to the nonlinear component and backward Euler to the linear, stiff component. 
-
-In \cite{ascher1995explicit}, IMEX LMMs up to order four are investigated and a select number of schemes are singled out for their extensive use in the literature or for desired properties such as high frequency damping. As we are familiar with the first order variant, we begin by listing the second order methods of interest. These, and the higher order variants, will be presented as applied to the ODE 
-\begin{align*}
-u' = f + g, 
-\end{align*}
-where $f$ we identify as the nonlinear component and $g$ the stiff component. 
-
-\noindent
-\textbf{Second order methods}\\
-CNAB:
-\begin{align}
-\frac{u^{n+1}-u^n}{\Delta t} 
-= \frac{3}{2} f^n - \frac{1}{2}f^{n-1} 
-+ \frac{1}{2}(g^{n+1} + g^n), 
-\label{cnab}
-\end{align}\\
-mCNAB:
-\begin{align}
-\frac{u^{n+1}-u^n}{\Delta t} 
-= \frac{3}{2}f^n - \frac{1}{2} f^{n-1}
-+ \frac{9}{16}g^{n+1} 
-+ \frac{3}{8}g^n
-+ \frac{1}{16}g^{n-1},
-\label{mcnab}
-\end{align}
-\\
-CNLF:
-\begin{align}
-\frac{u^{n+1}-u^{n-1}}{2\Delta t}
-= f^n + \frac{1}{2}(g^{n+1} + g^{n-1}),
-\label{cnlf}
-\end{align} \\
-SBDF2:
-\begin{align}
-\frac{3u^{n+1}-4u^n+u^{n-1}}{2\Delta t} 
-= 2f^n - f^{n-1} + g^{n+1}.
-\label{sbdf2}
-\end{align}
-
-\noindent
-\textbf{Third order methods}\\
-SBDF3:
-\begin{align}
-\frac{1}{\Delta t}\left(\frac{11}{6}u^{n+1} - 3u^n + \frac{3}{2}u^{n-1} - \frac{1}{3}u^{n-2} \right) 
-= 3f^n - 3f^{n-1} + f^{n-2} + g^{n+1}.
-\label{sbdf3}
-\end{align}
-
-\noindent
-\textbf{Fourth order methods}\\
-SBDF4:
-\begin{align}
-\frac{1}{\Delta t}\left(\frac{25}{12}u^{n+1} - 4u^n + 3u^{n-1} - \frac{4}{3}u^{n-2} + \frac{1}{4}u^{n-3} \right) 
-= 4f^n - 6f^{n-1} + 4f^{n-2} -f^{n-3} + g^{n+1}.
-\label{sbdf4}
-\end{align}
-
-Words about applying schemes to modified test equation ... absolute stability ... parameter range.
-
-\section{}
-
-\chapter{Higher Order with Exponential Time Differencing}
-A truly comprehensive review is \cite{hochbruck2010exponential}
-
-\chapter{Numerical Results}
-Oh yeah, lots of neat pictures.
 
 \chapter{Conclusion}
 
@@ -218,7 +131,7 @@ Oh yeah, lots of neat pictures.
 \backmatter%
 	\addtoToC{Bibliography}
 	\bibliographystyle{plain}
-	\bibliography{/home/kjc19/Desktop/master_ref}
+	\bibliography{master_ref}
 
 \begin{appendices} % optional
 	\chapter{Code}
