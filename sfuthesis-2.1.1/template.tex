@@ -1,6 +1,6 @@
 \documentclass{sfuthesis}
 
-\title{Numerical Solution to PDEs}
+\title{Numerical Solution to Stiff PDEs}
 \thesistype{Dissertation}
 \author{Kevin Chow}
 \previousdegrees{%
@@ -55,9 +55,15 @@
 \usepackage[pdfborder={0 0 0}]{hyperref}
 \usepackage{graphicx}
 \usepackage{caption}
+\usepackage{enumitem}
+\usepackage{booktabs}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[chapter] 
 
 \theoremstyle{definition}
-\newtheorem{definition}{Definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
 
 \renewcommand{\L}{\mathcal{L}}
 \newcommand{\N}{\mathcal{N}}
@@ -65,6 +71,7 @@
 \delimitershortfall-1sp
 \newcommand{\abs}[1]{\left|#1\right|}
 
+\newcommand{\head}[1]{\textnormal{\textbf{#1}}}
 
 
 
