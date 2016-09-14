@@ -68,8 +68,8 @@ The modified test equation is
 In our analysis, we will assume $p>0$ and $\lambda < 0$. The goal is then, for each IMEX LMM we consider, to identify a constraint on the parameter $p$, such that when satisfied, we may freely choose the time step-size without being subject to a stability restriction (eg. $\Delta t < C\Delta x^2$).
 
 \subsection{Von Neumann Polynomials}
-The resulting amplification polynomials from applying an $n$th order IMEX LMM to the modified test equation will be a degree $n$ polynomial in the amplification factor, $\xi$. The tool of choicie for the analysis of these amplification polynomials is the theory of Von Neumann polynomials \cite[Chapter 4]{strikwerda2004finite}. We begin with a definition.
+The resulting amplification polynomials from applying an $n$th order IMEX LMM to the modified test equation will be a degree $n$ polynomial in the amplification factor, $\xi$. The tool of choicie for the analysis of these amplification polynomials is the theory of Von Neumann polynomials \cite[Chapter 4]{strikwerda2004finite}. Below we give the relevant definitions and theorems.
 
 \begin{definition}
-        The polynomial $\phi$ is a von Neumann polynomial 
+        The polynomial $\phi$ is a von Neumann polynomial if all its roots, $r_q$, satisfy $\abs{r_q}\leq 1$.
 \end{definition}
