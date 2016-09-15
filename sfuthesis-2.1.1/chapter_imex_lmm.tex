@@ -145,7 +145,7 @@ Other IMEX LMMs are analyzed in the same way. Their amplification polynomials ar
 		\toprule[1.5pt] 
 		\head{Method} 
 		& \head{Amplification Polynomial}
-		& \head{$p\in$}
+		& \head{$p\lambda/\lambda\in$}
 		\\	\midrule 
 		CNAB 
 		& $\left(1 - \frac{1}{2}zp\right)\xi^2
@@ -173,7 +173,7 @@ Other IMEX LMMs are analyzed in the same way. Their amplification polynomials ar
 \end{table}
 
 \subsection{Amplification polynomials of third and fourth oder IMEX LMMs}
-We continue with this type of analysis for higher order IMEX LMMs. Because the expressions and manipulations quickly become tedious and cumbersome for higher order methods, the computer algebra system, \textsc{Maple}, was used to for the majority of the calculations. Again, amplification polynomials and parameter ranges are derived. 
+We continue with this type of analysis for higher order IMEX LMMs. Again, amplification polynomials and parameter ranges are derived, but because the expressions and manipulations quickly become cumbersome and tedious for higher order methods, the computer algebra system, \textsc{Maple}, was used to for the majority of the calculations.
 
 \begin{table}[htb!]
 	\centering
@@ -182,7 +182,7 @@ We continue with this type of analysis for higher order IMEX LMMs. Because the e
 		\toprule[1.5pt] 
 		\head{Method} 
 		& \head{Amplification Polynomial}
-		& \head{$p\in$}
+		& \head{$p\lambda/\lambda\in$}
 		\\	\midrule 
 		SBDF3
 		& $\left(\frac{11}{6} - zp \right)\xi^3
@@ -207,3 +207,16 @@ We continue with this type of analysis for higher order IMEX LMMs. Because the e
 	\end{tabular}
 	\label{table:amp poly 34}
 \end{table}
+
+Listed in Table \ref{table:amp poly 34} are respectively the amplification factor and the parameter restriction for SBDF3 and SBDF4. A crucial difference when comparing these higher order methods to the second order methods is that the restriction leaves only a finite interval. This will be addressed further in the subsequent section. In fact, we will demonstrate that this detail renders the linearly stabilized SBDF3, SBDF4 useless in practical application.
+
+\subsection{Von Neumann stability analysis on a 1D test problem}
+We now take our theory on a test drive with the 1D mean curvature motion test problem from before. Recall that after discretization in space by second order centred differences, we have the system of ODEs
+\begin{align*}
+\dd{U_j}{t} 
+= 4\frac{U_{j+1} - U_j + U_{j-1}}{4\Delta x^2 + (U_{j+1} - U_{j-1})^2} 
+- \frac{1}{U_j}, 
+\quad 
+j=1:N,
+\end{align*} 
+along with $U_0 = U_{N+1} = 1$.
