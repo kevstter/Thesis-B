@@ -1,4 +1,51 @@
 \chapter{Adding Zero, Absolute Stability and a Modified Test Equation}
+Our strategy for handling stiff, nonlinear problems involves, broadly speaking, making two choices. One is adding zero, and the other is choosing a time stepping method that provides the desired stability properties while handling the nonlinearity inexpensively. 
+
+\section{Prototype 1D Problem}
+As a prototype, let us consider the following 1D mean curvature motion problem \cite{duchemin2014explicit}: 
+\begin{subequations} 
+\begin{align}
+u_t &= \frac{u_{xx}}{1 + u_x^2} - \frac{1}{u}, 
+\qquad 0 < x < 10, \, t > 0,
+\end{align}
+with initial and boundary condition
+\begin{gather}
+u(x,0) = 1 + 0.10\sin\left( \frac{\pi}{5}x \right) 
+\\
+u(0,t)=u(10,t)=1.
+\end{gather}
+\label{ammc}
+\end{subequations}
+The presence of the $u_{xx}$ guarantees that \eqref{ammc} is stiff, suggesting that an implicit time stepping scheme would prove more efficient. However, to additionally handle the factor of $(1+u_x^2)^{-1}$ suggests otherwise. Thus we are presented with a scenario where an implicit nor an explicit approach proves particularly palatable.
+
+\subsection{A first order unconditionally stable scheme}
+As demonstrated in Duchemin and Eggers \cite{duchemin2014explicit} as well as an earlier paper by Smereka \cite{smereka2003semi}, an efficient method to handling this problem is to add and subtract a linear Laplacian term to the righthand side, 
+\begin{align}
+u_t = \underbrace{\frac{u_{xx}}{1 + u_x^2} 
+- \frac{1}{u} 
+- u_{xx}}_{\N(u)} 
++ \underbrace{\phantom{\frac{1_1}{1}}u_{xx}\phantom{\frac{1}{1_1}}}_{\L u}, 
+\end{align} 
+and then time step as 
+\begin{align}
+\frac{u^{n+1} - u^n}{\Delta t} 
+= \N(u^n) + \L u^{n+1}.
+\end{align}
+Adopting a second order centred difference in space, we will now show that this scheme is unconditionally stable.
+
+With the prescribed spatial-temporal discretization, we have 
+\begin{align}
+\frac{u^{n+1}_j - u^n_j}{\Delta t}
+= 4\frac{u^n_{j+1} - 2u^n_j + u^n_{j-1}}{4\Delta x^2 + (u^n_{j+1} - u^n_{j-1})^2}
+- \frac{1}{u^n_j} 
+- \frac{u^n_{j+1} - 2u^n_j + u^n_{j-1}}{\Delta x^2} 
++ \frac{u^{n+1}_{j+1} - 2u^{n+1}_j + u^{n+1}_{j-1}}{\Delta x^2}
+\end{align} 
+
+But the advantage of doing this is not immediate. Yes, the nonlinearity is handled explicitly and yes, there is now a stiff component handled implicitly, which perhaps will improve the stability. 
+
+\newpage
+ 
 In this section, it will be important to give exact details as to the type of equations that I am solving. Then starting from a generic equation of this type, we add zero
 \begin{align}
         u_t = \N(u)
