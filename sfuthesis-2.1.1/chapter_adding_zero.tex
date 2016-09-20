@@ -33,16 +33,85 @@ and then time step as
 \end{align}
 Adopting a second order centred difference in space, we will now show that this scheme is unconditionally stable.
 
-With the prescribed spatial-temporal discretization, we have 
+With the prescribed spatial-temporal discretization, we have at the interior nodes,
 \begin{align}
 \frac{u^{n+1}_j - u^n_j}{\Delta t}
 = 4\frac{u^n_{j+1} - 2u^n_j + u^n_{j-1}}{4\Delta x^2 + (u^n_{j+1} - u^n_{j-1})^2}
 - \frac{1}{u^n_j} 
 - \frac{u^n_{j+1} - 2u^n_j + u^n_{j-1}}{\Delta x^2} 
-+ \frac{u^{n+1}_{j+1} - 2u^{n+1}_j + u^{n+1}_{j-1}}{\Delta x^2}
++ \frac{u^{n+1}_{j+1} - 2u^{n+1}_j + u^{n+1}_{j-1}}{\Delta x^2}.
+\label{fully_discrete_ammc}
 \end{align} 
+The von Neumann stability analysis then proceeds by writing the numerical solution as the exact solution to the difference equation \eqref{fully_discrete_ammc} perturbed by a single Fourier mode, 
+\begin{align}
+u^n_j = \bar u(j\Delta x, n\Delta t) 
++ \xi^n e^{ikj\Delta x}
+= \bar u^n_j + \xi^n e^{ikj\Delta x}.
+\end{align}
+Recording the result term-by term, we have 
+\begin{subequations}
+	\begin{align}
+	\frac{u^{n+1}_j - u^n_j}{\Delta t} 
+&= \frac{\bar u^{n+1}_j - \bar u^n_j}{\Delta t} 
++ \frac{(\xi - 1)\xi^n e^{ikj\Delta t}}{\Delta t}, 
+\\
+ \frac{u^{n+1}_{j+1} - 2u^{n+1}_j + u^{n+1}_{j-1}}{\Delta x^2}
+&= \frac{\bar u^{n+1}_{j+1} - 2\bar u^{n+1}_j + \bar u^{n+1}_{j-1}}{\Delta x^2}
++ \frac{2}{\Delta x^2}\left(\cos(k\Delta x) - 1\right) \xi^{n+1} e^{ikj\Delta x}
+\\
+	\frac{u^n_{j+1} - 2u^n_j + u^n_{j-1}}{\Delta x^2}
+&= \frac{\bar u^n_{j+1} - 2\bar u^n_j + \bar u^n_{j-1}}{\Delta x^2} 
++ \frac{2}{\Delta x^2}\left(\cos(k\Delta x)-1\right) \xi^n e^{ikj\Delta x}
+\\
+	\frac{1}{u^n_j} 
+&= \frac{1}{\bar u^n_j + \xi^n e^{ikj\Delta x}} 
+\approx \frac{1}{\bar u^n_j} - \xi^n e^{ikj\Delta x} \frac{1}{(\bar u^n_j)^2}
+	\end{align}
+and 
+\begin{align}
+4\frac{u^n_{j+1} - 2u^n_j + u^n_{j-1}}{4\Delta x^2 + (u^n_{j+1} - u^n_{j-1})^2} 
+&= 4\frac{\bar u^n_{j+1} - 2\bar u^n_j + \bar u^n_{j-1} + 2(\cos(k\Delta x)-1)\xi^ne^{ikj\Delta x}}{4\Delta x^2 + [\bar u^n_{j+1} - \bar u^n_{j-1} - 2i\sin(k\Delta x)\xi^ne^{ikj\Delta x}]^2}
+\notag
+\\
+&= 4\frac{2(\cos(k\Delta x)-1)[\frac{\bar u^n_{j+1} - 2\bar u^n_j + \bar u^n_{j-1}}{2(\cos(k\Delta x)-1)} + \xi^n e^{ikj\Delta x}]}{4\Delta x^2 + (2i\sin(k\Delta x))^2[\frac{\bar u^n_{j+1} - \bar u^n_{j-1}}{2i\sin(k\Delta x)} - \xi^n e^{ikj\Delta x}]^2}
+\notag\\
+&\approx 4\frac{\bar u^n_{j+1} - 2\bar u^n_{j} + \bar u^n_{j-1}}{4\Delta x^2 + (\bar u^n_{j+1} - \bar u^n_{j-1})^2}
+\notag\\
+&+ 8(\cos(k\Delta x)-1)\xi^ne^{ikj\Delta x}\frac{1}{4\Delta x^2 + (\bar u^n_{j+1} - \bar u^n_{j-1})^2}
+\notag\\ 
+&-8i\sin(k\Delta x)\xi^ne^{ikj\Delta x}(\bar u^n_{j+1} - \bar u^n_{j-1})(\bar u^n_{j+1} - 2\bar u^n_{j} + \bar u^n_{j-1}) 
+\notag\\
+\begin{split} 
+&\approx 4\frac{\bar u^n_{j+1} - 2\bar u^n_{j} + \bar u^n_{j-1}}{4\Delta x^2 + (\bar u^n_{j+1} - \bar u^n_{j-1})^2}
+\\
+&+ \frac{2}{\Delta x^2}(\cos(k\Delta x)-1)\xi^ne^{ikj\Delta x} \frac{1}{1 + \left(
+	\frac{\bar u^n_{j+1} - u^n_{j-1}}{2\Delta x}
+	\right)^2}.
+\end{split}
+\end{align}
 
-But the advantage of doing this is not immediate. Yes, the nonlinearity is handled explicitly and yes, there is now a stiff component handled implicitly, which perhaps will improve the stability. 
+\end{subequations}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \newpage
  
