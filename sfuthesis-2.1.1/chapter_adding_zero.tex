@@ -16,7 +16,7 @@ u(0,t)=u(10,t)=1.
 \end{gather}
 \label{ammc}
 \end{subequations}
-The presence of the $u_{xx}$ guarantees that \eqref{ammc} is stiff, suggesting that an implicit time stepping scheme would prove more efficient. However, to additionally handle the factor of $(1+u_x^2)^{-1}$ suggests otherwise. Thus we are presented with a scenario where an implicit nor an explicit approach proves particularly palatable.
+The presence of the $u_{xx}$ guarantees that \eqref{ammc} is stiff, suggesting that an implicit time stepping scheme would prove more efficient. However, to additionally handle the factor of $(1+u_x^2)^{-1}$ suggests otherwise. Thus we are presented with a scenario where neither an implicit nor an explicit approach proves particularly palatable.
 
 \subsection{A first order unconditionally stable scheme}
 As demonstrated in Duchemin and Eggers \cite{duchemin2014explicit} as well as an earlier paper by Smereka \cite{smereka2003semi}, an efficient method to handling this problem is to add and subtract a linear Laplacian term to the righthand side, 
@@ -31,8 +31,9 @@ and then time step as
 \frac{u^{n+1} - u^n}{\Delta t} 
 = \N(u^n) + \L u^{n+1}.
 \end{align}
-Adopting a second order centred difference in space, we will now show that this scheme is unconditionally stable.
+Adopting a second order centred difference in space, we will show next that this scheme is unconditionally stable.
 
+\subsection{A von Neumann stability analysis}
 With the prescribed spatial-temporal discretization, we have at the interior nodes,
 \begin{align}
 \frac{u^{n+1}_j - u^n_j}{\Delta t}
@@ -84,16 +85,54 @@ and
 \begin{split} 
 &\approx 4\frac{\bar u^n_{j+1} - 2\bar u^n_{j} + \bar u^n_{j-1}}{4\Delta x^2 + (\bar u^n_{j+1} - \bar u^n_{j-1})^2}
 \\
-&+ \frac{2}{\Delta x^2}(\cos(k\Delta x)-1)\xi^ne^{ikj\Delta x} \frac{1}{1 + \left(
-	\frac{\bar u^n_{j+1} - u^n_{j-1}}{2\Delta x}
-	\right)^2}.
+&+ \frac{2}{\Delta x^2}(\cos(k\Delta x)-1)\xi^ne^{ikj\Delta x} \frac{1}{1 + (
+	D_1 \bar u^n_j
+	)^2},
 \end{split}
 \end{align}
-
+\label{ammc_von_neumann}
 \end{subequations}
+where $D_1\bar u^n_j = (\bar u^n_{j+1} -  \bar u^n_{j-1})/(2\Delta x)$.
+All together, \eqref{ammc_von_neumann} then simplifies to 
+\begin{align}
+        \frac{\xi - 1}{\Delta t} 
+= \frac{2}{\Delta x^2}\frac{\cos(k\Delta x)-1}{1 +(
+	D_1\bar u^n_j 
+	)^2}
++ \frac{1}{(\bar u_j^n)^2}
++ \frac{2}{\Delta x^2}(\cos(k\Delta x)-1)(\xi-1),
+\end{align}
+from which we can then isolate the amplification factor,
+\begin{align}
+        \xi 
+= 1+\underbrace{\Delta t \frac{\frac{2}{\Delta x^2}\frac{\cos(k\Delta x)-1}{1 +(
+	D_1\bar u^n_j 
+	)^2}
++ \frac{1}{(\bar u_j^n)^2}}{1-\frac{2\Delta t}{\Delta x^2}(\cos(k\Delta x)-1)}}_{=w}.
+\end{align}
+Absolute stability, $\abs{\xi} < 1$, is attained, if and only if $-2<w<0$. First, $w<0$. As the denominator is positive, this will hold so long as the numerator is negative, 
+\begin{align}
+        \frac{2}{\Delta x^2}\frac{\cos(k\Delta x)-1}{1 +(
+	D_1\bar u^n_j 
+	)^2}
++ \frac{1}{(\bar u_j^n)^2} < 0 
+\iff 
+\left(\frac{\Delta x}{\bar u^n_j} \right)^2 
+< \frac{2(1-\cos(k\Delta x))}{1 + (D_1\bar u^n_j)^2}.
+\end{align}
+This last relation is satisfied on the assumption that $\Delta x \ll \bar u^n_j$.  Next, we examine the numerator of $w+2$ in order to show $w+2 > 0$,
+\begin{align}
+\begin{split}
+  \frac{2\Delta t}{\Delta x^2}\frac{\cos(k\Delta x)-1}{1 + (D_1 \bar u^n_j)^2} + \frac{\Delta t}{(\bar u^n_j)^2} + 2 - 4\frac{\Delta t}{\Delta x^2}(\cos(k\Delta x)-1) 
+\\
+= 2\frac{\Delta t}{\Delta x^2}(\cos(k\Delta x)-1)\left(
+\frac{1}{1 + (D_1 \bar u^n_j)^2} - 2 \right)
++ 2 + \frac{\Delta t}{(\bar u^n_j)^2}.
+\end{split}
+\end{align}
+Each term is positive without restriction and thus $\abs{\xi} < 1$ for all $\Delta t > 0$.
 
-
-
+\subsection{Second order by Richardson extrapolation}
 
 
 
