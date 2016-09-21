@@ -25,11 +25,13 @@ u_t = \underbrace{\frac{u_{xx}}{1 + u_x^2}
 - \frac{1}{u} 
 - u_{xx}}_{\N(u)} 
 + \underbrace{\phantom{\frac{1_1}{1}}u_{xx}\phantom{\frac{1}{1_1}}}_{\L u}, 
+\label{ammc +- uxx}
 \end{align} 
 and then time step as 
 \begin{align}
 \frac{u^{n+1} - u^n}{\Delta t} 
 = \N(u^n) + \L u^{n+1}.
+\label{ammc sbdf1}
 \end{align}
 Adopting a second order centred difference in space, we will show next that this scheme is unconditionally stable.
 
@@ -93,7 +95,7 @@ and
 \label{ammc_von_neumann}
 \end{subequations}
 where $D_1\bar u^n_j = (\bar u^n_{j+1} -  \bar u^n_{j-1})/(2\Delta x)$.
-All together, \eqref{ammc_von_neumann} then simplifies to 
+Combining, \eqref{ammc_von_neumann} then simplifies to 
 \begin{align}
         \frac{\xi - 1}{\Delta t} 
 = \frac{2}{\Delta x^2}\frac{\cos(k\Delta x)-1}{1 +(
@@ -133,24 +135,75 @@ This last relation is satisfied on the assumption that $\Delta x \ll \bar u^n_j$
 Each term is positive without restriction and thus $\abs{\xi} < 1$ for all $\Delta t > 0$.
 
 \subsection{Second order by Richardson extrapolation}
+The scheme \eqref{ammc sbdf1} can be adapted to second order by Richardson extrapolation. This was suggested in \cite{smereka2003semi} and implemented in \cite{duchemin2014explicit}. Moreover, they somewhat generalized the approach with a free parameter, $p$, i.e.,
+\begin{align}
+u_t = \frac{u_{xx}}{1 + u_x^2} - \frac{1}{u} - pu_{xx} + pu_{xx}, 
+\end{align}
+and derived restrictions to $p$ on the condition that the resulting scheme be unconditionally stable. For the first order implementation, $p > 0.5/(1 + (D_1 \bar u^n_j)^2)$ is sufficient. With Richardson extrapolation, the restriction is $p > (2/3)/(1 + (D_1 \bar u^n_j)^2)$.
 
+\section{A Modified Test Equation}
+The idea of adding and subtracting a stiff linear component that resembles the stiff component on the righthand side of the PDE can, at first glance, be easily applied to a large number of PDEs. Starting from a generic equation, $u_t = \N(u)$, we add zero,
+\begin{align}
+u_t = \underbrace{ (\N(u) - p\L u)}_\text{nonlinear} + \underbrace{p\L u}_\text{linear},
+\label{generic} 
+\end{align}
+and ask for unconditionally stable time stepping. It is the last request that we first address.
 
+To progress, we will examine a simplified scenario that we will refer to as the modified test equation (MTE): 
+\begin{align}
+u' = (1-p)\lambda u + p\lambda u,
+\quad\text{where}\quad \lambda < 0\text{, } p>0.
+\label{mte}
+\end{align}
+This has obvious parallels to the more general problem \eqref{generic}. The quantity $\lambda$ captures the character of $\N$, and the component $p\lambda u$ represents the linear component that closely resembles $\N(u)$. 
 
+With the modified test equation, \eqref{mte}, we will now discuss the stability properties of three time stepping methods.
 
+\subsection{Forward Euler}
+Forward Euler is a first order time stepping method that treats the righthand side explicitly. Application to \eqref{mte} is therefore no different than to the standard test equation. Thus there is no hope of unconditional stability.
 
+\subsection{Semi-implicit Euler}
+Semi-implicit Euler \cite{smereka2003semi} or IMEX-Euler \cite{ascher1995implicit} time stepping was demonstrated on the 1D mean curvature motion problem \eqref{ammc} in equation \eqref{ammc sbdf1}. In the case of the modified test equation, we identify $\N(u^n) = (1-p)\lambda u^n$ and $\L u^{n+1} = p\lambda u^{n+1}$, to get 
+\begin{align}
+\frac{u^{n+1} - u^n}{\Delta t} 
+= (1-p)\lambda u^n + p\lambda u^{n+1} 
+\iff 
+u^{n+1} 
+= \underbrace{\left(1 + \frac{\lambda \Delta t}{1 - p\lambda\Delta t} \right)}_{=\xi_E} u^n.
+\end{align}
+Enforcing absolute stability, i.e. $\abs{\xi_E} < 1$, for all $\lambda\Delta t < 0$, we find 
+\begin{align}
+\abs{\xi_E} < 1 \iff 
+-2 < \frac{\lambda\Delta t}{1 - p\lambda\Delta t} < 0
+\iff p > 0 \quad\text{and}\quad (2p-1)\lambda\Delta t < 2.
+\end{align}
+Thus unconditional stability is guaranteed if $p > 1/2$.
 
-
-
-
-
-
-
-
-
-
-
-
-
+\subsection{Explicit-implicit null}
+In \cite{duchemin2014explicit}, Duchemin and Eggers extended the above method to second order using Richardson extrapolation. They referred to their methodology as explicit-implicit null (EIN). 
+The amplification factor, $\xi_{EIN}$, can therefore be expressed in terms of $\xi_E$, 
+\begin{align}
+\xi_{EIN} 
+= 2\xi^2_{E}(\Delta t/2) - \xi_E(\Delta t) 
+= 1 + \underbrace{\frac{z\left(p(3p-2)z^2 + 2(1-4p)z + 4 \right)}{(1 - pz)(2-pz)^2}}_{=w},
+\end{align} 
+where $z = \lambda\Delta t$. Similar to before, absolute stability dictates $-2 < w < 0$. Since $p>0$ and $z<0$, the denominator is positive for all $z<0$. Thus, for $w<0$, we require the quadratic in the numerator to be positive for all $z<0$. A necessary condition is $3p-2>0 \iff p>2/3$. Direct examination then shows that the roots of the quadratic are positive whenever the discriminant is positive,
+\begin{align}
+\frac{1}{2p(3p-2)}\left(2(4p-1) \pm  2\sqrt{(4p-1)^2 - 4p(3p-2)}\right) > 0.
+\end{align} 
+Therefore, $p>2/3$ is necessary and sufficient for $w<0$. Next, we show $w+2>0$. The numerator of $w+2$ can be simplified to 
+\begin{align}
+-p(2-3p+2p^2) z^3 + (2-8p+10p^2)z^2 + 4(1-4p)z + 8.
+\end{align}
+The coefficients of the powers of $z$ have the property
+\begin{align*}
+& [z] = 4(1-4p) > 0 \quad\text{whenever}\quad p > 1/4,
+\\
+&[z^2] = 2-8p + 10p^2 > 0 \quad\text{since the discriminant } 8^2 - 4(2)(10) < 0,
+\\
+&[z^3] = -p(2-3p+2p^2) > 0 \quad\text{since the discriminant } (-3)^2 - 4(2)(2) < 0,
+\end{align*}
+for all $z<0$, thus guaranteeing the numerator is positive. And since the denominator, as we have mentioned before, is positive, $w+2>0$, and thus unconditional stability is guaranteed if $p>2/3$.
 
 \newpage
  
@@ -160,21 +213,6 @@ In this section, it will be important to give exact details as to the type of eq
 = \underbrace{p\L u}_\text{linear} +\underbrace{ (\N(u) - p\L u)}_\text{nonlinear}, 
 \quad 
 p > 0.
-\label{generic}
 \end{align}
 
 We ask for stability for all $\Delta t > 0$. What is a parabolic PDE? Elliptic PDE? More on the history, the result of Duchemin and Eggers \cite{duchemin2014explicit}.
-
-
-We can also set up an example to convey our idea. Use the problem from Duchemin and Eggers \cite{duchemin2014explicit}: 
-\begin{align*}
-u_t &= \frac{u_{xx}}{1 + u_x^2} - \frac{1}{u}, 
-\qquad 0 < x < 10, \, t > 0,
-\end{align*}
-with initial and boundary condition
-\begin{align*}
-u(x,0) &= 1 + 0.10\sin\left(\frac{\pi}{5} x \right),
-\\
-u(0,t) &= u(10,t) = 1.
-\end{align*}
-We will this problem throughout this thesis as testing grounds to demonstrate our ideas.
