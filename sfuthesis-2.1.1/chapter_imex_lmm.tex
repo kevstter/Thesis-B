@@ -1,6 +1,8 @@
 \chapter{IMEX Linear Multistep Methods}
 For equations whose righthand side comprise of a stiff linear part and a nonstiff nonlinear component, a popular class of methods to apply are the implicit-explicit linear multistep methods (IMEX LMMs), with the most simple being an application of forward Euler to the nonlinear component and backward Euler to the linear, stiff component. 
 
+Here, we investigate possible uses 
+
 \section{IMEX LMM Formulas}
 In \cite{ascher1995implicit}, IMEX LMMs up to order four are investigated and a select number of schemes are singled out for their extensive use in the literature or for desired properties such as strong high frequency damping. As we are familiar with the first order variant, we begin by listing the second order methods of interest. These, and the higher order variants, will be presented as applied to the ODE 
 \begin{align*}
