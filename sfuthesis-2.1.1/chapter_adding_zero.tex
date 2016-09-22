@@ -1,4 +1,4 @@
-\chapter{Adding Zero, Absolute Stability and a Modified Test Equation}
+\chapter{Adding Zero, Unconditional Stability and a Modified Test Equation}
 Our strategy for handling stiff, nonlinear problems involves, broadly speaking, making two choices. One is adding zero, and the other is choosing a time stepping method that provides the desired stability properties while handling the nonlinearity inexpensively. 
 
 \section{Prototype 1D Problem}
@@ -155,9 +155,9 @@ u' = (1-p)\lambda u + p\lambda u,
 \quad\text{where}\quad \lambda < 0\text{, } p>0.
 \label{mte}
 \end{align}
-This has obvious parallels to the more general problem \eqref{generic}. The quantity $\lambda$ captures the character of $\N$, and the component $p\lambda u$ represents the linear component that closely resembles $\N(u)$. 
+This has obvious parallels to the more general problem,\eqref{generic}. The quantity $\lambda$ captures the character of $\N$, and the quantity $p\lambda u$ represents the linear component that closely resembles $\N(u)$. 
 
-With the modified test equation, \eqref{mte}, we will now discuss the stability properties of three time stepping methods.
+We will now discuss the stability properties of three time stepping methods as applied to the modified test equation \eqref{mte}.
 
 \subsection{Forward Euler}
 Forward Euler is a first order time stepping method that treats the righthand side explicitly. Application to \eqref{mte} is therefore no different than to the standard test equation. Thus there is no hope of unconditional stability.
@@ -180,8 +180,7 @@ Enforcing absolute stability, i.e. $\abs{\xi_E} < 1$, for all $\lambda\Delta t <
 Thus unconditional stability is guaranteed if $p > 1/2$.
 
 \subsection{Explicit-implicit null}
-In \cite{duchemin2014explicit}, Duchemin and Eggers extended the above method to second order using Richardson extrapolation. They referred to their methodology as explicit-implicit null (EIN). 
-The amplification factor, $\xi_{EIN}$, can therefore be expressed in terms of $\xi_E$, 
+In \cite{duchemin2014explicit}, Duchemin and Eggers extended the above method to second order using Richardson extrapolation, and they referred to their methodology as explicit-implicit null (EIN). For their EIN method, the amplification factor, $\xi_{EIN}$, can be expressed in terms of $\xi_E$, 
 \begin{align}
 \xi_{EIN} 
 = 2\xi^2_{E}(\Delta t/2) - \xi_E(\Delta t) 
@@ -203,16 +202,9 @@ The coefficients of the powers of $z$ have the property
 \\
 &[z^3] = -p(2-3p+2p^2) > 0 \quad\text{since the discriminant } (-3)^2 - 4(2)(2) < 0,
 \end{align*}
-for all $z<0$, thus guaranteeing the numerator is positive. And since the denominator, as we have mentioned before, is positive, $w+2>0$, and thus unconditional stability is guaranteed if $p>2/3$.
+for all $z<0$, thus guaranteeing the numerator is positive. And since the denominator, as previously mentioned, is positive, we are guaranteed $w+2>0$, and thus unconditional stability is guaranteed if $p>2/3$.
 
-\newpage
- 
-In this section, it will be important to give exact details as to the type of equations that I am solving. Then starting from a generic equation of this type, we add zero
-\begin{align}
-        u_t = \N(u)
-= \underbrace{p\L u}_\text{linear} +\underbrace{ (\N(u) - p\L u)}_\text{nonlinear}, 
-\quad 
-p > 0.
-\end{align}
+\begin{remark}
+	It is perhaps more faithful to write the restrictions as $p\lambda / \lambda > 2/3$ rather simply $p > 2/3$, as it is necessary the ratio of the two that must satisfy the restriction, rather than the choice of the parameter $p$. This distinction is vital for any problem beyond a simple test equation, where the eigenvalues of the nonlinear operator, $\lambda_\N$, and the eigenvalues of the linear operator, $\lambda_\L$, may have the same scaling, ex. $\lambda_\N, \lambda_\L = \O(\Delta x^{-2})$, but the actual values may be far apart, ex. $\lambda_\N \approx 100 \lambda_\L$.
+\end{remark}
 
-We ask for stability for all $\Delta t > 0$. What is a parabolic PDE? Elliptic PDE? More on the history, the result of Duchemin and Eggers \cite{duchemin2014explicit}.
