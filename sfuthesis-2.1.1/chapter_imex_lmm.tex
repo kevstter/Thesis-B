@@ -1,7 +1,7 @@
 \chapter{IMEX Linear Multistep Methods}
-For equations whose righthand side comprise of a stiff linear part and a nonstiff nonlinear component, a popular class of methods to apply are the implicit-explicit linear multistep methods (IMEX LMMs), with the most simple being an application of forward Euler to the nonlinear component and backward Euler to the linear, stiff component. 
+For equations whose righthand side comprise of a stiff linear part and a nonstiff nonlinear component, a popular class of methods to apply are the implicit-explicit linear multistep methods (IMEX LMMs). The simplest of these is the semi-implicit Euler -- forward Euler to the nonlinear component and backward Euler to the linear, stiff component -- a scheme that we reviewed in Chapter 2. 
 
-Here, we investigate possible uses 
+In this chapter, we investigate the use of IMEX LMMs in the context of linearly stabilized schemes. The added linear term is solved implicitly to provide greater stability, and the remaining terms, including a stiff nonlinear term, are solved explicitly.
 
 \section{IMEX LMM Formulas}
 In \cite{ascher1995implicit}, IMEX LMMs up to order four are investigated and a select number of schemes are singled out for their extensive use in the literature or for desired properties such as strong high frequency damping. As we are familiar with the first order variant, we begin by listing the second order methods of interest. These, and the higher order variants, will be presented as applied to the ODE 
@@ -59,20 +59,23 @@ SBDF4:
 \label{sbdf4}
 \end{align}
 
-Having given a collection of IMEX LMM formulas, we are now ready to apply such IMEX schemes to the modified test equation.
+In the next section, we will apply these IMEX schemes to the modified test equation to determine for each scheme the range of $p$ suitable for linear stabilization.
 
-\section{Parameter Selection}
-Let us restate here the modified test equation and some basic assumptions we make.
+\section{Analysis of the Amplification Polynomials}
+Let us restate here the modified test equation and the basic assumptions we make.
 The modified test equation is 
 \begin{align*}
         u' =  (1-p)\lambda u + p\lambda u.
 \label{mtee}
 \end{align*}
-In our analysis, we will assume $p>0$ and $\lambda < 0$. The goal is then, for each IMEX LMM we consider, to identify a constraint on the parameter $p$, such that when satisfied, we may freely choose the time step-size without being subject to a stability restriction (eg. $\Delta t < C\Delta x^2$).
+In our analysis, we will assume $p>0$ and $\lambda < 0$. The goal is then, for each IMEX scheme, to identify a constraint on the parameter $p$ such that when satisfied, we may freely choose the time step-size without being subject to a stability restriction (eg. $\Delta t < C\Delta x^2$).
 
-\subsection{Von Neumann Polynomials}
-The resulting amplification polynomials from applying an $n$th order IMEX LMM to the modified test equation will be a degree $n$ polynomial in the amplification factor, $\xi$. The tool of choicie for the analysis of these amplification polynomials is the theory of Von Neumann polynomials \cite[Chapter 4]{strikwerda2004finite}. Below we give the relevant definitions and theorems.
+\subsection{Von Neumann polynomials}
+The resulting polynomials from applying an $n$th order IMEX LMM to the modified test equation will be a degree $n$ polynomial in the amplification factor, $\xi$. The tool of choice for analyzing these amplification polynomials is the theory of von Neumann polynomials \cite[Chapter 4]{strikwerda2004finite}. Below we give the relevant definitions and theorems.
 
+\begin{definition}
+	The polynomial $\phi$ is a Schur polynomial if all its roots, $r_q$, satisfy $\abs{r_q} < 1$.
+\end{definition}
 \begin{definition}
         The polynomial $\phi$ is a von Neumann polynomial if all its roots, $r_q$, satisfy $\abs{r_q}\leq 1$.
 \end{definition}
@@ -81,16 +84,14 @@ The resulting amplification polynomials from applying an $n$th order IMEX LMM to
 \end{definition}
 \begin{definition}
 	For any polynomial $\phi(\xi) = \sum^n_{j=0} a_j\xi^j$, we define the polynomial $\phi^*$ by $\phi^*(\xi) = \sum^n_{j=0} a^*_{n-j} \xi^j$, where $^*$ on the coefficient denotes the complex conjugate.
+\label{defn:conj}
 \end{definition}
 \begin{definition}
 	For any polynomial $\phi_n(\xi) = \sum^n_{j=0} a_j\xi^j$, we define recursively the polynomial $\phi_{n-1}$ by
 	\begin{align}
-	\phi_{n-1}(\xi) = \frac{\phi_d^*(0)\phi_d(\xi) - \phi_d(0)\phi_d^*(\xi)}{\xi}.
+	\phi_{n-1}(\xi) = \frac{\phi_n^*(0)\phi_n(\xi) - \phi_n(0)\phi_n^*(\xi)}{\xi}.
 	\end{align} 
 \label{defn:recurse}
-\end{definition}
-\begin{definition}
-	$\phi$ is a Schur polynomial if all its roots, $r_q$, satisfy $\abs{r_q} < 1$.
 \end{definition}
 \begin{theorem}
 	$\phi_n$ is a simple von Neumann polynomial if and only if either 
@@ -110,9 +111,9 @@ We start by applying CNAB \eqref{cnab} to the modified test equation \eqref{mte}
 - \left(1 + z\left(\frac{3}{2}-p \right)\right)\xi + \frac{1}{2}z(1-p).
 \label{amp_cnab}
 \end{align}
-The next series of steps will show that for $z<0$ (i.e. $\lambda < 0$,) \eqref{amp_cnab} is a simple von Neumann polynomial if and only if $p\geq 1$. This process involves showing that Theorem \ref{thm:simple vN} holds for $\Phi_2$.
+The next series of steps will show that for all $z<0$ (i.e. $\lambda < 0$,) \eqref{amp_cnab} is a simple von Neumann polynomial if and only if $p\geq 1$. This process involves showing that Theorem \ref{thm:simple vN} holds for $\Phi_2$.
 
-We first give $\Phi_2^*$ and $\Phi_1$ as defined by the recursive process in Definition \ref{defn:recurse},
+We first give $\Phi_2^*$ and $\Phi_1$ as defined by the processes in Definition \ref{defn:conj}-\ref{defn:recurse},
 \begin{align}
 \Phi_2^*(\xi) = \frac{1}{2}z(1-p) \xi^2 
 - \left(1 + z\left(\frac{3}{2} - p \right)\right) \xi
@@ -138,11 +139,11 @@ Finally, we show that $\Phi_1$ is simple von Neumann directly. Denoting the root
 \end{align*}
 which holds for all $z<0$ if and only if $p\geq 1$.
 
-Other IMEX LMMs are analyzed in the same way. Their amplification polynomials are recorded for reference in Table \ref{table:amp poly 2}, along with the parameter range for which we observe unconditional stability.
+Other IMEX LMMs are analyzed in the same way. Their amplification polynomials are recorded for reference in Table \ref{table:amp poly 2}, along with the range of parameters for which we observe unconditional stability.
 
 \begin{table}[htb!]
 	\centering
-	\caption{Amplification polynomial and choice of parameter when applying second order IMEX LMMs to the modified test equation for unconditional stability.}
+	\caption{Amplification polynomial of second order IMEX schemes. The rightmost column is the guide for choosing $p$.}
 	\begin{tabular}{lll}
 		\toprule[1.5pt] 
 		\head{Method} 
@@ -175,7 +176,7 @@ Other IMEX LMMs are analyzed in the same way. Their amplification polynomials ar
 \end{table}
 
 \subsection{Amplification polynomials of third and fourth oder IMEX LMMs}
-We continue with this type of analysis for higher order IMEX LMMs. Again, amplification polynomials and parameter ranges are derived, but because the expressions and manipulations quickly become cumbersome and tedious for higher order methods, the computer algebra system, \textsc{Maple}, was used to for the majority of the calculations.
+We continue with the analysis for higher order IMEX LMMs. Again, amplification polynomials and parameter restrictions are derived, but because the expressions and manipulations quickly become cumbersome and tedious for higher order methods, the computer algebra system, \textsc{Maple}, was used to for the majority of the calculations.
 
 \begin{table}[htb!]
 	\centering
@@ -210,15 +211,6 @@ We continue with this type of analysis for higher order IMEX LMMs. Again, amplif
 	\label{table:amp poly 34}
 \end{table}
 
-Listed in Table \ref{table:amp poly 34} are respectively the amplification factor and the parameter restriction for SBDF3 and SBDF4. A crucial difference when comparing these higher order methods to the second order methods is that the restriction leaves only a finite interval. This will be addressed further in the subsequent section. In fact, we will demonstrate that this detail renders the linearly stabilized SBDF3, SBDF4 useless in practical application.
+Listed in Table \ref{table:amp poly 34} are respectively the amplification factor and the parameter restriction for SBDF3 and SBDF4. A crucial difference when comparing these higher order methods to the second order methods is that the restriction leaves only a finite interval. This will be addressed further in the subsequent section. In fact, we will demonstrate that this detail renders the linearly stabilized SBDF3, SBDF4 useless when it comes to practical applications.
 
-\subsection{Von Neumann stability analysis on a 1D test problem}
-We now take our theory on a test drive with the 1D mean curvature motion test problem from before. Recall that after discretization in space by second order centred differences, we have the system of ODEs
-\begin{align*}
-\dd{U_j}{t} 
-= 4\frac{U_{j+1} - U_j + U_{j-1}}{4\Delta x^2 + (U_{j+1} - U_{j-1})^2} 
-- \frac{1}{U_j}, 
-\quad 
-j=1:N,
-\end{align*} 
-along with $U_0 = U_{N+1} = 1$.
+\section{Unbounded}
