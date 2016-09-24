@@ -143,7 +143,7 @@ Other IMEX LMMs are analyzed in the same way. Their amplification polynomials ar
 
 \begin{table}[htb!]
 	\centering
-	\caption{Amplification polynomial of second order IMEX schemes. The rightmost column is the guide for choosing $p$.}
+	\caption[Amplification polynomials of second order IMEX]{Amplification polynomial of second order IMEX schemes. The rightmost column is the guide for choosing $p$.}
 	\begin{tabular}{lll}
 		\toprule[1.5pt] 
 		\head{Method} 
@@ -175,12 +175,12 @@ Other IMEX LMMs are analyzed in the same way. Their amplification polynomials ar
 \label{table:amp poly 2}
 \end{table}
 
-\subsection{Amplification polynomials of third and fourth oder IMEX LMMs}
+\subsection{Amplification polynomials of third and fourth order IMEX LMMs}
 We continue with the analysis for higher order IMEX LMMs. Again, amplification polynomials and parameter restrictions are derived, but because the expressions and manipulations quickly become cumbersome and tedious for higher order methods, the computer algebra system, \textsc{Maple}, was used to for the majority of the calculations.
 
 \begin{table}[htb!]
 	\centering
-	\caption{Amplification polynomial and choice of parameter when applying high order IMEX LMMs to the modified test equation for unconditional stability.}
+	\caption[Amplification polynomials of third and fourth order IMEX]{Amplification polynomial and choice of parameter when applying high order IMEX LMMs to the modified test equation for unconditional stability.}
 	\begin{tabular}{lll}
 		\toprule[1.5pt] 
 		\head{Method} 
@@ -213,4 +213,15 @@ We continue with the analysis for higher order IMEX LMMs. Again, amplification p
 
 Listed in Table \ref{table:amp poly 34} are respectively the amplification factor and the parameter restriction for SBDF3 and SBDF4. A crucial difference when comparing these higher order methods to the second order methods is that the restriction leaves only a finite interval. This will be addressed further in the subsequent section. In fact, we will demonstrate that this detail renders the linearly stabilized SBDF3, SBDF4 useless when it comes to practical applications.
 
-\section{Unbounded}
+\section{Numerical Results}
++ Revisit the von Neumann analysis
+
++ Convergence test 1, ammc. 
+
++ Failure of sbdf3, sbdf4. Why? 
+
++ cpu time comparison with EIN. What happens with the estimates for p are crude?
+
++ Further corroborate with Convergence test 2, nl5. Add CPU time comparison with EIN. cnlf fails. 
+
++ Further problems with EIN. Loss of accuracy.
