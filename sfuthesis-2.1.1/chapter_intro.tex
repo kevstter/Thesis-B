@@ -5,4 +5,12 @@ What are other ways people handle nonlinear stiff equations?
 Often, we see new, efficient solvers that are so complex, that the preferred method of choice remains those that are simple, clear, and easy to implement. 
 
 \section{Overview}
-An outline of this thesis is as follows: in Chapter 2, we motivate the key ideas through a moderately challenging problem in 1D, setup a framework for analyzing methods to be proposed, and expound on a related piece of work that led to our own research. In Chapter 3, we propose the use of IMEX LMMs in our framework and conduct a stability analysis. Deficiencies exposed in Chapter 3 presented us an opportunity to investigate a class of ETD schemes. These are considered in Chapter 4. Seriously fun applications are all in Chapter 5, and wrapping it all up will be a conclusion. We will recap there what we have learned, and some exciting potential future work.  
+An outline of this thesis is as follows. In Chapter 2, we discuss the notion of linear stabilization. The idea is not new and we will discuss some work that is relevant to our own. Stability is the central theme and an appropriate framework is set. 
+
+After that, it's onto our work. We propose linear stabilization with IMEX linear multistep methods. We cover stability and implementation. Then we compare with a competing method and demonstrate our superiority in each and every way possible.
+
+The framework supplied earlier is not limited to IMEX methods. We develop the same ideas with exponential Runge-Kutta methods for a higher order implementation. Following that we will compared with the IMEX class of linearly stabilized schemes.
+
+Finally, we present a number of applications. Expect cool figures, some convergence plots, and some words.
+
+To conclude, recap, future work, etc.
