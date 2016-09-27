@@ -1,7 +1,10 @@
 \chapter{Higher Order with Exponential Time Differencing}
-The investigation with IMEX LMMs left us with a major question. Since the variants derived from SBDF3, SBDF4, admitted bounded parameter ranges and thus proved worthless for practical use, is it possible to construct practical high order linearly stabilize time stepping methods? In this chapter, we answer in the affirmative. To do so, we look to a relatively new class of methods with exceptional stability properties. 
+The investigation with IMEX LMMs left us with a major question. Since the linearly stabilized schemes derived from SBDF3, SBDF4 admitted only bounded parameter ranges and were subsequently shown to be worthless for practical use, is it possible to construct practical high order linearly stabilized time stepping methods? In this chapter, we answer in the affirmative by adopting a class of methods possessing  exceptional stability properties. 
 
 \section{Runge-Kutta exponential time differencing }
+Exponential time differencing, or ETD, methods are a class of methods which treat the linear part of the PDE exactly, and approximate the nonlinear part with an appropriate quadrature formula. Although these methods go back to \cite{}, a systematic derivation and related extensions have only recently been undertaken \cite{hochbruck2005explicit, hochbruck2005exponential, hochbruck2009exprosenbrock, hochbruck2010expintegrators}.
+
+Our attention is on the Runge-Kutta ETD formulas first derived in the paper by Cox and Matthews \cite{cox2002exponential}. We emphasize that our purpose is merely to demonstrate the potential of linear stabilization with ETD schemes and not a comprehensive survey.
 
 \section{Notes}
 + How are these schemes derived? Give the basics? Runge-Kutta style presentation? 
