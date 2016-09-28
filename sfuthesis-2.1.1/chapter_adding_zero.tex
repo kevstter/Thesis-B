@@ -7,6 +7,7 @@ As a prototype, let us consider the following 1D mean curvature motion problem \
 \begin{align}
 u_t &= \frac{u_{xx}}{1 + u_x^2} - \frac{1}{u}, 
 \qquad 0 < x < 10, \, t > 0,
+\label{ammc 1}
 \end{align}
 with initial and boundary condition
 \begin{gather}
@@ -19,7 +20,7 @@ u(0,t)=u(10,t)=1.
 The presence of the $u_{xx}$ guarantees that \eqref{ammc} is stiff, suggesting that an implicit time stepping scheme would prove more efficient. However, having to additionally handle the factor of $(1+u_x^2)^{-1}$ would suggest otherwise. Thus we are presented with a scenario where neither an implicit nor an explicit approach proves particularly palatable.
 
 \subsection{A first order linearly stabilized scheme}
-As demonstrated in Duchemin and Eggers \cite{duchemin2014explicit} as well as an earlier paper by Smereka \cite{smereka2003semi}, an efficient method to handling problem \eqref{ammc} is to add and subtract a linear Laplacian term to the righthand side, 
+As demonstrated in Duchemin and Eggers \cite{duchemin2014explicit} as well as an earlier paper by Smereka \cite{smereka2003semi}, an efficient method to handling \eqref{ammc} is to add and subtract a linear Laplacian term to the righthand side, 
 \begin{align}
 u_t = \underbrace{\frac{u_{xx}}{1 + u_x^2} 
 - \frac{1}{u} 
@@ -33,7 +34,7 @@ and then time step as
 = \N(u^n) + \L u^{n+1}.
 \label{ammc sbdf1}
 \end{align}
-Since this is our first instance of witnessing a linearly stabilized scheme in action, we remark on some of the basic properties. We first note that in the continuous case, the modified equation \eqref{ammc +- uxx} is unchanged from \eqref{ammc}. Next, note in the discrete case \eqref{ammc sbdf1}, the nonlinear term is evaluated explicitly, and ignoring the $\L u^{n+1}$ term, it is a forward Euler step. Conversely, the implicit solve in this time stepping procedure is a backward Euler step. This sort of time stepping is well known as implicit-explicit (IMEX) or semi-implicit Euler \cite{ascher1995implicit,smereka2003semi}. As it is a combination of explicit and implicit Euler steps, the accuracy is first order. We also note that the simplicity of the implicit term means that the related linear algebra is fast and easy. Lastly, as a result of the implicit solution to the $\L u$ term, we may expect this scheme to have improved stability compared to a purely explicit scheme, and indeed this is the case. Adopting second order centred differences in space, we will show next that this scheme is unconditionally stable.
+Since this is our first instance witnessing a linearly stabilized scheme in action, we remark on some of the key properties. We first note that in the continuous case, the modified equation \eqref{ammc +- uxx} is unchanged from \eqref{ammc 1}. Next, note in the discrete case \eqref{ammc sbdf1}, the nonlinear term is evaluated explicitly, and ignoring the $\L u^{n+1}$ term, it is a forward Euler step. Over on the linear term, the implicit solve in this time stepping procedure is a backward Euler step. This method of time stepping is known well as implicit-explicit (IMEX) or semi-implicit Euler \cite{ascher1995implicit,smereka2003semi}. As it is a combination of explicit and implicit Euler steps, the accuracy is first order. We also note that the simplicity of the implicit term means that the related linear algebra is efficient and easy to implement. Lastly, as a result of the implicit solution to the $\L u$ term, we may expect this scheme to have improved stability compared to a purely explicit scheme, and indeed this is the case. Adopting second order centred differences in space, we will show next that this scheme is unconditionally stable.
 
 \subsection{A von Neumann stability analysis}
 With the prescribed spatial-temporal discretization, we have at the interior nodes,
@@ -60,15 +61,15 @@ Recording the result term-by term, we have
 \\
  \frac{u^{n+1}_{j+1} - 2u^{n+1}_j + u^{n+1}_{j-1}}{\Delta x^2}
 &= \frac{\bar u^{n+1}_{j+1} - 2\bar u^{n+1}_j + \bar u^{n+1}_{j-1}}{\Delta x^2}
-+ \frac{2}{\Delta x^2}\left(\cos(k\Delta x) - 1\right) \xi^{n+1} e^{ikj\Delta x}
++ \frac{2}{\Delta x^2}\left(\cos(k\Delta x) - 1\right) \xi^{n+1} e^{ikj\Delta x},
 \\
 	\frac{u^n_{j+1} - 2u^n_j + u^n_{j-1}}{\Delta x^2}
 &= \frac{\bar u^n_{j+1} - 2\bar u^n_j + \bar u^n_{j-1}}{\Delta x^2} 
-+ \frac{2}{\Delta x^2}\left(\cos(k\Delta x)-1\right) \xi^n e^{ikj\Delta x}
++ \frac{2}{\Delta x^2}\left(\cos(k\Delta x)-1\right) \xi^n e^{ikj\Delta x},
 \\
 	\frac{1}{u^n_j} 
 &= \frac{1}{\bar u^n_j + \xi^n e^{ikj\Delta x}} 
-\approx \frac{1}{\bar u^n_j} - \xi^n e^{ikj\Delta x} \frac{1}{(\bar u^n_j)^2}
+\approx \frac{1}{\bar u^n_j} - \xi^n e^{ikj\Delta x} \frac{1}{(\bar u^n_j)^2},
 	\end{align}
 and 
 \begin{align}
@@ -112,7 +113,7 @@ from which we can then isolate the amplification factor,
 	)^2}
 + \frac{1}{(\bar u_j^n)^2}}{1-\frac{2\Delta t}{\Delta x^2}(\cos(k\Delta x)-1)}}_{=w}.
 \end{align}
-The next steps will show that $\abs{\xi} < 1$ for all $\Delta t > 0$, i.e. absolute stability is unconditional. We show the equivalent statement $-2 < w < 0$. First, $w<0$. As the denominator is positive, this will hold so long as the numerator is negative, 
+In the next steps, we will show $\abs{\xi} < 1$ for all $\Delta t > 0$, i.e. absolute stability is unconditional. We show the equivalent statement $-2 < w < 0$. First, $w<0$. As the denominator is positive, $w>0$ will hold true so long as the numerator is negative, 
 \begin{align}
 \frac{2}{\Delta x^2}\frac{\cos(k\Delta x)-1}{1 +(
 	D_1\bar u^n_j 
@@ -134,38 +135,39 @@ This last relation is satisfied on the assumption that $\Delta x \ll \bar u^n_j$
 + 2 + \frac{\Delta t}{(\bar u^n_j)^2}.
 \end{split}
 \end{align}
-Since each term is positive without restriction, we have shown $w+2 > 0$, and thus $\abs{\xi} < 1$ for all $\Delta t > 0$.
+Since each term is positive without restriction, we have that $w+2 > 0$, and thus $\abs{\xi} < 1$ for all $\Delta t > 0$.
 
 \subsection{Second order by Richardson extrapolation}
-As stated at the outset, the time stepping procedure in \eqref{ammc sbdf1} is only first order. The work of Duchemin and Eggers \cite{duchemin2014explicit} (and as was suggested but not implemented in \cite{smereka2003semi},) extends it to second order by Richardson extrapolation.  Moreover, they generalized the approach with a free parameter, $p$, i.e.,
+As stated at the outset, the time stepping procedure in \eqref{ammc sbdf1} is only first order. The work of Duchemin and Eggers \cite{duchemin2014explicit} (and as was suggested but not implemented in \cite{smereka2003semi},) extends the method to second order by Richardson extrapolation.  Moreover, they generalized the approach with a free parameter, $p$, i.e.,
 \begin{align}
 u_t = \frac{u_{xx}}{1 + u_x^2} - \frac{1}{u} - pu_{xx} + pu_{xx}, 
 \end{align}
-and derived restrictions to $p$ on the condition that the resulting scheme be unconditionally stable. With the semi-implicit Euler approach, they found $p > 0.5/(1 + (D_1 \bar u^n_j)^2)$ to be sufficient. With the additional Richardson extrapolation, the restriction is $p > (2/3)/(1 + (D_1 \bar u^n_j)^2)$.
+and derived restrictions to $p$ on the condition that the resulting scheme be unconditionally stable. With the semi-implicit Euler approach, they found $p \geq0.5/(1 + (D_1 \bar u^n_j)^2)$ to be sufficient. With the additional Richardson extrapolation, the restriction is $p \geq (2/3)/(1 + (D_1 \bar u^n_j)^2)$.
 
 \section{A Modified Test Equation}
-Let us now consider a more general problem. Starting from a generic equation, $u_t = \N(u)$, where we assume $\N(u)$ is a stiff, nonlinear term. We modify by adding and subtracting a linear term that ``resembles'' $\N(u)$,
+This method of linear stabilization would be extremely cumbersome if in each case we had to perform a von Neumann analysis to determine the stability. Thankfully, there is an alternative.
+To begin, let us now consider the more general problem, $u' = \N(u)$, which may be from a spatial discretization of some nonlinear PDE, and we assume $\N(u)$ is a stiff, nonlinear term. We can modify, in a way analogous to \eqref{ammc +- uxx}, by subtracting and adding a linear term that ``resembles'' $\N(u)$,
 \begin{align}
 u_t = \underbrace{ (\N(u) - p\L u)}_\text{nonlinear} + \underbrace{p\L u}_\text{linear},
 \label{generic} 
 \end{align}
-and we demand unconditionally stable time stepping. This last request we now address.
+and demand unconditionally stable time stepping. This last request we now address.
 
-To progress, we abandon \eqref{generic} and instead examine a analogous, but simplified scenario that we will refer to as the modified test equation: 
+To progress, we abandon \eqref{generic} and instead examine a related, but simplified scenario that we will refer to as the modified test equation: 
 \begin{align}
 u' = (1-p)\lambda u + p\lambda u,
 \quad\text{where}\quad \lambda < 0\text{, } p>0.
 \label{mte}
 \end{align}
-In \eqref{mte}, the quantity $\lambda$ captures the character of $\N$ (and can be thought of as the eigenvalues of the Jacobian of the linearized $\N$), and the quantity $p\lambda u$ represents the linear component that closely resembles $\N(u)$. Note also when $p=0$, the modified test equation reduces to the standard test equation, $u'=\lambda u$.
+In \eqref{mte}, the quantity $\lambda$ captures the character of $\N$ (e.g. the eigenvalues of the Jacobian of the linearized $\N$), and the quantity $p\lambda u$ represents the linear component that closely resembles $\N(u)$. Note also when $p=0$, the modified test equation reduces to the standard test equation, $u'=\lambda u$.
 
-We will now discuss the stability properties of three time stepping methods as applied to the modified test equation \eqref{mte}.
+We will discuss next the stability properties of three time stepping methods as applied to the modified test equation \eqref{mte}.
 
 \subsection{Forward Euler}
 Forward Euler is a first order time stepping method that treats the righthand side explicitly. Application to \eqref{mte} is therefore no different than to the standard test equation. Thus there is no hope of unconditional stability.
 
-\subsection{Semi-implicit Euler}
-Semi-implicit Euler time stepping was demonstrated on the 1D mean curvature motion problem \eqref{ammc} in equation \eqref{ammc sbdf1} and its stability further analyzed. In the case of the modified test equation, we identify $\N(u^n) = (1-p)\lambda u^n$ and $\L u^{n+1} = p\lambda u^{n+1}$, to get 
+\subsection{Linearly stabilized semi-implicit Euler}
+Semi-implicit Euler time stepping was demonstrated on the 1D mean curvature motion problem \cref{ammc} via \cref{ammc +- uxx,ammc sbdf1}, and its stability further analyzed. In the case of the modified test equation, we identify $\N(u^n) = (1-p)\lambda u^n$ and $\L u^{n+1} = p\lambda u^{n+1}$, to get 
 \begin{align}
 \frac{u^{n+1} - u^n}{\Delta t} 
 = (1-p)\lambda u^n + p\lambda u^{n+1} 
@@ -181,8 +183,10 @@ Enforcing absolute stability, i.e. $\abs{\xi_E} < 1$, for all $\lambda\Delta t <
 \end{align}
 Thus unconditional stability is guaranteed if $p \geq 1/2$.
 
+We will onwards be referring to this scheme as SBDF1.
+
 \subsection{Explicit-implicit null}
-In \cite{duchemin2014explicit}, Duchemin and Eggers extended the semi-implicit Euler approach to second order using Richardson extrapolation, and they referred to their methodology as explicit-implicit null (EIN). For their EIN method, the amplification factor, $\xi_{EIN}$, can be expressed in terms of $\xi_E$, 
+In \cite{duchemin2014explicit}, Duchemin and Eggers extended the SBDF1 approach to second order by using Richardson extrapolation, and they referred to their methodology as explicit-implicit null (EIN). For their method, the amplification factor, $\xi_{EIN}$, can be expressed in terms of $\xi_E$, 
 \begin{align}
 \xi_{EIN} 
 = 2\xi^2_{E}(\Delta t/2) - \xi_E(\Delta t) 
@@ -204,44 +208,45 @@ The coefficients of the powers of $z$ have the property
 \\
 &[z^3] = -p(2-3p+2p^2) > 0 \quad\text{since the discriminant } (-3)^2 - 4(2)(2) < 0,
 \end{align*}
-for all $z<0$, thus guaranteeing the numerator is positive. And since the denominator, as previously mentioned, is positive, we are guaranteed $w+2>0$, and thus unconditional stability is guaranteed if $p>2/3$.
+for all $z<0$, thus guaranteeing the numerator is positive. And since the denominator, as stated previously, is positive, we are guaranteed $w+2>0$, and thus unconditional stability is guaranteed if $p>2/3$.
 
 \begin{remark}
-	It is perhaps more faithful to write the restrictions as $p\lambda / \lambda > 2/3$ rather than simply $p > 2/3$, as it is necessarily the ratio of the two that must satisfy the restriction, and not the parameter $p$. This distinction is vital for any problem beyond a simple test equation, where the eigenvalues of the nonlinear operator, $\lambda_\N$, and the eigenvalues of the linear operator, $\lambda_\L$, may have the same scaling, ex. $\lambda_\N, \lambda_\L = \O(\Delta x^{-2})$, but the actual values may be far apart, ex. $\lambda_\N \approx 100 \lambda_\L$.
+	It is perhaps more faithful to write the restrictions as $p\lambda / \lambda > 2/3$ rather than simply $p > 2/3$, as it is necessarily the ratio of the two that must satisfy the restriction, and not the parameter $p$. This distinction is vital for any problem beyond a simple test equation, where the eigenvalues of the nonlinear operator, $\lambda_\N$, and the eigenvalues of the linear operator, $\lambda_\L$, may follow the same scaling, e.g.\ $\lambda_\N, \lambda_\L = \O(\Delta x^{-2})$, but the actual values may be far apart, e.g.\ $\lambda_\N \approx 100 \lambda_\L$.
 \end{remark}
 \begin{remark}
-	What we now understand is that in order to linearly stabilize effectively, we need the ratio of the eigenvalues to meet a specific bound. This bound, however, is specific to the time stepping procedure, and is met by choosing a sufficiently large value of $p$.  
+	What we now understand is that in order to linearly stabilize effectively, we need the ratio of the eigenvalues to meet a specific bound. This bound, however, is specific to the time stepping procedure, assuming a fixed and reasonable choice of a linear operator $\L$, and is met by choosing a sufficiently large value of $p$.  
 \end{remark}
 \begin{remark}
-	Finally, we must mention that this provides us with a simple and widely applicable avenue to selecting $p$ outside of doing a von Neumann analysis, especially as the latter in many cases may be infeasible. 
+	Finally, we must mention that this provides us with a simple and widely applicable avenue to selecting $p$ outside of doing a von Neumann analysis, especially as the latter in many cases may be infeasible.
 \end{remark}
 
 \section{Numerical Results}
-We present in this section a number of tests to support our claims.
+We present in this section some tests to support our claims.
 
 \subsection{Stability contours}
-Stability contours plots are shown in \cref{sbdf1 contours,ein contours}
+Stability contours plots are shown in \cref{sbdf1 contours,ein contours} as a verification of the earlier analysis of the linearly stabilized semi-implicit Euler scheme and the EIN method. In the first case, we found the parameter restriction to be $p\geq 0.5$, and this is in agreement with \cref{sbdf1 contours}. When we set $p=0.45$, the stable range along the negative real axis is clearly bounded. But at $p=0.50$ and greater, it is stability region includes the entirety of the negative real axis.
 \begin{figure}[htb!]
         \centering
 \includegraphics[width=0.65\textwidth]{sbdf1_stab_contour2}
 \caption{Stability contours of linearly stabilized SBDF1 with various $p$.}
 \label{sbdf1 contours}
 \end{figure}
+
+The same is demonstrated for the EIN method in \cref{ein contours}. Again we see that below the derived threshold, the stability region is bounded. But beyond that, the stability region contains the entire negative real axis.
 \begin{figure}[htb!]
         \centering
 \includegraphics[width=0.65\textwidth]{ein_stab_contour}
 \caption{Stability contours of EIN with various $p$.}
 \label{ein contours}
 \end{figure}
+
 \subsection{Numerical convergence test}
-Convergence tests and any necessary tables and figures to support claims.
+The convergence of linearly stabilized semi-implicit Euler and EIN are demonstrated next on problem \cref{ammc}. We solve to time $T=0.35$ with $N=2048$ spatial grid nodes. As a reference solution, we use an explcit third order Runge-Kutta method with time step-size $\Delta t=\num{1.46e-5}$. This choice of step-size is a result of stability restrictions. As a comparison, with the linearly stabilized schemes, we will solve \cref{ammc} with step-sizes as large as $\Delta t = \num{1.1e-2}$.
 
-
-
-+ stability plots?
-
-+ Revisting the von Neumann analysis
-
-+ Numerical convergence test with FE, SBDF1, EIN with reference solution from a 3rd order Runge-Kutta.
-
-+ Figures. Convergence test. Stability of FE. Contrast with the linearly stabilize schemes.
+Results of the numerical convergence study are shown in \cref{ein_sbdf1_conv_ammc}. Both schemes converge with the expected order of accuracy. No issues with stability are observed.
+\begin{figure}[htb!]
+        \centering
+\includegraphics[width=0.65\textwidth]{ein_sbdf1_conv_ammc}
+\caption{Result of numerical convergence study to \cref{ammc}.}
+\label{ein_sbdf1_conv_ammc}
+\end{figure}
