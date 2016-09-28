@@ -1,4 +1,5 @@
-\documentclass{sfuthesis}
+\documentclass[draft]{sfuthesis}
+%\documentclass{sfuthesis}
 
 \title{Numerical Solution to Stiff PDEs}
 \thesistype{Dissertation}
@@ -57,7 +58,10 @@
 \usepackage{caption}
 \usepackage{enumitem}
 \usepackage{booktabs}
-\usepackage{cleveref}
+\usepackage[capitalize]{cleveref}
+\crefname{equation}{}{}
+\usepackage{siunitx}
+%\sisetup{output-exponent-marker=\ensuremath{\mathrm{e}}}
 
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}[chapter] 
