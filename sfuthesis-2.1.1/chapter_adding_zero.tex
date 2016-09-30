@@ -141,6 +141,7 @@ Since each term is positive without restriction, we have that $w+2 > 0$, and thu
 As stated at the outset, the time stepping procedure in \eqref{ammc sbdf1} is only first order. The work of Duchemin and Eggers \cite{duchemin2014explicit} (and as was suggested but not implemented in \cite{smereka2003semi},) extends the method to second order by Richardson extrapolation.  Moreover, they generalized the approach with a free parameter, $p$, i.e.,
 \begin{align}
 u_t = \frac{u_{xx}}{1 + u_x^2} - \frac{1}{u} - pu_{xx} + pu_{xx}, 
+\label{ammc p}
 \end{align}
 and derived restrictions to $p$ on the condition that the resulting scheme be unconditionally stable. With the semi-implicit Euler approach, they found $p \geq0.5/(1 + (D_1 \bar u^n_j)^2)$ to be sufficient. With the additional Richardson extrapolation, the restriction is $p \geq (2/3)/(1 + (D_1 \bar u^n_j)^2)$.
 
@@ -186,6 +187,7 @@ Thus unconditional stability is guaranteed if $p \geq 1/2$.
 We will onwards be referring to this scheme as SBDF1.
 
 \subsection{Explicit-implicit null}
+\label{sect:ein}
 In \cite{duchemin2014explicit}, Duchemin and Eggers extended the SBDF1 approach to second order by using Richardson extrapolation, and they referred to their methodology as explicit-implicit null (EIN). For their method, the amplification factor, $\xi_{EIN}$, can be expressed in terms of $\xi_E$, 
 \begin{align}
 \xi_{EIN} 
@@ -214,21 +216,34 @@ for all $z<0$, thus guaranteeing the numerator is positive. And since the denomi
 	It is perhaps more faithful to write the restrictions as $p\lambda / \lambda > 2/3$ rather than simply $p > 2/3$, as it is necessarily the ratio of the two that must satisfy the restriction, and not the parameter $p$. This distinction is vital for any problem beyond a simple test equation, where the eigenvalues of the nonlinear operator, $\lambda_\N$, and the eigenvalues of the linear operator, $\lambda_\L$, may follow the same scaling, e.g.\ $\lambda_\N, \lambda_\L = \O(\Delta x^{-2})$, but the actual values may be far apart, e.g.\ $\lambda_\N \approx 100 \lambda_\L$.
 \end{remark}
 \begin{remark}
-	What we now understand is that in order to linearly stabilize effectively, we need the ratio of the eigenvalues to meet a specific bound. This bound, however, is specific to the time stepping procedure, assuming a fixed and reasonable choice of a linear operator $\L$, and is met by choosing a sufficiently large value of $p$.  
+	What we now understand is that in order to linearly stabilize effectively, we need the ratio of the eigenvalues to meet a specific bound. This bound, if we assume a fixed and reasonable choice of a linear operator $\L$, however, is specific to the time stepping procedure, and is met by choosing a sufficiently large value of $p$.  
 \end{remark}
 \begin{remark}
-	Finally, we must mention that this provides us with a simple and widely applicable avenue to selecting $p$ outside of doing a von Neumann analysis, especially as the latter in many cases may be infeasible. As an example, ...
+	Finally, we must mention that this provides us with a simple avenue to selecting $p$ without a von Neumann analysis, as the latter in many cases may be infeasible. For example, the analysis in \eqref{ammc_von_neumann} reveals that 
+\begin{align}
+        \lambda_\N = \frac{2}{\Delta x^2}\frac{\cos(k\Delta x)-1}{1 + (D_1\bar u_j^n)^2}
+\qand 
+\lambda_\L = \frac{2}{\Delta x^2}(\cos(k\Delta x) - 1).
+\end{align}
+So then to apply, e.g. EIN, to \eqref{ammc p} with centred differences, we would select $p$ to satisfy 
+\begin{align}
+        \frac{2}{3} < \frac{p\lambda_\L}{\lambda_\N} = p(1 + (D_1 \bar u_j^n)^2) 
+\iff 
+p > \frac{2}{3}(1 + (D_1 \bar u^n_j)^2)^{-1}.
+\end{align}
+ 
+
 \end{remark}
 
 \section{Numerical Results}
-We present in this section some tests to support our claims.
+We present in this section some numerical tests to support our claims.
 
 \subsection{Stability contours}
-Stability contours plots are shown in \cref{sbdf1 contours,ein contours} as a verification of the earlier analysis of the linearly stabilized semi-implicit Euler scheme and the EIN method. In the first case, we found the parameter restriction to be $p\geq 0.5$, and this is in agreement with \cref{sbdf1 contours}. When we set $p=0.45$, the stable range along the negative real axis is clearly bounded. But at $p=0.50$ and greater, it is stability region includes the entirety of the negative real axis.
+Stability contours plots are shown in \cref{sbdf1 contours,ein contours} as a verification of the earlier analysis of the SBDF1 and the EIN method. In the first case, we found the parameter restriction to be $p\geq 0.5$, and this is in agreement with \cref{sbdf1 contours}. When we set $p=0.45$, the stable range along the negative real axis is clearly bounded. But at $p=0.50$ and greater, it is stability region includes the entirety of the negative real axis.
 \begin{figure}[htb!]
         \centering
-\includegraphics[width=0.65\textwidth]{sbdf1_stab_contour2}
-\caption{Stability contours of linearly stabilized SBDF1 with various $p$.}
+\includegraphics[width=0.65\textwidth,height=0.36\textheight]{sbdf1_stab_contour2}
+\caption{Stability contours for SBDF1 with various $p$.}
 \label{sbdf1 contours}
 \end{figure}
 
@@ -236,17 +251,18 @@ The same is demonstrated for the EIN method in \cref{ein contours}. Again we see
 \begin{figure}[htb!]
         \centering
 \includegraphics[width=0.65\textwidth]{ein_stab_contour}
-\caption{Stability contours of EIN with various $p$.}
+\caption{Stability contours for EIN with various $p$.}
 \label{ein contours}
 \end{figure}
 
 \subsection{Numerical convergence test}
-The convergence of linearly stabilized semi-implicit Euler and EIN are demonstrated next on problem \cref{ammc}. We solve to time $T=0.35$ with $N=2048$ spatial grid nodes. As a reference solution, we use an explcit third order Runge-Kutta method with time step-size $\Delta t=\num{1.46e-5}$. This choice of step-size is a result of stability restrictions. As a comparison, with the linearly stabilized schemes, we will solve \cref{ammc} with step-sizes as large as $\Delta t = \num{1.1e-2}$.
+\label{ein conv test}
+The convergence of SBDF1 and EIN are demonstrated next on \cref{ammc} with \cref{ammc +- uxx} in place of \eqref{ammc 1}. We solve to time $T=0.35$ with $N=2048$ spatial grid nodes. As a reference solution, we use an explcit third order Runge-Kutta method with time step-size $\Delta t=\num{1.46e-5}$. This choice of step-size is a result of stability restrictions. With the linearly stabilized schemes, we will solve \cref{ammc} with step-sizes as large as $\Delta t = \num{2.09e-2}$.
 
 Results of the numerical convergence study are shown in \cref{ein_sbdf1_conv_ammc}. Both schemes converge with the expected order of accuracy. No issues with stability are observed.
 \begin{figure}[htb!]
         \centering
 \includegraphics[width=0.65\textwidth]{ein_sbdf1_conv_ammc}
-\caption{Result of numerical convergence study to \cref{ammc}.}
+\caption[Numerical convergence study with SBDF1 and EIN]{Result of numerical convergence study to \cref{ammc} with SBDF1 and EIN. Values $p=0.50$ and $p=0.70$ were chosen for SBDF1 and EIN respectively.}
 \label{ein_sbdf1_conv_ammc}
 \end{figure}
