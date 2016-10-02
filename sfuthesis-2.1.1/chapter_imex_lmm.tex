@@ -263,28 +263,42 @@ Convergence of the proposed schemes will be tested on three problems.
 
 \subsubsection{1D mean curvature motion}
 The first of the three is the 1D mean curvature motion problem \cref{ammc}, which we restate below:
-\begin{align*}
+\begin{subequations}
+\begin{align}
         u_t = \frac{u_{xx}}{1 + u_x^2} - \frac{1}{u} - pu_{xx} + pu_{xx},
 \quad 0< x< 10,\, t>0,
-\end{align*}
+\end{align}
 with initial and boundary conditions
-\begin{gather*}
+\begin{gather}
         u(x,0) = 1 + 0.10\sin\left(\frac{\pi}{5}x \right) 
 \\
 u(0,t) = u(10,t) = 1.
-\end{gather*}
+\end{gather}
+\label{ammc pmpm}
+\end{subequations}
 
-As in \cref{ein conv test}, we solve to time $T=0.35$ with $N=2048$ spatial grid nodes, and a reference solution is generated using a third order Runge-Kutta method with time step-size $\Delta t = \num{1.46e-5}$.
+As in \cref{ein conv test}, we solve to time $T=0.35$ with $N=2048$ spatial grid nodes, and a reference solution is generated using a third order Runge-Kutta method with time step-size $\Delta t = \num{1.46e-5}$. Starting values necessary for the multistep methods are found using a third order Runge-Kutta method with small time step. The values of $p$ used for each scheme is indicated in \cref{lmm conv test}.
 
-Results of the numerical convergence study are shown in \cref{lmm conv test}.
+Results of the numerical convergence study are shown in \cref{lmm conv test}. Each of the second order methods converge with the order of accuracy as expected, with SBDF2 having the largest errors, followed by CNAB/mCNAB (identical performance), CNLF, and EIN. SBDF3 converges nicely for $p=0.875$. SBDF4 does not exhibit fourth order convergence and in fact fails at both $\Delta t =\num{6.84e-04}$ and $\Delta t=\num{3.42e-04}$. We discuss next why SBDF4 fails, and show also that SBDF3 suffers from the same defect.
 
 \begin{figure}
         \centering
-%\includegraphics[width=0.65\textwidth]{}
-\caption[Numerical convergence study with IMEX LMMs]{Numerical convergence study to \cref{ammc} with IMEX LMMs. Convergence of EIN is also included for comparison.}
+\includegraphics[draft=false,width=0.65\textwidth]{lmm_conv_ammc}
+\caption[Numerical convergence study with IMEX LMMs]{Numerical convergence study to \cref{ammc } with IMEX LMMs. Convergence of EIN is also included for comparison. Test with mCNAB is omitted, but would otherwise overlap with CNAB.}
 \label{lmm conv test}
 \end{figure}
 
+\subsubsection{Failure with high order IMEX LMMs}
+First, let us tabulate the observed (non)convergence of SBDF3 with various values of $p$. 
+
+\begin{table}[htb!]
+        \centering
+\caption[(Non)convergence of SBDF with various $p$.]{(Non)convergence of SBDF with various $p$.}
+\begin{tabular}{lll}
+        a
+\end{tabular}
+\label{tab: sbdf3 nonconvergence}
+\end{table}
 
 
 \clearpage
