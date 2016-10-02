@@ -17,6 +17,14 @@ u(0,t)=u(10,t)=1.
 \end{gather}
 \label{ammc}
 \end{subequations}
+A time evolution of this problem is plotted in \cref{fig:ammc sol}.
+\begin{figure}[htb!]
+        \centering
+\includegraphics[width=0.65\textwidth]{ammc_sol}
+\caption[Time evolution of the solution to \cref{ammc}.]{Time evolution of the solution to \cref{ammc}. The black curve is the initial state. The bottom blue curve is the state at $T=0.35$.}
+\label{fig:ammc sol}
+\end{figure}
+
 The presence of the $u_{xx}$ guarantees that \eqref{ammc} is stiff, suggesting that an implicit time stepping scheme would prove more efficient. However, having to additionally handle the factor of $(1+u_x^2)^{-1}$ would suggest otherwise. Thus we are presented with a scenario where neither an implicit nor an explicit approach proves particularly palatable.
 
 \subsection{A first order linearly stabilized scheme}
@@ -224,12 +232,14 @@ for all $z<0$, thus guaranteeing the numerator is positive. And since the denomi
         \lambda_\N = \frac{2}{\Delta x^2}\frac{\cos(k\Delta x)-1}{1 + (D_1\bar u_j^n)^2}
 \qand 
 \lambda_\L = \frac{2}{\Delta x^2}(\cos(k\Delta x) - 1).
+\label{ammc eig}
 \end{align}
 So then to apply, e.g. EIN, to \eqref{ammc p} with centred differences, we would select $p$ to satisfy 
 \begin{align}
         \frac{2}{3} < \frac{p\lambda_\L}{\lambda_\N} = p(1 + (D_1 \bar u_j^n)^2) 
 \iff 
 p > \frac{2}{3}(1 + (D_1 \bar u^n_j)^2)^{-1}.
+\label{ammc ein p}
 \end{align}
  
 
