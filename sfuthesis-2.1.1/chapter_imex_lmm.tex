@@ -283,13 +283,13 @@ Results of the numerical convergence study are shown in \cref{lmm conv test}. Ea
 
 \begin{figure}
         \centering
-\includegraphics[draft=true,width=0.65\textwidth]{lmm_conv_ammc}
+\includegraphics[width=0.65\textwidth]{lmm_conv_ammc}
 \caption[Numerical convergence study with IMEX LMMs]{Numerical convergence study to \cref{ammc pmpm} with IMEX LMMs. Convergence of EIN is also included for comparison. Test with mCNAB is omitted, but would otherwise overlap with CNAB.}
 \label{lmm conv test}
 \end{figure}
 
 \subsubsection{Failure with high order IMEX LMMs}
-First, let us tabulate the observed (non)convergence of SBDF3 at various values of $p$. In \cref{table: sbdf3 nonconvergence} we document a case exhibiting reduction in the order of accuracy and a case where the method diverged as the time step-size was reduced. Divergence of SBDF3, SBDF4, can be attributed to the fact that their parameter restriction leaves only a bounded interval.
+First, let us tabulate the observed (non)convergence of SBDF3 at various values of $p$. In \cref{table: sbdf3 nonconvergence} we document a case exhibiting reduction in the order of accuracy and a case where the method diverged as the time step-size was reduced. We attribute the divergence of SBDF3 and SBDF4 to the fact that their parameter restriction leaves only a finite interval.
 
 \begin{table}[htb!]
         \centering
@@ -317,31 +317,31 @@ First, let us tabulate the observed (non)convergence of SBDF3 at various values 
 \label{table: sbdf3 nonconvergence}
 \end{table}
 
-Combining the parameter restrictions listed in \cref{table:amp poly 34} and the relation \cref{ammc eig}, we have for SBDF3 the parameter restriction
+To see this, recall the parameter restrictions listed in \cref{table:amp poly 34} and the relation \cref{ammc eig}. Combing we have for SBDF3 the parameter restriction
 \begin{align}
         \frac{7}{8(1 + (D_1\bar u^n_j)^2)} \leq p \leq \frac{2}{1 + (D_1 \bar u^n_j)^2},
 \quad j=1,\dots,N,
 \end{align}
-and for SBDF4 the parameter restriction
+or equivalently
 \begin{align} 
- \frac{15}{16(1 + (D_1\bar u^n_j)^2)} \leq p \leq \frac{5}{4(1 + (D_1 \bar u^n_j)^2)},
-\quad j=1,\dots,N.
+\max_{1\leq j\leq N}\frac{7}{8(1 + (D_1\bar u^n_j)^2)} \leq p 
+\leq \min_{1\leq j\leq N}\frac{2}{1 + (D_1 \bar u^n_j)^2}.
 \end{align}
-We can equivalently state these as
-\begin{align}
-       \max_{1\leq j\leq N} \frac{7}{8(1 + (D_1\bar u^n_j)^2)} \leq p \leq \min_{1\leq j\leq N}\frac{2}{1 + (D_1 \bar u^n_j)^2},
-\end{align}
-and 
-\begin{align} 
- \max_{1\leq j\leq N} \frac{15}{16(1 + (D_1\bar u^n_j)^2)} \leq p \leq  \min_{1\leq j\leq N} \frac{5}{4(1 + (D_1 \bar u^n_j)^2)}.
-\end{align}
+Failure of the method is due to being unable to satisfy the parameter constraint at every grid node. From \cref{fig:ammc sol}, we see that $\max_j (D_1 \bar u^n_j)^2$ is increasing as the solution evolves and is most extreme near the boundaries. Thus we expect instabilities to develop, and to develop in those regions first. This analysis is corroborated by \cref{fig:sbdf3 instab}, where we see instabilities developing near the righthand boundary.
+\begin{figure}[htb!]
+        \centering
+\includegraphics[width=0.65\textwidth]{sbdf3_instabilities}
+\caption[Instabilities using SBDF3.]{Instabilities using SBDF3. With $p=1.675$ and $\Delta t=\num{9.2e-4}$, we observe instabilities developing near the righthand boundary.}
+\label{fig:sbdf3 instab}
+\end{figure}
+
+With SBDF4, the issue is only worse as the restriction is tighter. The results in \cref{lmm conv test} for  SBDF4 only appeared acceptable at coarse step-sizes only because the low number of time steps did not allow for the instabilities to amplify and dominate the solution. We conclude that linear stabilization with SBDF3 and SBDF4  is not recommended. 
+
+This raises the question: Are all third and fourth order IMEX LMMs unsuited for combination with linear stabilization? To this we provide a partial answer in the negative. Third order, three step schemes form a three parameter family, and likewise for the fourth order, four step schemes \cite{ascher1995implicit}. An extensive search through the parameter space so far has yielded no positives, nor is there any evidence suggesting we may find one with unbounded $p$-parameter restriction.
+
+This leaves a number of competing second order methods. Our next task ...
 
 \clearpage
-+ Revisit the von Neumann analysis
-
-+ Convergence test 1, ammc. 
-
-+ Failure of sbdf3, sbdf4. Why? 
 
 + cpu time comparison with EIN. What happens with the estimates for p are crude?
 
