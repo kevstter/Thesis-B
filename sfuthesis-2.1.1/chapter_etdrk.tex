@@ -1,8 +1,18 @@
 \chapter{Higher Order with Exponential Time Differencing}
 The investigation with IMEX LMMs left us with a major question. Since the linearly stabilized schemes derived from SBDF3, SBDF4 admitted only bounded parameter ranges and were subsequently shown to be worthless for practical use, is it possible to construct practical high order linearly stabilized time stepping methods? In this chapter, we answer in the affirmative by adopting a class of methods possessing  exceptional stability properties. 
 
-\section{Runge-Kutta exponential time differencing }
-Exponential time differencing, or ETD, methods are a class of methods which treat the linear part of the PDE exactly, and approximate the nonlinear part with an appropriate quadrature formula. Although these methods go back to \cite{}, a systematic derivation and related extensions have only recently been undertaken \cite{hochbruck2005explicit, hochbruck2005exponential, hochbruck2009exprosenbrock, hochbruck2010expintegrators}.
+\section{Exponential Runge-Kutta}
+Consider the ODE
+\begin{align}
+u'(t) = \N(u) + \L u.
+\end{align}
+Exponential time differencing, or exponential integrators, is a family of time stepping methods that treats the linear part exactly, and approximates the nonlinear part by some suitable quadrature formula. As an example, a first order variant, the exponential Euler, has the formula
+\begin{align}
+u^{n+1} 
+= e^{\Delta t\L} u^n + \L^{-1}(e^{\Delta t\L}  -1) \N(u^n).
+\end{align}
+
+Although studies of these methods go back to 1960's \cite{}, difficulties with computing the matrix exponential have ... a systematic derivation and related extensions have only recently been undertaken \cite{hochbruck2005explicit, hochbruck2005exponential, hochbruck2009exprosenbrock, hochbruck2010expintegrators}.
 
 Our attention is on the Runge-Kutta ETD formulas first derived in the paper by Cox and Matthews \cite{cox2002exponential}. We emphasize that our purpose is merely to demonstrate the potential of linear stabilization with ETD schemes and not a comprehensive survey.
 
