@@ -214,11 +214,11 @@ We continue with the analysis for higher order IMEX LMMs. Again, amplification p
 
 Listed in Table \ref{table:amp poly 34} are respectively the amplification factor and the parameter restriction for SBDF3 and SBDF4. We must point out a crucial difference. In contrast to the second order methods, the derived parameter restriction leaves only a finite interval.  This will be addressed further in the subsequent section where it is demonstrated that this detail renders the linearly stabilized SBDF3 and SBDF4 useless.
 
-\section{Numerical Results}
-We present in this section some numerical tests to support our claims. Stability contours and a numerical convergence test to \cref{ammc} are first shown. Then we provide an answer as to why SBDF3 and SBDF4 fails. Following that, we conduct a detailed comparison of the second order methods, including the EIN method (see \cref{sect:ein}).
+\section{Convergence of IMEX LMMs}
+We present in this section numerical tests to support our claims. Stability contours are shown and a numerical convergence test to \cref{ammc} is conducted. We then provide an answer as to why linearly stabilized SBDF3 and SBDF4 fails. 
 
 \subsection{Stability contours}
-Presented in \cref{cnab contours,mcnab contours,cnlf contours,sbdf2 contours} are the stability contours for the second order IMEX LMMs, \cref{cnab,mcnab,cnlf,sbdf2}, applied to the modified test equation, \cref{mte}. In \cref{sbdf3 contours} are the stability contours for SBDF3 \cref{sbdf3}, and \cref{sbdf4 contours} show the stability contours for SBDF4 \cref{sbdf4}. They are in agreement with the analysis summarized in \cref{table:amp poly 2,table:amp poly 34}
+Presented in \cref{cnab contours,mcnab contours,cnlf contours,sbdf2 contours} are the stability contours for the second order IMEX LMMs, \cref{cnab,mcnab,cnlf,sbdf2}, applied to the modified test equation, \cref{mte}. In \cref{sbdf3 contours} are the stability contours for SBDF3 \cref{sbdf3}, and in \cref{sbdf4 contours}, the stability contours for SBDF4 \cref{sbdf4}. They are in agreement with the analysis summarized in \cref{table:amp poly 2,table:amp poly 34}
 \begin{figure}[htb!]
         \centering
 \includegraphics[width=0.65\textwidth]{cnab_stab_contour}
@@ -258,11 +258,8 @@ Presented in \cref{cnab contours,mcnab contours,cnlf contours,sbdf2 contours} ar
 \label{sbdf4 contours}
 \end{figure}
 
-\subsection{Numerical convergence tests}
-Convergence of the proposed schemes will be tested on three problems.
-
-\subsubsection{1D mean curvature motion}
-The first of the three is the 1D mean curvature motion problem \cref{ammc}, which we restate below:
+\subsection{Numerical convergence test}
+Convergence of the proposed schemes will be tested on the 1D mean curvature motion problem, which we restate below:
 \begin{subequations}
 \begin{align}
         u_t = \frac{u_{xx}}{1 + u_x^2} - \frac{1}{u} - pu_{xx} + pu_{xx},
@@ -277,7 +274,7 @@ u(0,t) = u(10,t) = 1.
 \label{ammc pmpm}
 \end{subequations}
 
-As in \cref{ein conv test}, we solve to time $T=0.35$ with $N=2048$ spatial grid nodes, and a reference solution is generated using a third order Runge-Kutta method with time step-size $\Delta t = \num{1.46e-5}$. Starting values necessary for the multistep methods are found using a third order Runge-Kutta method with small time step. The values of $p$ used for each scheme is indicated in \cref{lmm conv test}.
+As in \cref{ein conv test}, we solve to time $T=0.35$ with $N=2048$ spatial grid nodes. A reference solution is generated using a third order Runge-Kutta method with time step-size $\Delta t = \num{1.46e-5}$, and a max norm relative error calculated. Starting values necessary for the multistep methods are found using a third order Runge-Kutta method with small time step. The values of $p$ used for each scheme is as indicated in \cref{lmm conv test}.
 
 Results of the numerical convergence study are shown in \cref{lmm conv test}. Each of the second order methods converge with the order of accuracy as expected, with SBDF2 having the largest errors, followed by CNAB/mCNAB (identical performance), CNLF, and EIN. SBDF3 converges nicely for $p=0.875$. SBDF4 does not exhibit fourth order convergence and in fact fails at both $\Delta t =\num{6.84e-04}$ and $\Delta t=\num{3.42e-04}$. We discuss next why SBDF4 fails, and show also that SBDF3 suffers from the same defect.
 
@@ -288,7 +285,7 @@ Results of the numerical convergence study are shown in \cref{lmm conv test}. Ea
 \label{lmm conv test}
 \end{figure}
 
-\subsubsection{Failure with high order IMEX LMMs}
+\subsection{Failure with high order IMEX LMMs}
 First, let us tabulate the observed (non)convergence of SBDF3 at various values of $p$. In \cref{table: sbdf3 nonconvergence} we document a case exhibiting reduction in the order of accuracy and a case where the method diverged as the time step-size was reduced. We attribute the divergence of SBDF3 and SBDF4 to the fact that their parameter restriction leaves only a finite interval.
 
 \begin{table}[htb!]
@@ -317,7 +314,7 @@ First, let us tabulate the observed (non)convergence of SBDF3 at various values 
 \label{table: sbdf3 nonconvergence}
 \end{table}
 
-To see this, recall the parameter restrictions listed in \cref{table:amp poly 34} and the relation \cref{ammc eig}. Combing we have for SBDF3 the parameter restriction
+To see this, recall the parameter restrictions listed in \cref{table:amp poly 34} and the relation \cref{ammc eig}. Combining, we have for SBDF3 the parameter restriction
 \begin{align}
         \frac{7}{8(1 + (D_1\bar u^n_j)^2)} \leq p \leq \frac{2}{1 + (D_1 \bar u^n_j)^2},
 \quad j=1,\dots,N,
@@ -327,7 +324,7 @@ or equivalently
 \max_{1\leq j\leq N}\frac{7}{8(1 + (D_1\bar u^n_j)^2)} \leq p 
 \leq \min_{1\leq j\leq N}\frac{2}{1 + (D_1 \bar u^n_j)^2}.
 \end{align}
-Failure of the method is due to being unable to satisfy the parameter constraint at every grid node. From \cref{fig:ammc sol}, we see that $\max_j (D_1 \bar u^n_j)^2$ is increasing as the solution evolves and is most extreme near the boundaries. Thus we expect instabilities to develop, and to develop in those regions first. This analysis is corroborated by \cref{fig:sbdf3 instab}, where we see instabilities developing near the righthand boundary.
+Failure of the method is due to being unable to satisfy the parameter constraint at every grid node simultaneously. From \cref{fig:ammc sol}, we see that $\max_j (D_1 \bar u^n_j)^2$ is increasing as the solution evolves and is most extreme near the boundaries. Thus we expect instabilities to develop, and to develop in those regions first. This analysis is corroborated by \cref{fig:sbdf3 instab}, where we see instabilities developing near the righthand boundary.
 \begin{figure}[htb!]
         \centering
 \includegraphics[width=0.65\textwidth]{sbdf3_instabilities}
@@ -335,11 +332,15 @@ Failure of the method is due to being unable to satisfy the parameter constraint
 \label{fig:sbdf3 instab}
 \end{figure}
 
-With SBDF4, the issue is only worse as the restriction is tighter. The results in \cref{lmm conv test} for  SBDF4 only appeared acceptable at coarse step-sizes only because the low number of time steps did not allow for the instabilities to amplify and dominate the solution. We conclude that linear stabilization with SBDF3 and SBDF4  is not recommended. 
+With SBDF4, the issue is only worse as the restriction is tighter. The results in \cref{lmm conv test} only appeared acceptable at coarse step-sizes because the low number of time steps did not allow for the instabilities to amplify and dominate the solution. We conclude that linear stabilization with SBDF3 and SBDF4  is not recommended. 
 
-This raises the question: Are all third and fourth order IMEX LMMs unsuited for combination with linear stabilization? To this we provide a partial answer in the negative. Third order, three step schemes form a three parameter family, and likewise for the fourth order, four step schemes \cite{ascher1995implicit}. An extensive search through the parameter space so far has yielded no positives, nor is there any evidence suggesting we may find one with unbounded $p$-parameter restriction.
+A natural follow-up is then to ask if all third and fourth order IMEX LMMs are unsuited for combination with linear stabilization. To this we provide a partial answer in the negative. Third order, three step schemes form a three parameter family, and likewise for the fourth order, four step schemes \cite{ascher1995implicit}. An extensive search through the parameter space so far has yielded no positives, nor is there any evidence suggesting we may find one with unbounded $p$-parameter restriction.
 
-This leaves a number of competing second order methods. Our next task ...
+This leaves us a number of competing second order methods. Our next task is to compare the performance of our IMEX based schemes vs. the EIN method of \cite{duchemin2014explicit}.
+
+\section{Comparison of the Second Order Methods}
+Of the methods that we have proposed, only the second order variants remain. Along with the EIN method, that gives five second order linearly stabilized schemes. A performance evaluation is in order.
+
 
 \clearpage
 
