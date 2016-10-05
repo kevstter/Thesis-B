@@ -267,7 +267,7 @@ The same is demonstrated for the EIN method in \cref{ein contours}. Again we see
 
 \subsection{Numerical convergence test}
 \label{ein conv test}
-The convergence of SBDF1 and EIN are demonstrated next on \cref{ammc} with \cref{ammc +- uxx} in place of \eqref{ammc 1}. We solve to time $T=0.35$ with $N=2048$ spatial grid nodes. As a reference solution, we use an explcit third order Runge-Kutta method with time step-size $\Delta t=\num{1.46e-5}$. This choice of step-size is a result of stability restrictions. With the linearly stabilized schemes, we will solve \cref{ammc} with step-sizes as large as $\Delta t = \num{2.09e-2}$.
+The convergence of SBDF1 and EIN are demonstrated next on \cref{ammc} with \cref{ammc +- uxx} in place of \eqref{ammc 1}. We solve to time $T=0.35$ with $N=2048$ spatial grid nodes. As a reference solution, we use an explicit third order Runge-Kutta method with time step-size $\Delta t=\num{1.46e-5}$. (Typical explicit methods demand step-sizes comparable for stability.) With the linearly stabilized schemes, we will solve \cref{ammc} with step-sizes as large as $\Delta t = \num{2.09e-2}$. We show the max norm relative error.
 
 Results of the numerical convergence study are shown in \cref{ein_sbdf1_conv_ammc}. Both schemes converge with the expected order of accuracy. No issues with stability are observed.
 \begin{figure}[htb!]
