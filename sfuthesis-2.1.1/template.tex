@@ -59,9 +59,11 @@
 \usepackage{enumitem}
 \usepackage{booktabs}
 \usepackage[capitalize]{cleveref}
-\crefname{equation}{}{}
+	\crefname{equation}{}{}
 \usepackage{siunitx}
-%\sisetup{output-exponent-marker=\ensuremath{\mathrm{e}}}
+	%\sisetup{output-exponent-marker=\ensuremath{\mathrm{e}}}
+\usepackage{natbib}
+	\bibliographystyle{plain} %plain, abbrev, acm
 
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}[chapter] 
@@ -150,7 +152,6 @@
 
 \backmatter%
 	\addtoToC{Bibliography}
-	\bibliographystyle{plain}
 	\bibliography{master_ref}
 
 \begin{appendices} % optional
