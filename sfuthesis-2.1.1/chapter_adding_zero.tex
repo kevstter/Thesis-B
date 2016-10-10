@@ -121,7 +121,7 @@ from which we can then isolate the amplification factor,
 	)^2}
 + \frac{1}{(\bar u_j^n)^2}}{1-\frac{2\Delta t}{\Delta x^2}(\cos(k\Delta x)-1)}}_{=w}.
 \end{align}
-In the next steps, we will show $\abs{\xi} < 1$ for all $\Delta t > 0$, i.e. absolute stability is unconditional. We show the equivalent statement $-2 < w < 0$. First, $w<0$. As the denominator is positive, $w>0$ will hold true so long as the numerator is negative, 
+In the next steps, we will show $\abs{\xi} < 1$ for all $\Delta t > 0$, i.e.\ absolute stability is unconditional. We show the equivalent statement $-2 < w < 0$. First, $w<0$. As the denominator is positive, $w>0$ will hold true so long as the numerator is negative, 
 \begin{align}
 \frac{2}{\Delta x^2}\frac{\cos(k\Delta x)-1}{1 +(
 	D_1\bar u^n_j 
@@ -253,7 +253,7 @@ We present in this section some numerical tests to support our claims.
 Stability contours plots are shown in \cref{sbdf1 contours,ein contours} as a verification of the earlier analysis of the SBDF1 and the EIN method. In the first case, we found the parameter restriction to be $p\geq 0.5$, and this is in agreement with \cref{sbdf1 contours}. When we set $p=0.45$, the stable range along the negative real axis is clearly bounded. But at $p=0.50$ and greater, it is stability region includes the entirety of the negative real axis.
 \begin{figure}[htb!]
         \centering
-\includegraphics[width=0.65\textwidth,height=0.36\textheight]{sbdf1_stab_contour2}
+\includegraphics[width=0.65\textwidth,height=0.36\textheight]{sbdf1_stab_contour}
 \caption{Stability contours for SBDF1 with various $p$.}
 \label{sbdf1 contours}
 \end{figure}
