@@ -341,10 +341,69 @@ This leaves us a number of competing second order methods. Our next task is to c
 \section{Comparison of the Second Order Methods}
 Of the methods that we have proposed, only the second order variants remain. Along with the EIN method, that gives five second order linearly stabilized schemes. A performance evaluation is in order.
 
-We set out two test problems. First is the 1D mean curvature motion problem \cref{ammc p} from before. The 
-However, it is of interest to compare the performance with increasing $p$. There are two reasons for this. One, the procedure for estimating the eigenvalues may produce an overestimate as a precaution. As such, $p$ may not be chosen optimally.  
+\subsection{A 2D test problem}
+Let us use as a test problem, the following nonlinear PDE from \cite{vdHouwen1982on}:
+\begin{subequations}
+        \begin{align}
+                u_t = \Delta (u^5),
+\quad 0\leq x,y\leq 1,
+\quad t > 0,
+\label{nl5a}
+        \end{align}
+with initial and boundary conditions set so that the exact solution is 
+\begin{align}
+u(x,y,t) = \left(\frac{4}{5}(2t+x+y)\right)^{1/4}.
+\label{nl5b}
+\end{align}
+\label{nl5}
+\end{subequations}
+Further assuming a uniform grid and centred differences in space, the eigenvalues of the Jacobian of the linearization are estimated to be in the interval
+\begin{align}
+        \left(-\frac{64}{h^2}(1+t), -16\pi^2(t+h) \right).
+\label{nl5 eigs}
+\end{align}
+
+To \cref{nl5}, we propose to stabilize with a $p\Delta u$ term, i.e., replace \cref{nl5a} with 
+\begin{align}
+        u_t = \Delta (u^5) - p\Delta u + p\Delta u, \quad 0\leq x,y\leq 1,
+\quad t > 0.
+\label{nl5 p}
+\end{align}
+The parameter $p$ will then according to the ratio
+\begin{align}
+        \frac{p\lambda_\L}{\lambda_\N}
+\approx \frac{-8p/h^2}{-64(1+t)/h^2}
+= \frac{p}{8(1+t)}.
+\end{align}
+Let us remark on the importance of this test problem. In the analysis of \cref{ammc p}, we performed a von Neumann analysis to obtain precise eigenvalue estimates. On the contrary, the interval provided in \cref{nl5 eigs} bounds the range and is not expected to be sharp. Consequently, $p$ may be substantially greater than necessary. Moreover, we also are forced to select a large value of $p$ to compensate for the fact that the operator we introduced to stabilize is less stiff than the nonlinear term. These situations we expect to be common in applications and thus it is of interest to investigate performance of the methods and behaviour of its discretization errors.
+
+\subsection{Loss of accuracy with EIN}
+We test our second order methods on \cref{nl5 p} with initial and boundary conditions set by \cref{nl5b}. We solve to time $T=0.40$ with spatial grid size $\Delta x = \Delta y = h =0.015$. As a reference solution, we use an explicit third order Runge-Kutta method with time step-size $\Delta t=\num{6.25e-6}$. (Typical explicit methods demand step-sizes comparable for stability.) With the linearly stabilized schemes, we will solve \cref{nl5 p} with step-sizes as large as $\Delta t = \num{1.25e-2}$. We show the max norm relative error.
+
+\begin{figure}[htb!]
+        \centering
+\includegraphics[draft=false,width=0.65\textwidth]{nl5_conv}
+\caption[Numerical convergence study comparing second order methods.]{Numerical convergence study comparing second order methods. Test with mCNAB ($p=9.97$) is omitted, but would otherwise overlap with CNAB.}
+\label{fig:nl5 conv}
+\end{figure}
+
+Results of the numerical convergence test is plotted in \cref{fig:nl5 conv} and it paints a grim picture for the EIN method and for CNLF. We will first discuss the horrific performance of the EIN method, after which we comment on the relative performance of the IMEX LMM based schemes. 
+
+Contrasting the performance of EIN in \cref{lmm conv test} and \cref{fig:nl5 conv}, we observe a drastic reduction in the order of accuracy. In the former, EIN converged with second order accuracy and recorded, amongst the second order method, the lowest error at any fixed $\Delta t$ (although an analysis of error vs. computing time would treat it less favorably). In our latest test problem, we do not observe second order convergence. Further testing shows that the EIN method only begins to demonstrate full second order rate of convergence as we dip below $\Delta t=\num{1e-5}$.
+
+In fact, we argue that this behaviour can already be observed in the original paper by Duchemin and Eggers \cite{duchemin2014explicit}. In their experiments with Hele-Shaw interface flow and with the Kuramoto-Sivashinsky equation, they fail to accurately reproduce the reference figures taken from prior publications \cite{hou1994removing,kassam2005fourth}. In both cases, a large value of $p$ was necessary to obtain the desired stability. 
+
+We offer an explanation. In the most simple case of the modified test equation \cref{mte}, we can apply the EIN method and derive the amplification factor \cref{ein amp fac}. A series expansion at $z=0$ gives 
+\begin{align}
+        \xi_{EIN}
+= 1 + z + \frac{z^2}{2} + \frac{1}{2}(p-p^2)z^3 + \O(p^3z^4).
+\end{align}
+This expression disagrees with the exact solution $\exp(z)$ in the $z^3$ term  and shows a quadratic dependence on $p$. Therefore when the step-size is coarse, a large value of $p$ will crater the observed order of accuracy. On the other hand, the methods we have proposed all show only a linear dependence on $p$ under the same analysis.
 
 \clearpage
+
+We set out two test problems. First is the 1D mean curvature motion problem \cref{ammc p} from before. The 
+However, it is of interest to compare the performance with increasing $p$. There are two reasons for this. One, the procedure for estimating the eigenvalues may produce an overestimate as a precaution. As such, $p$ may not be chosen optimally.  
 
 + cpu time comparison with EIN. What happens with the estimates for p are crude?
 
