@@ -400,15 +400,7 @@ We offer an explanation. In the most simple case of the modified test equation \
         \xi_{EIN}
 = 1 + z + \frac{z^2}{2} + \frac{1}{2}(p-p^2)z^3 + \O(p^3z^4).
 \end{align}
-This expression deviates from the exact solution, $\exp(z)$, in the $z^3$ term  and shows a quadratic dependence on $p$. Therefore at coarse step-sizes, sizable $p$ may crater the observed order of accuracy. On the other hand, the methods we have proposed all show only a linear dependence on $p$ under the same analysis.
+This expression deviates from the exact solution, $\exp(z)$, in the $z^3$ term  and shows a quadratic dependence on $p$. Therefore at coarse step-sizes, sizable $p$ will crater the observed order of accuracy. 
+On the other hand, the methods we have proposed all show only a linear dependence on $p$ under the same analysis, and do not suffer catastropically when $p$ is large.
 
-\clearpage
-
-We set out two test problems. First is the 1D mean curvature motion problem \cref{ammc p} from before. The 
-However, it is of interest to compare the performance with increasing $p$. There are two reasons for this. One, the procedure for estimating the eigenvalues may produce an overestimate as a precaution. As such, $p$ may not be chosen optimally.  
-
-+ cpu time comparison with EIN. What happens with the estimates for p are crude?
-
-+ Further corroborate with Convergence test 2, nl5. Add CPU time comparison with EIN. cnlf fails. 
-
-+ Further problems with EIN. Loss of accuracy.
+However, that is not the end of the story. We observe also that CNLF also struggled on this problem. For this scheme, it is known, e.g. \cite{ascher1995implicit}, only weakly damping and thus a poor choice for diffusion-dominant problems. This is also captured in the stability contours, \cref{cnlf contours}.
