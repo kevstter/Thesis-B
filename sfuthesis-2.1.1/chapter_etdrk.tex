@@ -1,10 +1,10 @@
-\chapter{Higher Order with Exponential Time Differencing}
-The investigation with IMEX LMMs left us with a major question. Since the linearly stabilized schemes derived from SBDF3, SBDF4 admitted only bounded parameter ranges and were subsequently shown to be worthless for practical use, is it possible to construct practical high order linearly stabilized time stepping methods? In this chapter, we answer in the affirmative by adopting a class of methods possessing  exceptional stability properties. 
+\chapter{Higher Order with Exponential Integrators}
+The investigation with multistep schemes left us with a major question. Since the linearly stabilized schemes derived from SBDF3, SBDF4 were shown to be unsuitable for practical use, is it possible to construct practical high order linearly stabilized time stepping methods? In this chapter, we consider two methods coming from the class of exponential integrators. We will demonstrate that the second and fourth order exponential Runge-Kutta from Cox and Matthews \cite{cox2002exponential} work well within our linear stabilization framework.
 
 \section{Exponential Runge-Kutta}
 Consider the ODE
 \begin{align}
-u'(t) = \N(u) + \L u.
+\dd{u}{t} = \N(u) + \L u.
 \end{align}
 Exponential time differencing, or exponential integrators, is a family of time stepping methods that treats the linear part exactly, and approximates the nonlinear part by some suitable quadrature formula. As an example, a first order variant, the exponential Euler, has the formula
 \begin{align}
@@ -12,11 +12,113 @@ u^{n+1}
 = e^{\Delta t\L} u^n + \L^{-1}(e^{\Delta t\L}  -1) \N(u^n).
 \end{align}
 
-Although studies of these methods go back to 1960's \cite{}, difficulties with computing the matrix exponential have ... a systematic derivation and related extensions have only recently been undertaken \cite{hochbruck2005explicit, hochbruck2005exponential, hochbruck2009exprosenbrock, hochbruck2010expintegrators}.
+Although studies of these methods go back to 1960's \cite{}, difficulties with computing the matrix exponential put a damper on the development of these methods. Lately, due to improvements in the approximation/calculation of the matrix exponential \cite{}, and the development of new techniques for computing the matrix exponential-vector product \cite{}, interest in this area has been reignited. Hockbruck and Ostermann give a comprehensive review of exponential integrators in \cite{hochbruck2010expintegrators}.
 
-Our attention is on the Runge-Kutta ETD formulas first derived in the paper by Cox and Matthews \cite{cox2002exponential}. We emphasize that our purpose is merely to demonstrate the potential of linear stabilization with ETD schemes and not a comprehensive survey.
+We examine only explicit exponential Runge-Kutta methods. This family of one-step methods have the form 
+\begin{subequations}
+	\begin{align}
+u^{n+1} &= e^{\Delta t \L} u_n 
++ \Delta t \sum^s_{i=1} b_i(\Delta t\L)\N(U^{n,i}) 
+\\
+U^{n,i} &= e^{\Delta t \L} u^n 
++ \Delta t\sum^{i-1}_{j=1} a_{ij}(\Delta t \L) \N(U^{n,j}),
+	\end{align}
+	\label{exp rk general}
+\end{subequations}
+and can be presented in the familiar Butcher tableaux:
+\newcommand\raisepunct[1]{\,\mathpunct{\raisebox{-5.20ex}{#1}}}
+\begin{align}
+\begin{tabular}{c|cccc}
+$c_1$
+&  
+\\
+$c_2$ & $a_{21}$ & 
+\\
+$\vdots$ & $\vdots$ & $\ddots$ 
+\\
+$c_s$ & $a_{s1}$ & $\cdots$ & $a_{s,s-1}$ 
+\\ \hline 
+& $b_1$ & $\cdots$ & $b_{s-1}$ & $b_s$
+\end{tabular}\raisepunct{.}
+\end{align}
+Our focus is on the second and fourth order exponential Runge-Kutta formulas derived by Cox and Matthews \cite{cox2002exponential}:
+\renewcommand\raisepunct[1]{\,\mathpunct{\raisebox{-1.30ex}{#1}}}
+\begin{align} 
+\begin{tabular}{c|cc}
+$0$ 
+& 
+\\
+\num{1} 
+& $\varphi_{1,2}$ 
+&
+\\ \hline
+& $\varphi_1 - \varphi_2$ 
+& $\varphi_2$
+	\end{tabular}\raisepunct{,}
+\label{etdrk2 butcher}
+\end{align}
+
+\renewcommand\raisepunct[1]{\,\mathpunct{\raisebox{-4.80ex}{#1}}}
+\begin{align} 
+\begin{tabular}{c|cccc}
+$0$ 
+&  
+\\
+\num{1/2} 
+& $\frac{1}{2}\varphi_{1,2}$ 
+&
+\\ 
+\num{1/2} 
+& 0 
+& $\frac{1}{2}\varphi_{1,3}$ 
+& 
+\\
+\num{1} 
+& $\frac{1}{2}\varphi_{1,3}(\varphi_{0,3}-1)$ 
+& 0 
+& $\varphi{1,3}$ 
+& 
+\\ \hline 
+& $\varphi_1 - 3\varphi_2 + 4\varphi_3$ 
+& $2\varphi_2 - 4\varphi_3$ 
+& $2\varphi_2 - 4\varphi_3$ 
+& $4\varphi_3 - \varphi_2$ 
+\end{tabular}\raisepunct{.}
+\label{etdrk4 butcher}
+\end{align}
+The first \cref{etdrk2 butcher} is a second order variant and the second \cref{etdrk4 butcher} is of fourth order. 
+\begin{align} 
+\begin{tabular}{c|cccc}
+$0$ 
+&  
+\\
+\num{1/2} 
+& $\frac{1}{2}\varphi_{1,2}$ 
+&
+\\ 
+\num{1/2} 
+& $\frac{1}{2}\varphi_{1,3} - \varphi_{2,3}$ 
+& $\varphi_{2,3}$ 
+& 
+\\
+\num{1} 
+& $\varphi_{1,4} - 2\varphi_{2,4}$ 
+& 0 
+& $2\varphi{2,4}$ 
+& 
+\\ \hline 
+& $\varphi_1 - 3\varphi_2 + 4\varphi_3$ 
+& $2\varphi_2 - 4\varphi_3$ 
+& $2\varphi_2 - 4\varphi_3$ 
+& $4\varphi_3 - \varphi_2$ 
+\end{tabular}\raisepunct{.}
+\label{krogstad butcher}
+\end{align}
 
 \section{Notes}
+
+We emphasize that our purpose is merely to demonstrate the potential of linear stabilization with ETD schemes and not a comprehensive survey.
+
 + How are these schemes derived? Give the basics? Runge-Kutta style presentation? 
 
 + Strengths of these schemes? Difficulties? 
