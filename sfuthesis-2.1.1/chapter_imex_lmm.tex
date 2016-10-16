@@ -403,4 +403,24 @@ We offer an explanation. In the most simple case of the modified test equation \
 This expression deviates from the exact solution, $\exp(z)$, in the $z^3$ term  and shows a quadratic dependence on $p$. Therefore at coarse step-sizes, sizable $p$ will crater the observed order of accuracy. 
 On the other hand, the methods we have proposed all show only a linear dependence on $p$ under the same analysis, and do not suffer catastropically when $p$ is large.
 
-However, that is not the end of the story. We observe also that CNLF also struggled on this problem. For this scheme, it is known, e.g. \cite{ascher1995implicit}, only weakly damping and thus a poor choice for diffusion-dominant problems. This is also captured in the stability contours, \cref{cnlf contours}.
+\subsection{Damping factors of multistep schemes}
+Having removed the EIN method from consideration, there remains a number of competing two-step schemes: CNAB, mCNAB, SBDF2, and CNLF. The result of our latest test problem, \cref{fig:nl5 conv}, suggests CNLF performs poorly, the performance of CNAB and mCNAB are identical, and SBDF2 may outperformed CNAB (mCNAB) at the coarsest step-sizes, but CNAB (mCNAB) eventually produces lower errors as we reduce $\Delta t$.
+We reason that the observed performance is related to the high frequency damping of each scheme. 
+
+\begin{figure}[htb!]
+	\centering 
+\includegraphics[width=0.65\textwidth]{damp_at_inf}
+\caption[Damping factors at infinity.]{Damping factors at infinity.}
+\label{fig:damp fac at inf}
+\end{figure}
+
+As noted in \cite{ascher1995implicit}, for stiff problems such as ours, it is beneficial to select a time stepping method with strong high frequency damping. In \cref{fig:damp fac at inf}, we display the damping provided by a number of methods (CNAB, mCNAB, SBDF2, CNLF, as well as two exponential Runge-Kutta schemes we will discuss in the next chapter) at the limit as $\lambda\Delta t \to -\infty$. These are plotted against the normalized parameter space, $p/p_0$, where $p_0$ is the lower bound of the parameter restriction (\cref{table:amp poly 2}) specific to each scheme. 
+
+CNLF provides little to no damping as $\lambda\Delta t \to \infty$ for any stable $p$. It is therefore necessary to choose smaller step-sizes than we would like to produce accurate results. 
+
+The scheme mCNAB was derived in \cite{ascher1995implicit} as an alternative to CNAB with superior damping properties. However in our framework, they are identical in that department. As it requires additional storage, there is no reason to consider it over CNAB.
+
+SBDF2 has superior damping to CNAB and thus performs better at coarse step-sizes and is a safer choice to use. That is, however, not to dismiss CNAB, as its lower error makes it the preferred choice in a number of applications.
+
+
+
