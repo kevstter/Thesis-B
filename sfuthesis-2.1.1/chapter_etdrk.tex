@@ -96,6 +96,23 @@ where
 We refer to this pair of exponential Runge-Kutta methods as ETDRK2 and ETDRK4.
 
 \section{Stability of ETDRK2 and ETDRK4}
+As before, we take the schemes \cref{etdrk2 butcher}, \cref{etdrk4 butcher}, and apply them to the modified test equation \cref{mte} to determined the parameter restriction over which the scheme is unconditionally stable. With the help of the computer algebra system, \textsc{Maple}\texttrademark, the parameter restriction is found to be $[1/2,\infty)$ in both cases. We verify these findings with a series of stability contour plots in \cref{fig:etdrk2 stab cont,fig:etdrk4 stab cont}. 
+
+\begin{figure}[htb!]
+	\centering
+\includegraphics[width=0.65\textwidth]{etdrk2_stab}
+\caption{Stability contours for ETDRK2 at various $p$.}
+\label{fig:etdrk2 stab cont}
+\end{figure}
+
+\begin{figure}[htb!]
+	\centering
+\includegraphics[width=0.65\textwidth]{etdrk4_stab}
+\caption{Stability contours for ETDRK4 at various $p$.}
+\label{fig:etdrk4 stab cont}
+\end{figure}
+
+
 Talk about parameter restriction for each scheme, stability plots, and maybe a little about damping at infinity.
 
 These schemes also suck with large p. Can it be salvaged? What about exponential multistep methods? 
