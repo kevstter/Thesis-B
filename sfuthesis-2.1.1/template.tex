@@ -1,6 +1,6 @@
 \documentclass{sfuthesis}
 
-\title{Numerical Solution to Stiff PDEs}
+\title{Linearly Stabilized Schemes for Numerical Solution to Stiff PDEs}
 \thesistype{Dissertation}
 \author{Kevin Chow}
 \previousdegrees{%
@@ -53,7 +53,7 @@
 
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage[pdfborder={0 0 0}]{hyperref}
-\usepackage[draft,demo]{graphicx}
+\usepackage[draft]{graphicx}
 %\usepackage{graphicx}
 \usepackage{caption}
 \usepackage{enumitem}
@@ -136,9 +136,10 @@
 %\setkeys{Gin}{draft=false}
 \include{chapter_imex_lmm}
 
-\setkeys{Gin}{draft}
+%\setkeys{Gin}{draft=false}
+%\setkeys{Gin}{draft}
 \include{chapter_etdrk}
-
+\setkeys{Gin}{draft}
 \include{chapter_conclusion}
 
 %   BACK MATTER  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
