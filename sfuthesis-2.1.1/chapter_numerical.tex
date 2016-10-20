@@ -1,0 +1,35 @@
+\chapter{Numerical Experiments}
+This chapter is entirely devoted to solving stiff PDEs prevalent in a number of fields. Through modelling of phenomenon in interfacial flows, demonstrating an application to image processing, and solving phase separation models on peculiar surfaces, we establish that our methods are easily applicable and can significantly reduce the runtime of 2D and 3D experiments.
+
+\section{Image Inpainting}
+The task in image inpainting is to repair corrupted images and damaged artwork. The restoration of artwork is the original motivation behind the development of the techniques in this area. Aged artwork would be restored to its former self by trained art restorers by extending the surrounding information into the missing/inpainting region. As an applied mathematician working on image inpainting, our goal is very much still to restore corrupted images, though not by hand, but in an automated fashion.
+
+In [figure], we have a photograph of a sea turtle that has been vandalize and overlaid with text. Schoenlieb and friends [cite] proposed an assortment of fourth order PDE model for image restoration to images similar to this and compares her results to other state-of-the-art variational image inpainting models [cite]. One of the proposed is the so-called TV-H$^{-1}$ inpainting: 
+\begin{align}
+u_t = -\Delta \nabla \cdot \left(\frac{\nabla u}{\sqrt{\abs{\nabla u}^2 + \epsilon^2}}\right)
++ \lambda_D(u_0 - u).
+\end{align}
+In here and what follows, $u$, the solution, is the inpainted image we seek. The quantity, $u_0$, is the initial corrupted image, and the parameter $\epsilon > 0$ is the necessary regularization. The symbol $\Omega$ denotes the image domain, $D$ denotes the inpainting region and $\lambda_D$ is defined as 
+\begin{align}
+\lambda_D(x)
+= \begin{cases}
+\lambda_0, & x\in \Omega\setminus D
+\\
+0, &\text{otherwise}.
+\end{cases}
+\end{align}
+
+
+Interestingly, her strategy for the time evolution of the PDE model is exactly the first order linearly stabilized SBDF1. 
+
+
+
+
+In [figure], we have an photograph of a bullfinch that has been vandalized.
+
+
+\section{Motion by Mean Curvature}
+
+
+
+\section{Phase Separation Models on Fun Surfaces}
