@@ -2,19 +2,19 @@
 The investigation with multistep schemes left us with a major question. Since the linearly stabilized schemes derived from SBDF3, SBDF4 were shown to be unsuitable for practical use, is it possible to construct practical high order linearly stabilized time stepping methods? In this chapter, we consider two methods coming from the class of exponential integrators. We will demonstrate that the second and fourth order exponential Runge-Kutta from Cox and Matthews \cite{cox2002exponential} work well within our linear stabilization framework.
 
 \section{Exponential Runge-Kutta}
+\label{sect:exp rk}
 Consider the ODE
 \begin{align}
 \dd{u}{t} = \N(u) + \L u.
 \end{align}
-Exponential time differencing, or exponential integrators, is a family of time stepping methods that treats the linear part exactly, and approximates the nonlinear part by some suitable quadrature formula. As an example, a first order variant, the exponential Euler, has the formula
+Exponential time differencing, or exponential integrators, is a family of time stepping methods that treats the linear part exactly, and approximates the nonlinear part by some suitable quadrature formula. As an example, the exponential Euler has the formula
 \begin{align}
 u^{n+1} 
 = e^{\Delta t\L} u^n + \L^{-1}(e^{\Delta t\L}  -1) \N(u^n).
 \end{align}
-
-Although studies of these methods go back to 1960's \cite{}, difficulties with computing the matrix exponential put a damper on the development of these methods. Lately, due to improvements in the approximation/calculation of the matrix exponential \cite{}, and the development of new techniques for computing the matrix exponential-vector product \cite{}, interest in this area has been reignited. Hockbruck and Ostermann give a comprehensive review of exponential integrators in \cite{hochbruck2010expintegrators}.
-
-We examine only explicit exponential Runge-Kutta methods. This family of one-step methods have the form 
+This is a first order accurate exponential integrator. 
+ 
+Our investigation deals with explicit exponential Runge-Kutta methods only. This family of one-step methods have the form 
 \begin{subequations}
 	\begin{align}
 u^{n+1} &= e^{\Delta t \L} u_n 
@@ -25,7 +25,7 @@ U^{n,i} &= e^{c_i\Delta t \L} u^n
 	\end{align}
 	\label{exp rk general}
 \end{subequations}
-and can be presented in the familiar Butcher tableaux:
+and can be presented in the familiar Butcher tableau:
 \newcommand\raisepunct[1]{\,\mathpunct{\raisebox{-5.20ex}{#1}}}
 \begin{align}
 \begin{tabular}{c|cccc}
@@ -41,6 +41,7 @@ $c_s$ & $a_{s1}$ & $\cdots$ & $a_{s,s-1}$
 & $b_1$ & $\cdots$ & $b_{s-1}$ & $b_s$
 \end{tabular}\raisepunct{.}
 \end{align}
+(Note that we have suppressed the argument, but these are indeed functions of $\Delta t\L$.)
 In particular, we focus on the second and fourth order exponential Runge-Kutta formulas of Cox and Matthews \cite{cox2002exponential},
 \renewcommand\raisepunct[1]{\,\mathpunct{\raisebox{-1.30ex}{#1}}}
 \begin{align} 
@@ -88,10 +89,11 @@ $0$
 \end{align}
 where 
 \begin{align}
-        \varphi_{j+1}(z) = \frac{\varphi_j(z) - 1/j!}{z}, 
+        \varphi_{k+1}(z) = \frac{\varphi_k(z) - 1/k!}{z}, 
 \quad \varphi_0(z) = \exp(z), 
 \qand 
 \varphi_{i,j}(z) = \varphi_{i}(c_j z).
+\label{phi functions}
 \end{align}
 We refer to this pair of exponential Runge-Kutta methods as ETDRK2 and ETDRK4.
 
@@ -112,10 +114,21 @@ As before, we take the schemes \cref{etdrk2 butcher}, \cref{etdrk4 butcher}, and
 \label{fig:etdrk4 stab cont}
 \end{figure}
 
+\section{Numerical Results}
+In the last section, we verified that ETDRK2 and ETDRK4 was suitable for combination with linear stabilization on the modified test equation. The logical next step is to test on a more substantial problem and perform a numerical convergence study. However, the implementation of exponential integrators is not a trivial matter. We must first discuss potential issues and the method in which we choose to resolve them.
 
-Talk about parameter restriction for each scheme, stability plots, and maybe a little about damping at infinity.
+\subsection{Stable evaluation of the matrix exponential and related functions}
+In \cref{sect:exp rk}, we have presented two exponential Runge-Kutta methods in tableau form and coefficients are combinations of functions of the operator, $\Delta t\L$.  For example, to properly implement ETDRK2, we must compute the functions 
+\begin{align}
+\varphi_1(c\Delta \L) &= (c\Delta t \L)^{-1}(\exp(c\Delta t \L) - 1),
+\\
+\varphi_2(c\Delta \L) &= (c\Delta t\L)^{-2}(\exp(c\Delta t \L)  -1 - c\Delta t \L) ,
+\end{align}
+for $c \in [0,1]$, or be able to efficiently evaluate the related matrix-vector multiplications without explicit construction.
 
-These schemes also suck with large p. Can it be salvaged? What about exponential multistep methods? 
+Difficulties with the evaluation of the matrix exponential and related functions of the form \cref{phi functions} are well-known and well-studied, eg.\ \cite{moler2003nineteen,higham2002accuracy,higham2008functions,hochbruck1997krylov}. In fact, struggles with the accurate and stable evaluation of the matrix exponential put a damper on the research into these methods and it was only with recent improvements and development of new techniques \cite{hochbruck1997krylov,sidje1998expokit,kassam2005fourth,simoncini2007recent,higham2008functions} that interest has revived and caught fire.
+
+In all our examples, we follow the direction of Kassam and Trefethen \cite{kassam2005fourth}. They take a contour integral approach for the evaluation of functions in the form of \cref{phi functions} coupled with the trapezoidal rule for fast, accurate, and stable computations. Moreover, to avoid the unpleasantness of boundary conditions (and the subsequent complications), our domain will be periodic when using ETDRK2 or ETDRK4.
 
 \clearpage
 \section{Notes}
@@ -148,6 +161,13 @@ These schemes also suck with large p. Can it be salvaged? What about exponential
 % \end{tabular}\raisepunct{.}
 % \label{krogstad butcher}
 % \end{align}
+
+Talk about parameter restriction for each scheme, stability plots, and maybe a little about damping at infinity.
+
+These schemes also suck with large p. Can it be salvaged? What about exponential multistep methods? 
+
+
+Rapid development of exponential integrators has been spurred by recent developments. Improvements in the approximation of the matrix exponential \cite{}, and the development of new techniques for computing the matrix exponential-vector product \cite{} has reignited interest in this area. Hockbruck and Ostermann give a comprehensive review of exponential integrators in \cite{hochbruck2010expintegrators}.
 
 We emphasize that our purpose is merely to demonstrate the potential of linear stabilization with ETD schemes and not a comprehensive survey.
 
