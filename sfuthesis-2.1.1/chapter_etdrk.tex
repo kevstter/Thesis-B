@@ -130,6 +130,9 @@ Difficulties with the evaluation of the matrix exponential and related functions
 
 In all our examples, we follow the direction of Kassam and Trefethen \cite{kassam2005fourth}. They take a contour integral approach for the evaluation of functions in the form of \cref{phi functions} coupled with the trapezoidal rule for fast, accurate, and stable computations. Moreover, to avoid the unpleasantness of boundary conditions (and the subsequent complications), our domain will be periodic when using ETDRK2 or ETDRK4.
 
+\subsection{Numerical convergence test}
+
+
 \clearpage
 \section{Notes}
 
@@ -164,19 +167,16 @@ In all our examples, we follow the direction of Kassam and Trefethen \cite{kassa
 
 Talk about parameter restriction for each scheme, stability plots, and maybe a little about damping at infinity.
 
-These schemes also suck with large p. Can it be salvaged? What about exponential multistep methods? 
-
-
-Rapid development of exponential integrators has been spurred by recent developments. Improvements in the approximation of the matrix exponential \cite{}, and the development of new techniques for computing the matrix exponential-vector product \cite{} has reignited interest in this area. Hockbruck and Ostermann give a comprehensive review of exponential integrators in \cite{hochbruck2010expintegrators}.
+These schemes also suck with large p. Can it be salvaged? What about exponential multistep methods? No, exponential multistep does not extend to high order.
 
 We emphasize that our purpose is merely to demonstrate the potential of linear stabilization with ETD schemes and not a comprehensive survey.
-
-+ How are these schemes derived? Give the basics? Runge-Kutta style presentation? 
 
 + Strengths of these schemes? Difficulties? 
 
 + Modified test equation
 
-+ Numerical Results with 2D periodic mean curvature motion problem or with 1D/2D CH 
++ Numerical Results with 2D periodic mean curvature motion problem  
 
 + Compare with results from IMEX schemes
+
++ Computing time comparison
