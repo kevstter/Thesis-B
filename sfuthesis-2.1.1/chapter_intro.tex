@@ -3,15 +3,72 @@ In this thesis, we propose and analyze some new linearly stabilized schemes for 
 
 In each of the references mentioned in the previous paragraph, the authors have succeeded in implemented only a first order time stepping method. Recently in \cite{duchemin2014explicit},  Duchemin and Eggers consolidated the approach and produced a second order linearly stabilized scheme they refer to as the explicit-implicit-null (EIN) method. The procedure they propose works off the first order scheme and extrapolates to second order. Moreover, they identified that the key principle for the success of any linearly stabilized scheme is unconditional stability. Indeed, a significant section of their paper is devoted to showing that their method is unconditionally stable under only a mild condition on a parameter that is introduced.
 
-Our derivations for new linearly stabilized schemes also begins by ensuring that the newly derived schemes are in fact unconditionally stable. The techniques we employ in our stability analysis are very much those of a standard linear stability analysis and are reviewed first. This is then followed by Chapter 2 where we formally introduce the notion of linear stabilization. Movitation for this technique is supplied by the need to handled a 1D stiff nonlinear PDE describing axisymmetric mean curvature flow and leads us to the well-known first order linearly stabilized time integrator and the EIN method of Duchemin and Eggers. The framework in which we analyze the stability of linearly stabilized schemes is setup following. 
+Our derivations for new linearly stabilized schemes also begins by ensuring that the newly derived schemes are in fact unconditionally stable. The techniques we employ in our stability analysis are very much those of a standard linear stability analysis and are reviewed first. This is then followed by Chapter 2 where we formally introduce the notion of linear stabilization. Movitation for this technique is supplied by the need to handled a 1D stiff nonlinear PDE describing axisymmetric mean curvature flow and leads us to the well-known first order linearly stabilized time integrator and the EIN method of Duchemin and Eggers. Following that, the framework in which we analyze the stability of linearly stabilized schemes is set. 
 
-In Chapter 3 we investigate the use of implicit-explicit (IMEX) linear multistep method. A detailed comparison of the schemes based on IMEX multistep schemes and the EIN method is conducted. Our experiments suggest additional criteria for practical linearly stabilized schemes. 
+In Chapter 3 we investigate implicit-explicit (IMEX) linear multistep methods within the linear stabilization framework. A detailed comparison of the schemes based on IMEX multistep schemes and the EIN method is conducted. Our experiments suggest criteria in addition to unconditional stability are necessary for practical linearly stabilized schemes. This in turn eliminates third order and higher multistep based linearly stabilized schemes from use. 
 
+In Chapter 4, we explore the use of exponential Runge-Kutta methods to mend this deficiency. A second order and a fourth order exponential Runge-Kutta method are verified to exhibit parameter restrictions of the right form. However, other complications limits their use.
+
+In Chapter 5, application of our linearly stabilized schemes to a number of 2D and 3D problems are presented. Not surprisingly, our second order schemes offer massive improvements over the commonly used first order linearly stabilized scheme. The experiments show that our schemes provide substantial efficiency improvement yet can be implemented with tremendous ease. 
+
+Finally, some concluding remarks are presented in Chapter 6.  
 
 
 \section{Linear Stability Analysis}
+Linear stability analysis is predicated finding the constraints necessary on the time step-size so that the numerical solution generated using that particular time stepping method applied to the test equation, 
+\begin{align}
+u' = \lambda u, 
+\quad \lambda < 0,
+\label{test eqn}
+\end{align}  
+has properties resembling that of the exact solution to the test equation,
+\begin{align}
+u(t^n + \Delta t) = e^{\lambda \Delta t} u(t^n).
+\end{align}
+Observe that, in general, the exact solution satisfies
+\begin{align}
+\frac{\abs{u(t^n + \Delta t)}}{\abs{u(t^n)}}
+= \abs{e^{\lambda\Delta t} } 
+< 1,
+\quad\text{for all } \Delta t > 0.
+\end{align}
+The analogous property for numerical methods is what we will refer to as stability.
 
+For example, applying the forward Euler method to the test equation \cref{test eqn}, we get 
+\begin{align}
+\frac{u^{n+1} - u^n}{\Delta t} = \lambda u^n 
+\iff u^{n+1} = \underbrace{(1 + \lambda \Delta t)}_{=\xi_{FE}} u^n, 
+\end{align}
+where $u^n$ is an approximation to $u(t^n)$. Then imposing $\abs{\xi_{FE}} < 1$, we get 
+\begin{align}
+\abs{1+ \lambda\Delta t} < 1 
+\iff -2 < \lambda\Delta t < 0,
+\end{align}
+and so for stability, $\Delta t < -2/\lambda$ must be satisfied. As the time step-size, $\Delta t$, is constrained, we say forward Euler is conditionally stable. 
 
+For another example, we may apply backward Euler to the test equation. Doing so we get 
+\begin{align}
+\frac{u^{n+1} - u^n}{\Delta t} = \lambda u^{n+1} 
+\iff 
+u^{n+1} = \underbrace{\frac{1}{1 - \lambda\Delta t}}_{=\xi_{BE}} u^n.
+\end{align}
+This time, imposing $\abs{\xi_{BE}}<1$ adds no new constraint to the time step-size. When no additional constraints are imposed on the time step-size, we say the numerical method is unconditionally stable.
+
+More generally, to determine the stability constraint of any one step method, one applies said method to the test equation, rearranges as $u^{n+1} = \xi(\lambda\Delta t) u^n$, and imposes $\abs{\xi(\lambda\Delta t)} < 1$. The quantity $\xi(\lambda\Delta t)$ is commonly referred to as the amplification factor and the region where $\abs{\xi(\lambda\Delta t)} < 1$ the stability region (of the numerical method.) In other words, for stability, we require that the magnitude of the amplification factor is less than one.
+ 
+\subsection{Stability contours}
+A stability contour plot is a graphical device for understanding the stability constraint of a method. It offers a way for us to verify calculations done analytically, or to visualize the stability region of a numerical method where an analytic solution is infeasible. Stability contours plots in this thesis all show contours of the amplification factor $\xi(\lambda\Delta t)$ plotted over a subset of the region $\{\lambda\Delta t \in \bC \mid \Delta t > 0\}$, with a focus on the left half plane and in particular the negative real line. \cref{fig:FE BE stab cont} shows stability contours of the forward Euler and the backward Euler method.
+
+\begin{figure}[htb!]
+	\centering
+\includegraphics[width=0.65\textwidth]{}
+\caption[Examples of stability contour plots.]{On the left is the stability contour plot for forward Euler. The stability region is the interior of the circle. On the right is the stability contour plot for backward Euler. The stabilty region is the region outside the circle.}
+\label{fig:FE BE stab cont}
+\end{figure}
+
+\subsection{Relation to stiff PDEs}
+
+\section{Overview}
 
 With increasing frequency, we (we? who?) find ourselves having to adopt nonlinear terms to correctly resolve complicated behaviours in interesting phenomena. Say things about interesting phenomena...
 
@@ -27,14 +84,3 @@ Prior contributions to this subject: Duchemin and Eggers \cite{duchemin2014expli
 What are other ways people handle nonlinear stiff equations? 
 
 Often, we see new, efficient solvers that are so complex, that the preferred method of choice remains those that are simple, clear, and easy to implement. 
-
-\section{Overview}
-An outline of this thesis is as follows. In Chapter 2, we discuss the notion of linear stabilization. The idea is not new and we will discuss some work that is relevant to our own. Stability is the central theme and an appropriate framework is set. 
-
-After that, it's onto our work. We propose linear stabilization with IMEX linear multistep methods. We cover stability and implementation. Then we compare with a competing method and demonstrate our superiority in each and every way possible.
-
-The framework supplied earlier is not limited to IMEX methods. We develop the same ideas with exponential Runge-Kutta methods for a higher order implementation. Following that we will compared with the IMEX class of linearly stabilized schemes.
-
-Finally, we present a number of applications. Expect cool figures, some convergence plots, and some words.
-
-To conclude, recap, future work, etc.
