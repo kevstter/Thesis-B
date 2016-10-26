@@ -15,6 +15,7 @@ Finally, some concluding remarks are presented in Chapter 6.
 
 
 \section{Linear Stability Analysis}
+\subsection{Stability and the scalar test equation}
 Linear stability analysis is predicated finding the constraints necessary on the time step-size so that the numerical solution generated using that particular time stepping method applied to the test equation, 
 \begin{align}
 u' = \lambda u, 
@@ -57,16 +58,39 @@ This time, imposing $\abs{\xi_{BE}}<1$ adds no new constraint to the time step-s
 More generally, to determine the stability constraint of any one step method, one applies said method to the test equation, rearranges as $u^{n+1} = \xi(\lambda\Delta t) u^n$, and imposes $\abs{\xi(\lambda\Delta t)} < 1$. The quantity $\xi(\lambda\Delta t)$ is commonly referred to as the amplification factor and the region where $\abs{\xi(\lambda\Delta t)} < 1$ the stability region (of the numerical method.) In other words, for stability, we require that the magnitude of the amplification factor is less than one.
  
 \subsection{Stability contours}
-A stability contour plot is a graphical device for understanding the stability constraint of a method. It offers a way for us to verify calculations done analytically, or to visualize the stability region of a numerical method where an analytic solution is infeasible. Stability contours plots in this thesis all show contours of the amplification factor $\xi(\lambda\Delta t)$ plotted over a subset of the region $\{\lambda\Delta t \in \bC \mid \Delta t > 0\}$, with a focus on the left half plane and in particular the negative real line. \cref{fig:FE BE stab cont} shows stability contours of the forward Euler and the backward Euler method.
+A stability contour plot is a graphical device for understanding the stability constraint of a method. It offers a way for us to verify calculations done analytically, or to visualize the stability region of a numerical method where an analytic solution is infeasible. Stability contours plots in this thesis all show contours of the amplification factor $\xi(\lambda\Delta t)$ plotted over a subset of the region $\{\lambda\Delta t \in \bC \mid \Delta t > 0\}$, with a focus on the left half plane and in particular the negative real line. \cref{fig:FE BE stab cont} shows stability contours of the forward Euler and the backward Euler method. Note that the regions are symmetric with respect to the real axis and thus only $\Im(\lambda\Delta t) \geq 0$ will be plotted.
 
 \begin{figure}[htb!]
 	\centering
-\includegraphics[width=0.65\textwidth]{}
-\caption[Examples of stability contour plots.]{On the left is the stability contour plot for forward Euler. The stability region is the interior of the circle. On the right is the stability contour plot for backward Euler. The stabilty region is the region outside the circle.}
+\begin{minipage}{0.45\textwidth}
+\includegraphics[width=0.95\textwidth]{fe_stab}
+\end{minipage}
+\begin{minipage}{0.45\textwidth}
+\includegraphics[width=0.95\textwidth]{be_stab}
+\end{minipage}
+\caption[Examples of stability contour plots.]{On the left is the stability contour plot for forward Euler. The stability region is the interior of the 1-contour. On the right is the stability contour plot for backward Euler. The stabilty region is the region outside the 1-contour.}
 \label{fig:FE BE stab cont}
 \end{figure}
 
 \subsection{Relation to stiff PDEs}
+Recall that our motivation is to develop methods suited to the time integration of stiff nonlinear PDEs. So how does the time step restriction of a numerical method derived from application to the test equation relate to time step selection for a stiff nonlinear PDE? The relation is as follows. Suppose the PDE has been discretized in space and we are to advance the solution of the resulting large system of ODEs, $u' = \N(u)$, by one time step, i.e.\ advance the numerical solution $u^n$ to $u^{n+1}$. Over just one time step, it may be reasonable to consider the linearization, 
+\begin{align*}
+        u' = \bar u + \pd{\N}{u} \bigg|_{u=\bar u} (u-\bar u), 
+\end{align*}
+or setting $v=u-\bar u$, $v' = Av$. Further assuming that $A$ is diagonalizable, $A=T^{-1}DT$, where $D=\diag(\lambda_1,\dots,\lambda_N)$, we get 
+\begin{align}
+        v' = T^{-1}DTv 
+&\iff (Tv)' = D(Tv)
+\\&\iff w_k' = \lambda w_k, \quad k=1,\dots, N.
+\end{align}
+In other words, under appropriate conditions, it may be fair to analyze the dynamics of the nonlinear system by inspecting the eigenvalues of the Jacobian from the linearized state. Thus to time step, we require that the computation be stable for each eigenmode. The time step constraint will then be dictated by the largest absolute eigenvalue.
+
+For instance, suppose we found, from a linearized system of ODEs, the eigenvalues to be $2(\cos(k\Delta x) -1)/\Delta x^2$, $\Delta x = 1/N$. Then the largest absolute eigenvalue can be bounded as 
+\begin{align}
+        \abs{\frac{2}{\Delta x^2}(\cos(k\Delta x) -1)} \leq \frac{4}{\Delta x^2},
+\end{align}
+and stable time step-sizes for forward Euler must then satisfy $\Delta t < \Delta x^2/4$. On the other hand, unconditionally stable methods such as backward Euler, maintain stability irrespective of the grid size $\Delta x$.
+
 
 \section{Overview}
 
