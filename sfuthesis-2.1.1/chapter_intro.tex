@@ -3,7 +3,7 @@ In this thesis, we propose and analyze some new linearly stabilized schemes for 
 
 In each of the references mentioned in the previous paragraph, the authors have succeeded in implemented only a first order time stepping method. Recently in \cite{duchemin2014explicit},  Duchemin and Eggers consolidated the approach and produced a second order linearly stabilized scheme they refer to as the explicit-implicit-null (EIN) method. The procedure they propose works off the first order scheme and extrapolates to second order. Moreover, they identified that the key principle for the success of any linearly stabilized scheme is unconditional stability. Indeed, a significant section of their paper is devoted to showing that their method is unconditionally stable under only a mild condition on a parameter that is introduced.
 
-Our derivations for new linearly stabilized schemes also begins by ensuring that the newly derived schemes are in fact unconditionally stable. The techniques we employ in our stability analysis are very much those of a standard linear stability analysis and are reviewed first. A brief discussion of order of accuracy and error constants is also included. 
+Our derivations for new linearly stabilized schemes also begins by ensuring that the newly derived schemes are in fact unconditionally stable. The techniques we employ in our stability analysis are very much those of a standard linear stability analysis and are reviewed first. A light discussion of order of accuracy and Richardson extrapolation is also included before an overview of the thesis is given.
 
 \section{Linear Stability Analysis}
 \subsection{Stability and the scalar test equation}
@@ -22,7 +22,7 @@ Observe that, in general, the exact solution satisfies
 \frac{\abs{u(t^n + \Delta t)}}{\abs{u(t^n)}}
 = \abs{e^{\lambda\Delta t} } 
 < 1,
-\quad\text{for all } \Delta t > 0.
+\quad\text{for all } \lambda\Delta t < 0.
 \end{align}
 The analogous property for numerical methods is what we will refer to as stability.
 
@@ -36,9 +36,9 @@ where $u^n$ is an approximation to $u(t^n)$. Then imposing $\abs{\xi_{FE}} < 1$,
 \abs{1+ \lambda\Delta t} < 1 
 \iff -2 < \lambda\Delta t < 0,
 \end{align}
-and so for stability, $\Delta t < -2/\lambda$ must be satisfied. As the time step-size, $\Delta t$, is constrained, we say forward Euler is conditionally stable. 
+and so for stability, $\Delta t < 2/\abs{\lambda}$ must be satisfied. As the time step-size, $\Delta t$, is constrained, we say forward Euler is conditionally stable. 
 
-For another example, we may apply backward Euler to the test equation. Doing so we get 
+As another example, we may apply backward Euler to the test equation. Doing so we get 
 \begin{align}
 \frac{u^{n+1} - u^n}{\Delta t} = \lambda u^{n+1} 
 \iff 
@@ -46,10 +46,10 @@ u^{n+1} = \underbrace{\frac{1}{1 - \lambda\Delta t}}_{=\xi_{BE}} u^n.
 \end{align}
 This time, imposing $\abs{\xi_{BE}}<1$ adds no new constraint to the time step-size. When no additional constraints are imposed on the time step-size, we say the numerical method is unconditionally stable.
 
-More generally, to determine the stability constraint of any one step method, one applies said method to the test equation, rearranges as $u^{n+1} = \xi(\lambda\Delta t) u^n$, and imposes $\abs{\xi(\lambda\Delta t)} < 1$. The quantity $\xi(\lambda\Delta t)$ is commonly referred to as the amplification factor and the region where $\abs{\xi(\lambda\Delta t)} < 1$ the stability region (of the numerical method.) In other words, for stability, we require that the magnitude of the amplification factor is less than one.
+More generally, to determine the stability constraint of any one step method, one applies said method to the test equation, rearranges as $u^{n+1} = \xi(\lambda\Delta t) u^n$, and imposes $\abs{\xi(\lambda\Delta t)} < 1$. (The quantity $\xi(\lambda\Delta t)$ is commonly referred to as the amplification factor, and the region, $\{\lambda\Delta t \in \bC \mid \abs{\xi(\lambda\Delta t)} < 1\}$, the stability region.) In other words, for stability, we require that the magnitude of the amplification factor is less than one.
  
 \subsection{Stability contours}
-A stability contour plot is a graphical device for understanding the stability constraint of a method. It offers a way for us to verify calculations done analytically, or to visualize the stability region of a numerical method where an analytic solution is infeasible. Stability contours plots in this thesis all show contours of the amplification factor $\xi(\lambda\Delta t)$ plotted over a subset of the region $\{\lambda\Delta t \in \bC \mid \Delta t > 0\}$, with a focus on the left half plane and in particular the negative real line. \cref{fig:FE BE stab cont} shows stability contours of the forward Euler and the backward Euler method. Note that the regions are symmetric with respect to the real axis and thus only $\Im(\lambda\Delta t) \geq 0$ will be plotted.
+A stability contour plot is a graphical device for understanding the stability constraint of a method. It offers a way for us to verify calculations done analytically, or to visualize the stability region of a numerical method where an analytic solution is infeasible. Stability contours plots in this thesis all show contours of the amplification factor $\xi(\lambda\Delta t)$ plotted over a subset of the region $\{\lambda\Delta t \in \bC \mid \Im(\lambda\Delta t) \geq 0\}$, with a focus on the left half plane and the negative real line. \cref{fig:FE BE stab cont} shows stability contours of the forward Euler and the backward Euler method. Note that the regions are symmetric with respect to the real axis and thus only $\Im(\lambda\Delta t) \geq 0$ will be plotted.
 
 \begin{figure}[htb!]
 	\centering
@@ -64,9 +64,9 @@ A stability contour plot is a graphical device for understanding the stability c
 \end{figure}
 
 \subsection{Relation to stiff PDEs}
-Recall that our motivation is to develop methods suited to the time integration of stiff nonlinear PDEs. So how does the time step restriction of a numerical method derived from application to the test equation relate to time step selection for a stiff nonlinear PDE? The relation is as follows. Suppose the PDE has been discretized in space and we are to advance the solution of the resulting large system of ODEs, $u' = \N(u)$, by one time step, i.e.\ advance the numerical solution $u^n$ to $u^{n+1}$. Over just one time step, it may be reasonable to consider the linearization, 
+Recall that our motivation is to develop methods suited to the time integration of stiff nonlinear PDEs. So how does the time step restriction of a numerical method derived from application to the test equation relate to time step selection for a stiff nonlinear PDE? The relation is as follows. Suppose the PDE has been discretized in space and we are to advance the solution of the resulting large system of ODEs, $u' = F(u)$, by one time step, i.e.\ advance the numerical solution $u^n$ to $u^{n+1}$. Over just one time step, it may be reasonable to consider the linearization, 
 \begin{align*}
-        u' = \bar u + \pd{\N}{u} \bigg|_{u=\bar u} (u-\bar u), 
+        u' = \bar u + \pd{F}{u} \bigg|_{u=\bar u} (u-\bar u), 
 \end{align*}
 or setting $v=u-\bar u$, $v' = Av$. Further assuming that $A$ is diagonalizable, $A=T^{-1}DT$, where $D=\diag(\lambda_1,\dots,\lambda_N)$, we get 
 \begin{align}
@@ -76,7 +76,7 @@ or setting $v=u-\bar u$, $v' = Av$. Further assuming that $A$ is diagonalizable,
 \end{align}
 In other words, under appropriate conditions, it may be fair to analyze the dynamics of the nonlinear system by inspecting the eigenvalues of the Jacobian from its linearized state. Thus to time step, we require that the computation be stable for each eigenmode. The time step constraint will then be dictated by the largest absolute eigenvalue.
 
-For instance, suppose we found, from a linearized system of ODEs, the eigenvalues to be $2(\cos(k\Delta x) -1)/\Delta x^2$. Then the largest absolute eigenvalue can be bounded as 
+For instance, suppose we found, from a linearized system of ODEs, the eigenvalues to be $2(\cos(k\Delta x) -1)/\Delta x^2$, $k=1,\dots,N$. Then the largest absolute eigenvalue can be bounded as 
 \begin{align}
     \abs{\frac{2}{\Delta x^2}(\cos(k\Delta x) -1)} \leq \frac{4}{\Delta x^2},
 \end{align}
@@ -84,13 +84,42 @@ and stable time step-sizes for forward Euler must then satisfy $\Delta t < \Delt
 
 That unconditionally stable methods maintain stability irrespective of the grid size is crucial for the solution to stiff problems. In \cref{chap:num experiments}, we will solve problems in 2D and 3D where the largest absolute eigenvalues scale like $\O(h^2)$ and $\O(h^4)$, where $h$ is the spatial grid size. In those cases, a conditionally stable method requiring $\Delta t = \O(h^k)$, $k\geq 2$, would give unnecessarily fine temporal resolution, and more critically, either push the cost of the computation to absurd levels, or else be forced to resolve poorly in space.
 
-\section{Accuracy}
-\subsection{Order of accuracy}
+\section{Order of Accuracy}
+If two competing numerical methods, both consuming similar levels of resources (e.g.\ CPU time, memory,) but one gave more accurate approximations, then likely one would be deemed superior to the other. 
 
-\subsection{Richardon extrapolation}
+For a time stepping method applied to the initial value problem 
+\begin{align}
+\begin{cases}
+        u' = F(u), & 0\leq t \leq T, \\
+ u(0) = u_0, 
+\end{cases}
+\end{align}
+with step-size $\Delta t$, 
+we will say that the method is convergent of order $k$ (or $k$th order accurate) if the global error behaves as 
+\begin{align}
+        \norm{u^{n} - u(t^n)} = \O(\Delta t^k),
+\quad\text{as}\quad \Delta t \to 0.
+\end{align}
+
+This points to a preference for high order accurate method. Intuitively, in order to achieve some desired level of accuracy, a low order method will require a finer time step-size than a method of higher order accuracy. Then if each time step had comparable costs, the higher order method will require less resources overall to compute the solution. 
+
+Finally, we note that familiar methods such as forward Euler and backward Euler are first order accurate.
+
+\subsection{Richardson extrapolation}
+As one of the methods under consideration relies heavily on Richardson extrapolation, we include here a brief note on this technique. A comprehensive text discussing the validity of this technique can be found in \cite{sidi2003practical}.
+
+Suppose we are approximating some quantity, $q$, via the rule $\bar q$ that is dependent on the step-size $h$ and that the error is of the form 
+\begin{align}
+        q - \bar q(h) = C_1 h^k  + C_2 h^{k+1} + \cdots.
+\end{align}
+Observe that if we evaluate both $\bar q(h)$ and $\bar q(h/2)$, then we can eliminate the leading order error term,
+\begin{align}
+        q-q^*(h) = q-\frac{2^k \bar q(h/2)  -\bar q(h)}{2^k-1} 
+= Ch^{k+1} + \cdots .
+\end{align}
 
 \section{Overview}
-This is then followed by Chapter 2 where we formally introduce the notion of linear stabilization. Movitation for this technique is supplied by the need to handled a 1D stiff nonlinear PDE describing axisymmetric mean curvature flow and leads us to the well-known first order linearly stabilized time integrator and the EIN method of Duchemin and Eggers. Following that, the framework in which we analyze the stability of linearly stabilized schemes is set. 
+In Chapter 2, we formally introduce the notion of linear stabilization. Movitation for this technique is supplied by the need to handled a 1D stiff nonlinear PDE describing axisymmetric mean curvature flow and leads us to the well-known first order linearly stabilized time integrator and the EIN method of Duchemin and Eggers. Following that, the framework in which we analyze the stability of linearly stabilized schemes is set. 
 
 In Chapter 3 we investigate implicit-explicit (IMEX) linear multistep methods within the linear stabilization framework. A detailed comparison of the schemes based on IMEX multistep schemes and the EIN method is conducted. Our experiments suggest criteria in addition to unconditional stability are necessary for practical linearly stabilized schemes. This in turn eliminates third order and higher multistep based linearly stabilized schemes from use. 
 
