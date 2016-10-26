@@ -335,8 +335,13 @@ or equivalently
 Failure of the method is due to being unable to satisfy the parameter constraint at every grid node simultaneously. From \cref{fig:ammc sol}, we see that $\max_j (D_1 \bar u^n_j)^2$ is increasing as the solution evolves and is most extreme near the boundaries. Thus we expect instabilities to develop, and to develop in those regions first. This analysis is corroborated by \cref{fig:sbdf3 instab}, where we see instabilities developing near the righthand boundary.
 \begin{figure}[htb!]
         \centering
-\includegraphics[width=0.65\textwidth]{sbdf3_instabilities}
-\caption[Instabilities using SBDF3.]{Instabilities using SBDF3. With $p=1.675$ and $\Delta t=\num{9.2e-4}$, we observe instabilities developing near the righthand boundary, as highlighted by the blue curve.}
+\begin{minipage}{0.45\textwidth}
+       \includegraphics[width=0.95\textwidth]{sbdf3_instabilities}
+\end{minipage}
+\begin{minipage}{0.45\textwidth}
+       \includegraphics[width=0.95\textwidth]{sbdf3_instabilities_zoom}
+\end{minipage}
+\caption[Instabilities using SBDF3.]{Instabilities using SBDF3. With $p=1.675$ and $\Delta t=\num{9.2e-4}$, we observe instabilities developing near the righthand boundary of the gray dashed curve. The figure on the right is a zoom-in to the righthand boundary.}
 \label{fig:sbdf3 instab}
 \end{figure}
 
