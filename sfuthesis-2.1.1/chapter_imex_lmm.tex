@@ -146,7 +146,7 @@ Other IMEX LMMs are analyzed in the same way. Their amplification polynomials ar
 	\centering
 	\caption[Amplification polynomials of second order IMEX]{Amplification polynomial of second order IMEX schemes. The rightmost column is the guide for choosing $p$.}
 	\begin{tabular}{lll}
-		\toprule[1.5pt] 
+		\toprule[1.25pt] 
 		\head{Method} 
 		& \head{Amplification Polynomial}
 		& \head{$p\lambda/\lambda\in$}
@@ -171,7 +171,7 @@ Other IMEX LMMs are analyzed in the same way. Their amplification polynomials ar
 		+ \frac{1}{2} + z(1-p)
 		$
 		& $[3/4,\infty)$
-		\\ \bottomrule[1.5pt]
+		\\ \bottomrule[1.25pt]
 	\end{tabular}
 \label{table:amp poly 2}
 \end{table}
@@ -183,7 +183,7 @@ We continue with the analysis for higher order IMEX LMMs. Again, amplification p
 	\centering
 	\caption[Amplification polynomials of third and fourth order IMEX]{Amplification polynomial and choice of parameter when applying high order IMEX LMMs to the modified test equation for unconditional stability.}
 	\begin{tabular}{lll}
-		\toprule[1.5pt] 
+		\toprule[1.25pt] 
 		\head{Method} 
 		& \head{Amplification Polynomial}
 		& \head{$p\lambda/\lambda\in$}
@@ -207,7 +207,7 @@ We continue with the analysis for higher order IMEX LMMs. Again, amplification p
 		\\
 		& \phantom{$\left(\frac{25}{12} - zp \right) \xi^4$}$- \frac{4}{3}\left(1 + 3z(1-p) \right) \xi
 		+ \frac{1}{4}\left(1 + 4z(1-p)\right)$
-		\\ \bottomrule[1.5pt]
+		\\ \bottomrule[1.25pt]
 	\end{tabular}
 	\label{table:amp poly 34}
 \end{table}
@@ -223,39 +223,45 @@ Presented in \cref{cnab contours,mcnab contours,cnlf contours,sbdf2 contours} ar
 In \cref{sbdf3 contours} are the stability contours for SBDF3 \cref{sbdf3}, and in \cref{sbdf4 contours} are the stability contours for SBDF4 \cref{sbdf4}. In each, we plot four instances to capture the bounded range of $p$.
 \begin{figure}[htb!]
         \centering
-\includegraphics[width=0.65\textwidth]{cnab_stab_contour}
+%\includegraphics[width=0.65\textwidth]{cnab_stab_contour}
+\includegraphics[width=0.65\textwidth]{cnab_stab_contour2}
 \caption{Stability contours for CNAB at various $p$.}
 \label{cnab contours}
 \end{figure}
 \begin{figure}[htb!]
         \centering
-\includegraphics[width=0.65\textwidth]{mcnab_stab_contour}
+%\includegraphics[width=0.65\textwidth]{mcnab_stab_contour}
+\includegraphics[width=0.65\textwidth]{mcnab_stab_contour2}
 \caption{Stability contours for mCNAB at various $p$.}
 \label{mcnab contours}
 \end{figure}
 \begin{figure}[htb!]
         \centering
-\includegraphics[width=0.65\textwidth]{cnlf_stab_contour}
+%\includegraphics[width=0.65\textwidth]{cnlf_stab_contour}
+\includegraphics[width=0.65\textwidth]{cnlf_stab_contour2}
 \caption{Stability contours for CNLF at various $p$.}
 \label{cnlf contours}
 \end{figure}
 \begin{figure}[htb!]
         \centering
-\includegraphics[width=0.65\textwidth]{sbdf2_stab_contour}
+%\includegraphics[width=0.65\textwidth]{sbdf2_stab_contour}
+\includegraphics[width=0.65\textwidth]{sbdf2_stab_contour2}
 \caption{Stability contours for SBDF2 at various $p$.}
 \label{sbdf2 contours}
 \end{figure}
 
 \begin{figure}[htb!]
         \centering
-\includegraphics[width=0.65\textwidth]{sbdf3_stab_contour}
+%\includegraphics[width=0.65\textwidth]{sbdf3_stab_contour}
+\includegraphics[width=0.65\textwidth]{sbdf3_stab_contour2}
 \caption{Stability contours for SBDF3 at various $p$.}
 \label{sbdf3 contours}
 \end{figure}
 
 \begin{figure}[htb!]
         \centering
-\includegraphics[width=0.65\textwidth]{sbdf4_stab_contour}
+%\includegraphics[width=0.65\textwidth]{sbdf4_stab_contour}
+\includegraphics[width=0.65\textwidth]{sbdf4_stab_contour2}
 \caption{Stability contours for SBDF4 at various $p$.}
 \label{sbdf4 contours}
 \end{figure}
@@ -293,7 +299,7 @@ First, let us tabulate the observed (non)convergence of SBDF3 at various values 
 \begin{table}[htb!]
         \centering
 \caption[(Non)convergence of SBDF3 at various $p$.]{(Non)convergence of SBDF3 at various $p$.}
-\begin{tabular}{lccc} \toprule[1.5pt]
+\begin{tabular}{lccc} \toprule[1.25pt]
 & \multicolumn{3}{c}{Observed convergence rate}
 \\
         $\Delta t$ & $p=0.875$ & $p=1.475$ & $p=1.675$ 
@@ -311,7 +317,7 @@ First, let us tabulate the observed (non)convergence of SBDF3 at various values 
 \num{6.84e-4} & \num{2.95} & \num{2.95} & diverge
 \\ 
 \num{3.42e-4} & \num{2.97} & \num{2.08} & diverge
-\\ \bottomrule[1.5pt]
+\\ \bottomrule[1.25pt]
 \end{tabular}
 \label{table: sbdf3 nonconvergence}
 \end{table}
@@ -330,7 +336,7 @@ Failure of the method is due to being unable to satisfy the parameter constraint
 \begin{figure}[htb!]
         \centering
 \includegraphics[width=0.65\textwidth]{sbdf3_instabilities}
-\caption[Instabilities using SBDF3.]{Instabilities using SBDF3. With $p=1.675$ and $\Delta t=\num{9.2e-4}$, we observe instabilities developing near the righthand boundary.}
+\caption[Instabilities using SBDF3.]{Instabilities using SBDF3. With $p=1.675$ and $\Delta t=\num{9.2e-4}$, we observe instabilities developing near the righthand boundary, as highlighted by the blue curve.}
 \label{fig:sbdf3 instab}
 \end{figure}
 
