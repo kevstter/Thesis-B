@@ -75,6 +75,8 @@
 \theoremstyle{remark}
 \newtheorem{remark}[]{Remark}
 
+\DeclareMathOperator{\diag}{diag}
+
 \renewcommand{\Re}{\operatorname{Re}}
 \renewcommand{\Im}{\operatorname{Im}}
 
@@ -89,6 +91,7 @@
 \newcommand{\head}[1]{\textnormal{\textbf{#1}}}
 
 \newcommand{\dd}[2]{\frac{d#1}{d#2}}
+\newcommand{\pd}[2]{\frac{\partial#1}{\partial#2}}
 
 \newcommand{\qand}{\quad\text{and}\quad}
 
@@ -129,7 +132,7 @@
 
 \mainmatter%
 
-\setkeys{Gin}{draft}
+\setkeys{Gin}{draft}\setkeys{Gin}{draft=false}
 \include{chapter_intro}
 
 \include{chapter_adding_zero}
@@ -137,7 +140,7 @@
 %\setkeys{Gin}{draft=false}
 \include{chapter_imex_lmm}
 
-%\setkeys{Gin}{draft=false}
+
 
 \include{chapter_etdrk}
 
