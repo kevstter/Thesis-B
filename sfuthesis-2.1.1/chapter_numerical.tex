@@ -37,7 +37,13 @@ for some $\lambda_0 > 0$.
 
 As for initial conditions, we have two vandalized images to be restored. The first is \cref{fig:turtle with text} where we have a photograph of a turtle overwritten with text. We would like to restore the photograph by removing the text. The second is \cref{fig:bullfinch and fox}, where fox figure requires removal. Although this may look simpler, it is in fact a more challenging scenario. The reason being that the thickness of the inpainting region requires correctly extending level lines over long distances \cite{schonlieb2011unconditionally}.
 
-Finally, we add that the spatial discretization is by second order centred differences with uniform spacing, $h$, in both $x$ and $y$.
+The image is restored in a channel-by-channel manner. As a stopping criteria, we look at the difference in successive images, 
+\begin{align}
+        \frac{\norm{u^{n+1} - u^n}_2}{\norm{u^{n+1}}_2} < \mathrm{tol},
+\end{align}
+where the tolerance is set at $\mathrm{tol}=\num{9e-5}$.  In addition, we also set a maximum of 500 iterations per channel. We report the time step-size and the total number of iterations used for each scheme.
+
+Finally, we note that the spatial discretization is by second order centred differences with uniform spacing, $h$, in both $x$ and $y$.
 \begin{figure}[htb!]
         \centering 
 \includegraphics[width=0.65\textwidth]{turtle_with_text}
@@ -48,13 +54,14 @@ Finally, we add that the spatial discretization is by second order centred diffe
 \begin{figure}[htb!]
         \centering 
 \includegraphics[width=0.65\textwidth]{bullfinch_and_fox}
-\caption[Photograph of a bullfinch vandalized by a cartoonish fox.]{Photograph of a bullfinch vandalized with a cartoonish fox.}
+\caption[Photograph of a bullfinch vandalized by a cartoonish fox.]{Photograph of a bullfinch vandalized with a cartoon fox.}
 \label{fig:bullfinch and fox}
 \end{figure}
 
 \subsection{TV inpainting}
 We first show that the TV inpainting model can easily be handled by our methods. In this model, there are two terms on the righthand side, both potentially stiff.  The second term is  stabilized by adding and subtracting $-p_2\lambda_0 u$, and we determined $p_2=p_0$. For the first term we stabilize by adding and subtracting $p_1\Delta u$. To determined $p_1$, we first bound the first term as 
 \begin{align}
+\begin{split}
         \nabla \cdot \left(\frac{\nabla u}{\sqrt{\abs{\nabla u}^2 + \epsilon^2}} \right) 
 &= \frac{u_{xx}(u_y^2 + \epsilon^2) + u_{yy}(u_x^2 + \epsilon^2)}{(u_x^2 + u_y^2 + \epsilon^2)^{3/2}} 
 - \frac{2u_xu_y u_{xy}}{(u_x^2 + u_y^2 + \epsilon^2)^{3/2}} 
@@ -62,50 +69,118 @@ We first show that the TV inpainting model can easily be handled by our methods.
 &\leq \frac{(u_{xx}+u_{yy})(u_x^2 + u_y^2 + \epsilon^2)}{(u_x^2 + u_y^2 + \epsilon^2)^{3/2}} + \frac{(u_x^2 + u_y^2 + \epsilon^2)u_{xy}}{(u_x^2 + u_y^2 + \epsilon^2)^{3/2}}  
 \\
 &= \frac{u_{xx} + u_{yy} + u_{xy}}{\sqrt{u_x^2 + u_y^2 + \epsilon^2}}.
+\end{split}
+\label{p1 estimate inpaint 1}
 \end{align}
 We then consider the auxilliary equation $u_t = u_{xx} + u_{yy} + u_{xy}$ discretized by centred differences in space and forward Euler in time to apply a von Neumann analysis with $u^n_{jk} = \xi^n \exp(i\omega_1jh)\exp(i\omega_2kh)$ to get 
 \begin{align}
         \frac{\xi  - 1}{\Delta t} 
 = \frac{1}{h^2}(-4 + 2\cos(\omega_1 h) + 2\cos(\omega_2 h) - \sin(\omega_1 h)\sin(\omega_2h))
 \geq -\frac{8.5}{h^2}.
+\label{p1 estimate inpaint 2}
 \end{align}
 Combined with the assumption of the extreme case, $\sqrt{u_x^2 + u_y^2 + \epsilon^2} \geq \epsilon$, we set $p_2$ according to 
 \begin{align}
-        p_2\frac{8/h^2}{8.5/(\epsilon h^2)} \geq p_0 \iff 
-p_2 \geq \frac{8.5}{8\epsilon}p_0.
+        p_1\frac{8/h^2}{8.5/(\epsilon h^2)} \geq p_0 \iff 
+p_1 \geq \frac{8.5}{8\epsilon}p_0.
 \end{align}
 
+The images restored by TV inpainting are shown in \cref{fig:bv inpainting}. We restored using SBDF1, SBDF2, and CNAB for time stepping. Parameters were set as $\epsilon=0.10$ and $\lambda_0=20$. \cref{tab:bv iter counts} charts the least iteration count we achieved with each method. The numbers show a definite improvement of using the second order methods over the first order. 
+\begin{figure}[htb!]
+\centering
+\begin{minipage}{0.65\textwidth}
+	\includegraphics[width=\textwidth]{bv_turtle}
+\end{minipage}
+\begin{minipage}{0.65\textwidth}
+	\includegraphics[width=\textwidth]{bv_bullfinch}
+\end{minipage}
+\caption[Image restoration by TV inpainting.]{Image restoration by TV inpainting using a second order linearly stabilized time stepping method.}
+\label{fig:bv inpainting}
+\end{figure}
 
+% \begin{figure}[htb!]
+%         \centering
+% \includegraphics[width=0.65\textwidth]{bv_bullfinch_s1}
+% \caption[Image restoration by TV inpainting -- SBDF1.]{Image restoration by TV inpainting using SBDF1.}
+% \label{fig:bv bullfinch s1}
+% \end{figure}
+
+\begin{table}[htb!]
+\caption[Iteration counts for TV image restoration.]{Iteration counts for TV image restoration.}
+        \centering\begin{tabular}{lll ll} \toprule[1.25pt]
+& \multicolumn{2}{c}{Turtle} & \multicolumn{2}{c}{Bullfinch}
+\\
+& $\Delta t$ & Iterations & $\Delta t$ & Iterations
+\\ \midrule
+SBDF1 & 0.50 & 141 & 0.33 & 393 
+\\
+SBDF2& 0.18 & 115 & 0.22 & 168
+\\             
+CNAB &  0.16 & 104 & 0.18 & 195
+\\ \bottomrule[1.25pt]
+\end{tabular}
+\label{tab:bv iter counts}
+\end{table}
 
 \subsection{TV-H\texorpdfstring{$^{-1}$}{-1} inpainting}
-Interestingly, her strategy for the time evolution of the PDE model is exactly the first order linearly stabilized SBDF1. 
+For TV-H$^{-1}$ inpainting, we stabilize \cref{tvhneg inpaint} as 
+\begin{align}
+        u_t = -\Delta \nabla \cdot \left(\frac{\nabla u}{\sqrt{\abs{\nabla u}^2 + \epsilon^2}} \right) + \lambda_D(u_0 - u)  + p_1\Delta^2 u + p_2\lambda_0 u - p_1\Delta^2 u - p_2\lambda_0 u.
+\label{tvhneg stabilized}
+\end{align}
+We note $p_2$ is chosen exactly as in TV inpainting. Determination of $p_1$ makes use of the bound set in \cref{p1 estimate inpaint 1,p1 estimate inpaint 2} to get 
+\begin{align}
+        p_1\frac{(8/h^2)^2}{(8/h^2)(8.5/(\epsilon h^2))} \geq p_0 
+\iff p_1 \geq \frac{8.5}{8\epsilon}p_0,
+\end{align}
+which is also the same as TV inpainting.
 
+Interestingly, in the same paper where they propose \cref{tvhneg inpaint} for image inpainting, they offer exactly \cref{tvhneg stabilized} and time stepping with SBDF1 as the solution algorithm. In \cref{tab:bvhneg iter counts}, we chart again the least iteration counts achieved with each of SBDF1, SBDF2, CNAB, with parameters $\epsilon=0.10$ and $\lambda_0=30$. Once again, the second order methods are an improvement over the first order method, with the improvement especially notable in the more difficult example with the bullfinch. 
 
+As a final note, we would like to mention other interesting developments in \cite{bredies2010total,papafitsoros2014combined,papafitsoros2013combined}. In these papers, they propose a number of image restoration models involving a number of high order derivatives interacting nonlinearly. It would be of some interest to compare the effectiveness of our schemes with the methods they propose.
 
+\begin{figure}[htb!]
+	\centering
+\begin{minipage}{0.65\textwidth}
+	\includegraphics[width=\textwidth]{bvhneg_turtle}
+\end{minipage}
+\begin{minipage}{0.65\textwidth}
+	\includegraphics[width=\textwidth]{bvhneg_bullfinch}
+\end{minipage}
+\caption[Image restoration by TV-H$^{-1}$ inpainting.]{Image restoration by TV-H$^{-1}$ inpainting.}
+\label{fig:bvhneg inpainting}
+\end{figure}
 
-In [figure], we have an photograph of a bullfinch that has been vandalized.
+\begin{table}[htb!]
+\caption[Iteration counts for TV-H$^{-1}$ image restoration.]{Iteration counts for TV-H$^{-1}$ image restoration.}
+        \centering\begin{tabular}{lll ll} \toprule[1.25pt]
+& \multicolumn{2}{c}{Turtle} & \multicolumn{2}{c}{Bullfinch}
+\\
+& $\Delta t$ & Iterations & $\Delta t$ & Iterations
+\\ \midrule
+SBDF1 & 0.65 & 143 & 0.30 & 1002
+\\
+SBDF2& 0.12 & 119 & 0.54 & 401 
+\\             
+CNAB & 0.10 & 108 & 0.64 & 347
+\\ \bottomrule[1.25pt]
+\end{tabular}
+\label{tab:bvhneg iter counts}
+\end{table}
 
 
 \section{Motion by Mean Curvature}
-
-
-
-\section{Phase Separation Models on Fun Surfaces}
-
-
-\section{Notes and stuff}
-Through modelling of phenomenon in interfacial flows, demonstrating an application to image processing, and solving phase separation models on peculiar surfaces, we establish that our methods are easily applicable and can significantly reduce the runtime of 2D and 3D experiments.
-
-Image inpainting is the task of repairing corrupted images and damaged artwork. The restoration of artwork is the original motivation behind the development of the techniques in this area. Aged artwork would be restored to its former self by trained art restorers by extending the surrounding information into the missing/inpainting region. As an applied mathematician working on image inpainting, our goal is very much still to restore corrupted images, though not by hand, but in an automated fashion.
-
-
-
-In [figure], we have a photograph of a sea turtle that has been vandalize and overlaid with text. Schoenlieb and friends [cite] proposed an assortment of fourth order PDE model for image restoration to images similar to this and compares her results to other state-of-the-art variational image inpainting models [cite]. One of the proposed is the so-called TV-H$^{-1}$ inpainting: 
+In this section, we study the problem of computing motion by mean curvature flow. The level set equation for mean curvature flow is 
 \begin{align}
-u_t = -\Delta \nabla \cdot \left(\frac{\nabla u}{\sqrt{\abs{\nabla u}^2 + \epsilon^2}}\right)
-+ \lambda_D(u_0 - u).
+        u_t 
+= \kappa\abs{\nabla u} 
+= \abs{\nabla u} \nabla \cdot \left(\frac{\nabla u}{\abs{\nabla u}} \right).
 \end{align}
+In these problems, the interest is in the time evolution of the interface, $\Gamma=\Gamma(t)$, typically described by the zero level set of the function $u$,
+\begin{align}
+        \Gamma(t) = \{x \in \bR^d \mid u(x,t) =0\}.
+\end{align}
+ 
 
-+ talk about same linear system over lots of time steps; factorize/preprocess once
 
-+
+\section{Phase Separation Models on Moo Surfaces}
