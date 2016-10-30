@@ -1,26 +1,83 @@
 \chapter{Numerical Experiments}
 \label{chap:num experiments}
-This chapter is entirely devoted to solving stiff PDEs prevalent in a number of fields. Through modelling of phenomenon in interfacial flows, demonstrating an application to image processing, and solving phase separation models on peculiar surfaces, we establish that our methods are easily applicable and can significantly reduce the runtime of 2D and 3D experiments.
+This chapter is entirely devoted to solving stiff PDEs prevalent in a number of fields. The experiments we demonstrate will fall under three categories: image inpainting, interface motion, and phase separation. For each problem, we will give the PDE model and then discuss how we stabilize and select the parameters. Our experiments will show the feasibility of these schemes in 2D and 3D. 
+
+Before we proceed further, we would like to make a few notes on our implementation of these schemes. As stated from the outset, our goal is to provide simple, accurate, and efficient time stepping methods for nonlinear PDEs. Too often, new efficient methods are so complicated that the user resorts to simple explicit schemes known to require lengthy computing time rather than invest an indeterminate amount of time understanding, implementing, and debugging.
+
+In our implementation, the choice of $p$ is fixed throughout the time evolution. This is not the only way as one may want to adapt $p$ as the solution evolves. This could be advantageous as overestimates of $p$ lead to larger errors. However, we do not pursue that here. So while our theory speaks of approximating the eigenvalues of the linearized system, we do not incur this cost. 
+
+Moreover, a static value of $p$ offers the advantage that the linear system to be solved is the same at each time step, i.e.\ the matrix to be inverted is static. Any expensive preprocessing/factorizing of this matrix needs only be done once.
 
 \section{Image Inpainting}
-The task in image inpainting is to repair corrupted images and damaged artwork. The restoration of artwork is the original motivation behind the development of the techniques in this area. Aged artwork would be restored to its former self by trained art restorers by extending the surrounding information into the missing/inpainting region. As an applied mathematician working on image inpainting, our goal is very much still to restore corrupted images, though not by hand, but in an automated fashion.
+Image inpainting is the task of repairing corrupted images and damaged artwork \cite{bertalmio2000image}. In the inpainting examples to follow, the user identifies in the image the region to be inpainted, and from there, a PDE model is evolved to fill-in the inpainting region using the neighbouring information.
 
-In [figure], we have a photograph of a sea turtle that has been vandalize and overlaid with text. Schoenlieb and friends [cite] proposed an assortment of fourth order PDE model for image restoration to images similar to this and compares her results to other state-of-the-art variational image inpainting models [cite]. One of the proposed is the so-called TV-H$^{-1}$ inpainting: 
+Two PDE models are selected. The first is a second order model from Shen and Chan \cite{shen2002mathematical}, and the second is a recent fourth order model from Sch{\"o}nlieb and Bertozzi \cite{schonlieb2011unconditionally},
 \begin{align}
-u_t = -\Delta \nabla \cdot \left(\frac{\nabla u}{\sqrt{\abs{\nabla u}^2 + \epsilon^2}}\right)
-+ \lambda_D(u_0 - u).
+        u_t  = \nabla \cdot \left(\frac{\nabla u}{\sqrt{\abs{\nabla u}^2 + \epsilon^2}} \right) 
++ \lambda_D(u_0 - u), 
+\label{bv inpaint}
 \end{align}
-In here and what follows, $u$, the solution, is the inpainted image we seek. The quantity, $u_0$, is the initial corrupted image, and the parameter $\epsilon > 0$ is the necessary regularization. The symbol $\Omega$ denotes the image domain, $D$ denotes the inpainting region and $\lambda_D$ is defined as 
+\begin{align}
+         u_t  = -\Delta \nabla \cdot \left(\frac{\nabla u}{\sqrt{\abs{\nabla u}^2 + \epsilon^2}} \right) 
++ \lambda_D(u_0 - u).
+\label{tvhneg inpaint}
+\end{align}
+We refer to these as TV inpainting and TV-H$^{-1}$ inpainting.
+
+The solution, $u$, is the inpainted image we seek. The quantity, $u_0$, is the initially corrupted image, and $\epsilon > 0$ is a regularization parameter. Denoting the image domain $\Omega$, and the inpainting region, $D$, we then define $\lambda_D$ as 
 \begin{align}
 \lambda_D(x)
 = \begin{cases}
 \lambda_0, & x\in \Omega\setminus D
 \\
-0, &\text{otherwise}.
+0, &\text{otherwise},
 \end{cases}
+\end{align}
+for some $\lambda_0 > 0$.
+
+As for initial conditions, we have two vandalized images to be restored. The first is \cref{fig:turtle with text} where we have a photograph of a turtle overwritten with text. We would like to restore the photograph by removing the text. The second is \cref{fig:bullfinch and fox}, where fox figure requires removal. Although this may look simpler, it is in fact a more challenging scenario. The reason being that the thickness of the inpainting region requires correctly extending level lines over long distances \cite{schonlieb2011unconditionally}.
+
+Finally, we add that the spatial discretization is by second order centred differences with uniform spacing, $h$, in both $x$ and $y$.
+\begin{figure}[htb!]
+        \centering 
+\includegraphics[width=0.65\textwidth]{turtle_with_text}
+\caption[Photograph of turtle overwritten with text.]{Photograph of turtle overwritten with text.}
+\label{fig:turtle with text}
+\end{figure}
+
+\begin{figure}[htb!]
+        \centering 
+\includegraphics[width=0.65\textwidth]{bullfinch_and_fox}
+\caption[Photograph of a bullfinch vandalized by a cartoonish fox.]{Photograph of a bullfinch vandalized with a cartoonish fox.}
+\label{fig:bullfinch and fox}
+\end{figure}
+
+\subsection{TV inpainting}
+We first show that the TV inpainting model can easily be handled by our methods. In this model, there are two terms on the righthand side, both potentially stiff.  The second term is  stabilized by adding and subtracting $-p_2\lambda_0 u$, and we determined $p_2=p_0$. For the first term we stabilize by adding and subtracting $p_1\Delta u$. To determined $p_1$, we first bound the first term as 
+\begin{align}
+        \nabla \cdot \left(\frac{\nabla u}{\sqrt{\abs{\nabla u}^2 + \epsilon^2}} \right) 
+&= \frac{u_{xx}(u_y^2 + \epsilon^2) + u_{yy}(u_x^2 + \epsilon^2)}{(u_x^2 + u_y^2 + \epsilon^2)^{3/2}} 
+- \frac{2u_xu_y u_{xy}}{(u_x^2 + u_y^2 + \epsilon^2)^{3/2}} 
+\\
+&\leq \frac{(u_{xx}+u_{yy})(u_x^2 + u_y^2 + \epsilon^2)}{(u_x^2 + u_y^2 + \epsilon^2)^{3/2}} + \frac{(u_x^2 + u_y^2 + \epsilon^2)u_{xy}}{(u_x^2 + u_y^2 + \epsilon^2)^{3/2}}  
+\\
+&= \frac{u_{xx} + u_{yy} + u_{xy}}{\sqrt{u_x^2 + u_y^2 + \epsilon^2}}.
+\end{align}
+We then consider the auxilliary equation $u_t = u_{xx} + u_{yy} + u_{xy}$ discretized by centred differences in space and forward Euler in time to apply a von Neumann analysis with $u^n_{jk} = \xi^n \exp(i\omega_1jh)\exp(i\omega_2kh)$ to get 
+\begin{align}
+        \frac{\xi  - 1}{\Delta t} 
+= \frac{1}{h^2}(-4 + 2\cos(\omega_1 h) + 2\cos(\omega_2 h) - \sin(\omega_1 h)\sin(\omega_2h))
+\geq -\frac{8.5}{h^2}.
+\end{align}
+Combined with the assumption of the extreme case, $\sqrt{u_x^2 + u_y^2 + \epsilon^2} \geq \epsilon$, we set $p_2$ according to 
+\begin{align}
+        p_2\frac{8/h^2}{8.5/(\epsilon h^2)} \geq p_0 \iff 
+p_2 \geq \frac{8.5}{8\epsilon}p_0.
 \end{align}
 
 
+
+\subsection{TV-H\texorpdfstring{$^{-1}$}{-1} inpainting}
 Interestingly, her strategy for the time evolution of the PDE model is exactly the first order linearly stabilized SBDF1. 
 
 
@@ -34,3 +91,21 @@ In [figure], we have an photograph of a bullfinch that has been vandalized.
 
 
 \section{Phase Separation Models on Fun Surfaces}
+
+
+\section{Notes and stuff}
+Through modelling of phenomenon in interfacial flows, demonstrating an application to image processing, and solving phase separation models on peculiar surfaces, we establish that our methods are easily applicable and can significantly reduce the runtime of 2D and 3D experiments.
+
+Image inpainting is the task of repairing corrupted images and damaged artwork. The restoration of artwork is the original motivation behind the development of the techniques in this area. Aged artwork would be restored to its former self by trained art restorers by extending the surrounding information into the missing/inpainting region. As an applied mathematician working on image inpainting, our goal is very much still to restore corrupted images, though not by hand, but in an automated fashion.
+
+
+
+In [figure], we have a photograph of a sea turtle that has been vandalize and overlaid with text. Schoenlieb and friends [cite] proposed an assortment of fourth order PDE model for image restoration to images similar to this and compares her results to other state-of-the-art variational image inpainting models [cite]. One of the proposed is the so-called TV-H$^{-1}$ inpainting: 
+\begin{align}
+u_t = -\Delta \nabla \cdot \left(\frac{\nabla u}{\sqrt{\abs{\nabla u}^2 + \epsilon^2}}\right)
++ \lambda_D(u_0 - u).
+\end{align}
+
++ talk about same linear system over lots of time steps; factorize/preprocess once
+
++
