@@ -327,6 +327,9 @@ For our methods, the added factor of $\gamma(\omega) + \gamma''(\omega)$ present
 \section{Phase Separation Models on Moo Surfaces}
 For our last batch of experiments, we will evolve in time phase separation models defined on rectangular grids in 2D, and on surface in 3D using the closest point method \cite{ruuth2008simple,macdonald2009implicit}.
 
+\subsection{Cahn-Hilliard on surface using the closest point method}
+
+
 \subsection{A Cahn-Hilliard with nonlocal interactions}
 In this section, we evolve 
 \begin{align}
@@ -349,7 +352,18 @@ So if we stabilize with $p\Delta u$, choosing $p \geq (2+6m+3m^2)p_0$ will be su
 Our experiments in [figure] shows our methods can be used to access the energy-minimizing states of \cref{mte}. 
 We note that to more easily access the energy-minimizing states, we also adopt the strategy of spectral filtering described in \cite{choksi20112d}. 
 
-\subsection{Cahn-Hilliard on surface using the closest point method}
+\begin{figure}[htb!]
+        \centering
+\begin{minipage}{0.46\textwidth}
+       \includegraphics[width=0.98\textwidth]{lamellae}
+\end{minipage}
+\begin{minipage}{0.46\textwidth}
+       \includegraphics[width=0.98\textwidth]{hex_pack}
+\end{minipage}
+\caption[{Energy minimizing patterns of the nonlocal Cahn-Hilliard \cref{mch}.}]{Energy minimizing patterns of the nonlocal Cahn-Hilliard \cref{mch}. On the left, the parameters set were $(\epsilon, m) = (0.10,0)$. On the right, the parameters set were $(\epsilon,m)=(0.10,0.40)$.}
+\label{fig:mchp energy minimizers}
+\end{figure}
+
 
 
 \section{notes}
