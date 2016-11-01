@@ -1,5 +1,5 @@
 \chapter{Adding Zero, Unconditional Stability and a Modified Test Equation}
-To time step for stiff, nonlinear problems, we set out two key design principles. Firstly, we want to handle the nonlinearity simply and inexpensively. Secondly, we must be free to select time step-sizes reflecting the accuracy requirement, and not step-sizes that are primarily constrained by stability. Linearly stabilized schemes, as we will see, adhere to both principles and are remarkably easy to implement.
+To time step for stiff, nonlinear problems, we set out two key design principles. Firstly, we want to handle the nonlinearity simply and inexpensively. Secondly, we must be free to select time step-sizes reflecting the accuracy requirement, rather than step-sizes that are primarily constrained by stability. Linearly stabilized schemes, as we will see, adhere to both principles and are remarkably easy to implement.
 
 \section{Prototype 1D Problem}
 As a prototype, let us consider the following 1D mean curvature motion problem \cite{duchemin2014explicit}: 
@@ -9,9 +9,9 @@ u_t &= \frac{u_{xx}}{1 + u_x^2} - \frac{1}{u},
 \qquad 0 < x < 10, \, t > 0,
 \label{ammc 1}
 \end{align}
-with initial and boundary condition
+with initial and boundary conditions
 \begin{gather}
-u(x,0) = 1 + 0.10\sin\left( \frac{\pi}{5}x \right) 
+u(x,0) = 1 + 0.10\sin\left( \frac{\pi}{5}x \right),
 \\
 u(0,t)=u(10,t)=1.
 \end{gather}
