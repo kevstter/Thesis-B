@@ -305,7 +305,7 @@ where $\omega = \arctan(u_y/u_x)$, and
 = \frac{1}{n^2+1}(n^2 + 1 - \sin(n\omega)), 
 \quad\text{for } n = 0,2,4,8.
 \end{align}
-For our methods, the added factor of $\gamma(\omega) + \gamma''(\omega)$ presents no additional difficulty at all. Setting $n=4$ and on a periodic grid of size $256\times 256$, we take 500 time steps to produce the solution presented in \cref{fig:aniso mcm}. 
+For our methods, the added factor of $\gamma(\omega) + \gamma''(\omega)$ presents no additional difficulty at all. Setting $n=4$ and on a periodic grid of size $256\times 256$, we take 500 time steps with a linearly stabilized ETDRK2 to produce the solution presented in \cref{fig:aniso mcm}. 
 \begin{figure}
         \centering
 \begin{minipage}{0.44\textwidth}
@@ -325,8 +325,33 @@ For our methods, the added factor of $\gamma(\omega) + \gamma''(\omega)$ present
 \end{figure}
 
 \section{Phase Separation Models on Moo Surfaces}
+For our last batch of experiments, we will evolve in time phase separation models defined on rectangular grids in 2D, and on surface in 3D using the closest point method \cite{ruuth2008simple,macdonald2009implicit}.
+
+\subsection{A Cahn-Hilliard with nonlocal interactions}
+In this section, we evolve 
+\begin{align}
+        u_t = -\epsilon^2 \Delta^2 u + \Delta (u^3 + 3mu^2 - (1-3m^2)u) - u, 
+\quad (x,y)\in[0,4\pi]^2,
+\quad t>0,
+\label{mch}
+\end{align}
+with periodic boundary conditions and uniform random perturbations in $[-1,1]$ for the initial condition, and where $\epsilon>0, m\geq 0$ are parameters that characterize the behaviour of the solution. As noted in \cite{choksi2009phase,choksi20112d}, this equation is of interest for its connections to the self-assembly of diblock copolymers. They describe how different regions in the parameter space $(\epsilon, m)$ give rise to the formation of different energy-minimizing patterns and also address the difficulties one faces in generating these energy-minimizing states numerically. One such difficulty that we look to treat is the mix of extremely fast dynamics at the beginning of the evolution with rapidly slowing dynamics at we inch towards steady state.  
+
+For an efficient implementation, we would suggest using a fast, cheap explicit method to simulate the initial fast dynamics of this equation, before switching to our linearly stabilized scheme to handle the late dynamics. The experiments we perform here are only to show that our methods are stable and can quickly advance the solution to access the minimizing states. 
+
+To stabilize \cref{mch}, we first need an estimate on the term $\Delta(u^3 + 3mu^2-(1-3m^2)u)$. Linearizing, we find
+\begin{align}
+        \norm{\Delta(3\bar u^2 + 6m\bar u - (1-3m^2))}_2 
+\leq \abs{2+6m+3m^2}\norm{\Delta}_2.
+\end{align}
+So if we stabilize with $p\Delta u$, choosing $p \geq (2+6m+3m^2)p_0$ will be sufficient for guaranteeing unconditional stability.
+
+Our experiments in [figure] shows our methods can be used to access the energy-minimizing states of \cref{mte}. 
+We note that to more easily access the energy-minimizing states, we also adopt the strategy of spectral filtering described in \cite{choksi20112d}. 
+
+\subsection{Cahn-Hilliard on surface using the closest point method}
+
 
 \section{notes}
 + why are the problems different?
 
-+ in the inpainting problem, the solution was found by driving the system to steady state. Restriction to a small time step-size merely lead to large run times and  The requirements on $\Delta t$ were not quite as stringent, with a large range of $\Delta t$ showing excellent performance for each scheme. In the mcm problem, choice of $\Delta t$ affects the accuracy of the solution, so it is important to be able to choose large step-sizes while maintaining accuracy.
