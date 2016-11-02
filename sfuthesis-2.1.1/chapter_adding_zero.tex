@@ -25,7 +25,7 @@ A time evolution of this problem is plotted in \cref{fig:ammc sol}.
 \label{fig:ammc sol}
 \end{figure}
 
-The presence of the $u_{xx}$ guarantees that \eqref{ammc} is stiff, suggesting that an implicit time stepping scheme would prove more efficient. However, having to additionally handle the factor of $(1+u_x^2)^{-1}$ would suggest otherwise. Thus we are presented with a scenario where neither an implicit nor an explicit approach proves particularly palatable.
+The presence of the $u_{xx}$ guarantees that \eqref{ammc} is stiff, suggesting that an implicit time stepping scheme would prove more efficient. However, having to additionally handle the factor of $(1+u_x^2)^{-1}$ complicates the linear algebra. Rather than a static linear system for which we could preprocess and solve efficiently, at each time step it is necessary to solve a nonlinear system. Thus we are presented with a scenario where neither an implicit nor an explicit approach proves particularly palatable.
 
 \subsection{A first order linearly stabilized scheme}
 As demonstrated in Duchemin and Eggers \cite{duchemin2014explicit} as well as an earlier paper by Smereka \cite{smereka2003semi}, an efficient method to handling \eqref{ammc} is to add and subtract a linear Laplacian term to the righthand side, 
@@ -42,7 +42,7 @@ and then time step as
 = \N(u^n) + \L u^{n+1}.
 \label{ammc sbdf1}
 \end{align}
-Since this is our first instance witnessing a linearly stabilized scheme in action, we remark on some of the key properties. We first note that in the continuous case, the modified equation \eqref{ammc +- uxx} is unchanged from \eqref{ammc 1}. Next, note in the discrete case \eqref{ammc sbdf1}, the nonlinear term is evaluated explicitly, and ignoring the $\L u^{n+1}$ term, it is a forward Euler step. Over on the linear term, the implicit solve in this time stepping procedure is a backward Euler step. This method of time stepping is known well as implicit-explicit (IMEX) or semi-implicit Euler \cite{ascher1995implicit,smereka2003semi}. As it is a combination of explicit and implicit Euler steps, the accuracy is first order. We also note that the simplicity of the implicit term means that the related linear algebra is efficient and easy to implement. Lastly, as a result of the implicit solution to the $\L u$ term, we may expect this scheme to have improved stability compared to a purely explicit scheme, and indeed this is the case. Adopting second order centred differences in space, we will show next that this scheme is unconditionally stable.
+Since this is our first instance of a linearly stabilized scheme, we remark on some of the key properties. We first note that in the continuous case, the modified equation \eqref{ammc +- uxx} is unchanged from \eqref{ammc 1}. Next, note in the discrete case \eqref{ammc sbdf1}, the nonlinear term is evaluated explicitly, and ignoring the $\L u^{n+1}$ term, it is a forward Euler step. Over on the linear term, the implicit solve in this time stepping procedure is a backward Euler step. This method of time stepping is known as implicit-explicit (IMEX) or semi-implicit Euler \cite{ascher1995implicit,smereka2003semi}. As it is a combination of explicit and implicit Euler steps, the accuracy is first order. We also note that the simplicity of the implicit term means that the related linear algebra is efficient and easy to implement. Lastly, as a result of the implicit solution to the $\L u$ term, we may expect this scheme to have improved stability compared to a purely explicit scheme, and indeed this is the case. Adopting second order centred differences in space, we will show next that this scheme is unconditionally stable.
 
 \subsection{A von Neumann stability analysis}
 With the prescribed spatial-temporal discretization, we have at the interior nodes,
@@ -192,7 +192,7 @@ Enforcing absolute stability, i.e. $\abs{\xi_E} < 1$, for all $\lambda\Delta t <
 \end{align}
 Thus unconditional stability is guaranteed if $p \geq 1/2$.
 
-We will onwards be referring to this scheme as SBDF1.
+Going forward, we shall refer to this scheme as SBDF1.
 
 \subsection{Explicit-implicit null}
 \label{sect:ein}

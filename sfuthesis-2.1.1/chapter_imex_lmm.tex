@@ -212,7 +212,7 @@ We continue with the analysis for higher order IMEX schemes. Again, amplificatio
 	\label{table:amp poly 34}
 \end{table}
 
-Listed in Table \ref{table:amp poly 34} are respectively the amplification factor and the parameter restriction for SBDF3 and SBDF4. We must point out a crucial difference. In contrast to the second order methods, the derived parameter restriction leaves only a finite interval.  This will be addressed further in the subsequent section where it is demonstrated that this detail renders the linearly stabilized SBDF3 and SBDF4 useless.
+Listed in Table \ref{table:amp poly 34} are respectively the amplification factor and the parameter restriction for SBDF3 and SBDF4. We must point out a crucial difference. In contrast to the second order methods, the derived parameter restriction leaves only a finite interval.  This will be addressed further in the subsequent section where it is demonstrated that this detail renders the linearly stabilized SBDF3 and SBDF4 ineffective.
 
 \section{Convergence of Linearly Stabilized IMEX Methods}
 We present in this section numerical tests to support our claims. Stability contours are shown and a numerical convergence test to \cref{ammc} is conducted. We then provide an answer as to why linearly stabilized SBDF3 and SBDF4 fails. 
@@ -282,19 +282,19 @@ u(0,t) = u(10,t) = 1.
 \label{ammc pmpm}
 \end{subequations}
 
-As in \cref{ein conv test}, we solve to time $T=0.35$ with $N=2048$ spatial grid nodes. A reference solution is generated using a third order Runge-Kutta method with time step-size $\Delta t = \num{1.46e-5}$, and a max norm relative error calculated. Starting values necessary for the multistep methods are found using a third order Runge-Kutta method with small time step. The values of $p$ used for each scheme is as indicated in \cref{lmm conv test}.
+As in \cref{ein conv test}, we solve to time $T=0.35$ with $N=2048$ spatial grid nodes. A reference solution is generated using a third order Runge-Kutta method with time step-size $\Delta t = \num{1.46e-5}$, and a max norm relative error calculated. Starting values necessary for the multistep methods are found using a third order Runge-Kutta method with small time step. The values of $p$ used for each scheme are as indicated in \cref{lmm conv test}.
 
 Results of the numerical convergence study are shown in \cref{lmm conv test}. Each of the second order methods converge with the order of accuracy as expected, with SBDF2 having the largest errors, followed by CNAB/mCNAB (identical performance), CNLF, and then EIN. SBDF3 converges nicely with $p=0.875$. SBDF4 does not exhibit fourth order convergence and in fact fails at both $\Delta t =\num{6.84e-04}$ and $\Delta t=\num{3.42e-04}$. We discuss next why SBDF4 fails, and show also that SBDF3 suffers from the same defect.
 
 \begin{figure}
         \centering
 \includegraphics[width=0.65\textwidth]{lmm_conv_ammc}
-\caption[Numerical convergence study with IMEX LMMs]{Numerical convergence study to \cref{ammc pmpm} with IMEX methods. Convergence of EIN is also included for comparison. Test with mCNAB is omitted, but would otherwise overlap with CNAB.}
+\caption[Numerical convergence study with IMEX LMMs]{Numerical convergence study to \cref{ammc pmpm} with IMEX methods. Convergence of EIN is also included for comparison. The test with mCNAB is omitted, but would otherwise overlap with CNAB.}
 \label{lmm conv test}
 \end{figure}
 
 \subsection{Failure with high order IMEX methods}
-First, let us tabulate the observed (non)convergence of SBDF3 at various values of $p$. In \cref{table: sbdf3 nonconvergence}, we document three cases. The first case is the one shown in \cref{lmm conv test}. The second case exhibits a drastic drop in the observed convergence rate and and in the third case the method diverged as the time step-size is reduced. We attribute the divergence of SBDF3 and SBDF4 to the fact that their parameter restriction is a finite interval.
+First, let us tabulate the observed (non)convergence of SBDF3 at various values of $p$. In \cref{table: sbdf3 nonconvergence}, we document three cases. The first case is the one shown in \cref{lmm conv test}. The second case exhibits a drastic drop in the observed convergence rate and in the third case the method diverges as the time step-size is reduced. We attribute the divergence of SBDF3 and SBDF4 to the fact that their parameter restriction is a finite interval.
 
 \begin{table}[htb!]
         \centering
@@ -352,10 +352,10 @@ A natural follow-up is then to ask if all third and fourth order IMEX schemes ar
 This leaves us a number of competing second order methods. Our next task is to compare the performance of our IMEX based schemes vs.\ the EIN method of \cite{duchemin2014explicit}.
 
 \section{Comparison of the Second Order Methods}
-Of the methods that we have proposed, only the second order variants remain. Along with the EIN method, that gives five second order linearly stabilized schemes. A performance evaluation is in order.
+Of the methods that we have proposed, only the second order variants remain. Along with the EIN method, we have a total of five second order linearly stabilized schemes to consider. We now proceed with a comparison of the methods.
 
 \subsection{A 2D test problem}
-Let us use as a test problem, the following nonlinear PDE from \cite{vdHouwen1982on}:
+Let us consider as a test problem, the following nonlinear PDE from \cite{vdHouwen1982on}:
 \begin{subequations}
         \begin{align}
                 u_t = \Delta (u^5),
@@ -388,7 +388,7 @@ The parameter $p$ will then be chosen according to the ratio
 \approx \frac{-8p/h^2}{-64(1+t)/h^2}
 = \frac{p}{8(1+t)}.
 \end{align}
-Let us remark on the importance of this test problem. In the analysis of \cref{ammc p}, we performed a von Neumann analysis to obtain precise eigenvalue estimates. On the contrary, the interval \cref{nl5 eigs} provides a bound that we do not expect to be sharp. We also never update $p$. It is chosen once and fixed at that value as we time step. Consequently, $p$ may be substantially greater than necessary. Moreover, to compensate for the fact that the operator we introduced to stabilize is less stiff than the nonlinear term, we are forced to select a relatively large value for $p$. We expect the situations just described to be common in applications and thus it is of interest to investigate performance of the methods and behaviour of its discretization errors.
+Let us remark on the importance of this test problem. In the analysis of \cref{ammc p}, we performed a von Neumann analysis to obtain precise eigenvalue estimates that are independent of $t$. On the contrary, the interval \cref{nl5 eigs} grows with $t$. Nevertheless, $p$ is never updated. It is chosen once and fixed at that value as we time step. Consequently, $p$ may be substantially greater than necessary. Moreover, to compensate for the fact that the operator we introduced to stabilize is less stiff than the nonlinear term, we are forced to select a relatively large value for $p$. We expect the situations just described to be common in applications and thus it is of interest to investigate performance of the methods and behaviour of its discretization errors.
 
 \subsection{Loss of accuracy with EIN}
 We test our second order methods on \cref{nl5 p} with initial and boundary conditions set by \cref{nl5b}. We solve to time $T=0.40$ with spatial grid size $\Delta x = \Delta y = h =0.015$. As a reference solution, we use an explicit third order Runge-Kutta method with time step-size $\Delta t=\num{6.25e-6}$. (Typical explicit methods demand step-sizes comparable for stability.) With the linearly stabilized schemes, we will solve \cref{nl5 p} with time step-sizes as large as $\Delta t = \num{1.25e-2}$. We show the max norm relative error.
@@ -402,7 +402,7 @@ We test our second order methods on \cref{nl5 p} with initial and boundary condi
 
 Results of the numerical convergence test is plotted in \cref{fig:nl5 conv} and it paints a grim picture for the EIN method and for CNLF. We will first discuss the horrific performance of the EIN method, after which we comment on the relative performance of the IMEX based schemes. 
 
-Contrasting the performance of EIN in \cref{lmm conv test} and \cref{fig:nl5 conv}, we observe a drastic reduction in the order of accuracy. In the former, EIN converged with second order accuracy and recorded, amongst the second order method, the lowest error at any fixed $\Delta t$ (although an analysis of error vs.\ computing time would treat it less favorably). In our latest test problem, we do not (yet) observe second order convergence. Further testing shows that the EIN method only begins to demonstrate full second order rate of convergence as we dip below $\Delta t=\num{1e-5}$.
+Contrasting the performance of EIN in \cref{lmm conv test} and \cref{fig:nl5 conv}, we observe a drastic reduction in the order of accuracy. In the former, EIN converged with second order accuracy and recorded, amongst the second order methods, the lowest error at any fixed $\Delta t$ (although an analysis of error vs.\ computing time would treat it less favorably). In our latest test problem, we do not (yet) observe second order convergence. Further testing shows that the EIN method only begins to demonstrate full second order rate of convergence as we dip below $\Delta t=\num{1e-5}$.
 
 In fact, we argue that this behaviour can already be observed in the original paper by Duchemin and Eggers \cite{duchemin2014explicit}. In their experiments with Hele-Shaw interface flow and with the Kuramoto-Sivashinsky equation, they fail to accurately reproduce the reference figures taken from prior publications \cite{hou1994removing,kassam2005fourth}. In both cases, a large value of $p$ was necessary to obtain the desired stability. 
 

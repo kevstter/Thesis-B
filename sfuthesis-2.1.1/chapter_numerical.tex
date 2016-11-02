@@ -35,7 +35,7 @@ The solution, $u$, is the inpainted image we seek. The quantity, $u_0$, is the i
 \end{align}
 for some $\lambda_0 > 0$.
 
-As for initial conditions, we have two vandalized images to be restored. The first is \cref{fig:turtle with text} where we have a photograph of a turtle overwritten with text. We would like to restore the photograph by removing the text. The second is \cref{fig:bullfinch and fox}, where fox figure requires removal. Although this may look simpler, it is in fact a more challenging scenario. The reason being that the thickness of the inpainting region requires correctly extending level lines over long distances \cite{schonlieb2011unconditionally}.
+As for initial conditions, we have two vandalized images to be restored. The first is \cref{fig:turtle with text} where we have a photograph of a sea turtle overwritten with text. We would like to restore the photograph by removing the text. The second is \cref{fig:bullfinch and fox}, where the fox figure requires removal. Although this may look simpler, it is in fact a more challenging scenario. The reason being that the thickness of the inpainting region requires correctly extending level lines over long distances \cite{schonlieb2011unconditionally}.
 
 The image is restored in a channel-by-channel manner. As a stopping criteria, we look at the difference in successive images, 
 \begin{align}
@@ -47,7 +47,7 @@ Finally, we note that the spatial discretization is by second order centred diff
 \begin{figure}[htb!]
         \centering 
 \includegraphics[width=0.65\textwidth]{turtle_with_text}
-\caption[Photograph of turtle overwritten with text.]{Photograph of turtle overwritten with text.}
+\caption[Photograph of turtle overwritten with text.]{Photograph of a sea turtle overwritten with text.}
 \label{fig:turtle with text}
 \end{figure}
 
@@ -59,7 +59,7 @@ Finally, we note that the spatial discretization is by second order centred diff
 \end{figure}
 
 \subsection{TV inpainting}
-We first show that the TV inpainting model can easily be handled by our methods. In this model, there are two terms on the righthand side, both potentially stiff.  The second term is  stabilized by adding and subtracting $-p_2\lambda_0 u$, and we determined $p_2=p_0$. For the first term we stabilize by adding and subtracting $p_1\Delta u$. To determined $p_1$, we first bound the first term as 
+We first show that the TV inpainting model can easily be handled by our methods. In this model, there are two terms on the righthand side, both potentially stiff.  The second term is stabilized by adding and subtracting $-p_2\lambda_0 u$, and we determined $p_2=p_0$, where $p_0$ is the minimum value required for unconditional stability that we find from applying the time stepping method to the modified test equation. For the first term we stabilize by adding and subtracting $p_1\Delta u$. To determined $p_1$, we first bound the first term as 
 \begin{align}
 \begin{split}
         \nabla \cdot \left(\frac{\nabla u}{\sqrt{\abs{\nabla u}^2 + \epsilon^2}} \right) 
