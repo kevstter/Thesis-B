@@ -1,4 +1,5 @@
 \chapter{IMEX Linear Multistep Methods}
+\label{LMM}
 For equations whose righthand side comprise of a stiff linear component and a nonstiff nonlinear part, a popular class of methods to apply are the implicit-explicit linear multistep methods\footnote{We will refer to these simply as IMEX methods.}. The simplest of these is the semi-implicit Euler -- forward Euler to the nonlinear component and backward Euler to the linear, stiff component -- a scheme that we reviewed in Chapter 2. 
 
 In this chapter, we investigate the use of IMEX methods within the linear stabilization framework. Implicit solution of the added linear term provides the needed stability, and the remaining terms, including the stiff nonlinear term, are solved explicitly.
