@@ -76,13 +76,13 @@ We then consider the auxilliary equation $u_t = u_{xx} + u_{yy} + u_{xy}$ discre
 \begin{align}
         \frac{\xi  - 1}{\Delta t} 
 = \frac{1}{h^2}(-4 + 2\cos(\omega_1 h) + 2\cos(\omega_2 h) - \sin(\omega_1 h)\sin(\omega_2h))
-\geq -\frac{8.5}{h^2}.
+\geq -\frac{8}{h^2}.
 \label{p1 estimate inpaint 2}
 \end{align}
 Combined with the assumption of the extreme case, $\sqrt{u_x^2 + u_y^2 + \epsilon^2} \geq \epsilon$, we set $p_2$ according to 
 \begin{align}
-        p_1\frac{8/h^2}{8.5/(\epsilon h^2)} \geq p_0 \iff 
-p_1 \geq \frac{8.5}{8\epsilon}p_0.
+        p_1\frac{8/h^2}{8/(\epsilon h^2)} \geq p_0 \iff 
+p_1 \geq \frac{1}{\epsilon}p_0.
 \end{align}
 
 The images restored by TV inpainting are shown in \cref{fig:bv inpainting}. We restored using SBDF1, SBDF2, and CNAB for time stepping. Parameters were set as $\epsilon=0.10$ and $\lambda_0=20$. \cref{tab:bv iter counts} charts the least iteration count we achieved with each method. The numbers show a definite improvement of using the second order methods over the first order. 
@@ -130,8 +130,8 @@ For TV-H$^{-1}$ inpainting, we stabilize \cref{tvhneg inpaint} as
 \end{align}
 We note $p_2$ is chosen exactly as in TV inpainting. Determination of $p_1$ makes use of the bound set in \cref{p1 estimate inpaint 1,p1 estimate inpaint 2} to get 
 \begin{align}
-        p_1\frac{(8/h^2)^2}{(8/h^2)(8.5/(\epsilon h^2))} \geq p_0 
-\iff p_1 \geq \frac{8.5}{8\epsilon}p_0,
+        p_1\frac{(8/h^2)^2}{(8/h^2)(8/(\epsilon h^2))} \geq p_0 
+\iff p_1 \geq \frac{1}{\epsilon}p_0,
 \end{align}
 which is also the same as TV inpainting.
 
