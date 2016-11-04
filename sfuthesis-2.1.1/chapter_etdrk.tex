@@ -7,14 +7,14 @@ Consider the ODE
 \begin{align}
 \dd{u}{t} = \N(u) + \L u.
 \end{align}
-Exponential time differencing, or exponential integrators, is a family of time stepping methods that treats the linear part exactly, and approximates the nonlinear part by some suitable quadrature formula. As an example, the exponential Euler has the formula
+Exponential time differencing, or exponential integrators, is a family of time stepping methods that treats the linear part exactly, and approximates the nonlinear part by some suitable quadrature formula. As an example, the exponential Euler method has the formula
 \begin{align}
 u^{n+1} 
 = e^{\Delta t\L} u^n + \L^{-1}(e^{\Delta t\L}  -1) \N(u^n).
 \end{align}
 This is a first order accurate exponential integrator. 
  
-Our investigation deals with explicit exponential Runge-Kutta methods only. This family of one-step methods have the form 
+Our investigation covers explicit exponential Runge-Kutta methods only. This family of one-step methods have the form 
 \begin{subequations}
 	\begin{align}
 u^{n+1} &= e^{\Delta t \L} u_n 
@@ -41,8 +41,8 @@ $c_s$ & $a_{s1}$ & $\cdots$ & $a_{s,s-1}$
 & $b_1$ & $\cdots$ & $b_{s-1}$ & $b_s$
 \end{tabular}\raisepunct{.}
 \end{align}
-(Note that we have suppressed the argument, but these are indeed functions of $\Delta t\L$.)
-In particular, we focus on the second and fourth order exponential Runge-Kutta formulas of Cox and Matthews \cite{cox2002exponential},
+Note that we have suppressed the argument, but these are indeed functions of $\Delta t\L$.
+In particular, we focus on the second and fourth order exponential Runge-Kutta formulas of Cox and Matthews \cite{cox2002exponential};
 \renewcommand\raisepunct[1]{\,\mathpunct{\raisebox{-1.30ex}{#1}}}
 \begin{align} 
 \begin{tabular}{c|cc}
@@ -58,7 +58,6 @@ $0$
 	\end{tabular}\raisepunct{,}
 \label{etdrk2 butcher}
 \end{align}
-
 \renewcommand\raisepunct[1]{\,\mathpunct{\raisebox{-4.80ex}{#1}}}
 \begin{align} 
 \begin{tabular}{c|cccc}
@@ -95,17 +94,19 @@ where
 \varphi_{i,j}(z) = \varphi_{i}(c_j z).
 \label{phi functions}
 \end{align}
-We refer to this pair of exponential Runge-Kutta methods as ETDRK2 and ETDRK4.
+We refer to this pair of exponential Runge-Kutta methods as ETDRK2 and ETDRK4, respectively.
 
-\section{Stability of ETDRK2 and ETDRK4}
-As before, we take the schemes \cref{etdrk2 butcher}, \cref{etdrk4 butcher}, and apply them to the modified test equation \cref{mte} to determined the parameter restriction over which the scheme is unconditionally stable. With the help of the computer algebra system, \textsc{Maple}\texttrademark, the parameter restriction is found to be $[1/2,\infty)$ in both cases. We verify these findings with a series of stability contour plots in \cref{fig:etdrk2 stab cont,fig:etdrk4 stab cont}. 
+\section{Linearly stabilized ETDRK2 and ETDRK4}
+In the last chapter, we identified some useful criteria for quickly assessing the practicality of newly constructed linearly stabilized methods. 
+
+First, we apply the schemes \cref{etdrk2 butcher,etdrk4 butcher} to the modified test equation \cref{mte} and imposed unconditional stability. The resulting parameter restriction must be unbounded, otherwise we stop. For ETDRK2 and ETDRK4, with the help of the computer algebra system, \textsc{Maple}\textsuperscript{\texttrademark}, we determined the parameter restriction to be $[1/2, \infty)$ in both cases. In \cref{fig:etdrk2 stab,fig:etdrk4 stab} are stability contour plots that support this claim.
 
 \begin{figure}[htb!]
 	\centering
 %\includegraphics[width=0.65\textwidth]{etdrk2_stab}
 \includegraphics[width=0.65\textwidth]{etdrk2_stab2}
 \caption{Stability contours for ETDRK2 at various $p$.}
-\label{fig:etdrk2 stab cont}
+\label{fig:etdrk2 stab}
 \end{figure}
 
 \begin{figure}[htb!]
@@ -113,14 +114,63 @@ As before, we take the schemes \cref{etdrk2 butcher}, \cref{etdrk4 butcher}, and
 %\includegraphics[width=0.65\textwidth]{etdrk4_stab}
 \includegraphics[width=0.65\textwidth]{etdrk4_stab2}
 \caption{Stability contours for ETDRK4 at various $p$.}
-\label{fig:etdrk4 stab cont}
+\label{fig:etdrk4 stab}
 \end{figure}
 
-\section{Numerical Results}
-In the last section, we verified that ETDRK2 and ETDRK4 was suitable for combination with linear stabilization on the modified test equation. The logical next step is to test on a more substantial problem and perform a numerical convergence study. However, the implementation of exponential integrators is not a trivial matter. We must first discuss potential issues and the method in which we choose to resolve them.
+We then also considered two other factors that affected the performance. The first is a proxy to the error constant of the numerical scheme, and the second is to consider the amplification factor at infinity. The latter is plotted in \cref{fig:damp fac at inf etd} for both ETDRK2 and ETDRK4. It shows that the ETDRK schemes provide strong damping at infinity for a wide range of $p$ and may be a good candidate for taking large time steps. For the proxy to the error constant, what we did before was we took the amplification factors and found its series expansion at $z=0$,
+\begin{align}
+        \xi_{ETDRK2} = 1+ z + \frac{z^2}{2} + \left(-\frac{1}{4}p^2 + \frac{5}{12}p \right) z^3 + \cdots ,
+\end{align}
+\begin{align}
+        \xi_{ETDRK4} = \exp(z) + \left( 
+\frac{1}{576}p^4 
+- \frac{11}{576}p^3
++ \frac{29}{720}p^2
+- \frac{1}{32}p
++ \frac{1}{120} 
+\right) z^5 + \cdots .
+\end{align}
+Let us take this one step further by taking the difference with the exact solution, $\exp(z)$. We find 
+\begin{align}
+        \delta_1(p) = \abs{\exp(z) - \xi_{ETDRK2}} 
+= \abs{\frac{1}{4}p^2 - \frac{5}{12}p + \frac{1}{6}},
+\end{align}
+\begin{align}
+        \delta_2(p) = \abs{\exp(z) - \xi_{ETDRK4}} 
+= \abs{\frac{1}{576}p^4 
+- \frac{11}{576}p^3
++ \frac{29}{720}p^2
+- \frac{1}{32}p
++ \frac{1}{120} },
+\end{align}
+and for the EIN method we have 
+\begin{align}
+\delta_3(p) = \abs{\exp(z) - \xi_{EIN}} 
+= \abs{\frac{1}{2} p^2 - \frac{1}{2}p + \frac{1}{6}}.
+\end{align}
+
+\begin{figure}[htb!]
+        \centering
+\includegraphics[width=0.65\textwidth]{damp_at_inf_2}
+\caption[Amplification factors at infinity with ETDRK schemes.]{Amplification factors at infinity with ETDRK schemes. Included also for the purpose of comparison are some second order schemes from the last chapter. The normalization along the horizontal axis is with respect to the lower limit of the parameter restriction of each scheme.}
+\label{fig:damp fac at inf etd}
+\end{figure}
+
+Recall from before that the observed convergence rate of EIN was reduced and we reasoned that that was because the error constant is large whenever $p$ is large, and thus the step-size had to be chosen much smaller than desirable before observing second order convergence.
+
+The situation is similar with the ETDRK schemes. The error term has quadratic and quartic polynomials in $p$ for ETDRK2 and ETDRK4 respectively, and thus we expect these schemes to fair poorly when $p$ is large. That being said, we do find in \cref{chap:num experiments} that these scheme can outperform SBDF2 and CNAB when $p$ is small and the step-size is coarse. To this end, we provide \cref{fig:err p dep} that shows $\delta_1$, $\delta_2$, and $\delta_3$ plotted against $p$. Also plotted are the analogous expressions for SBDF2 and CNAB. As was suggested, there may be a range of $p$ for which these ETDRK schemes are workable. A careful error analysis on fully nonlinear problems would be of some interest and is left as future work.
+
+\begin{figure}[htb!]
+        \centering
+\includegraphics[width=0.65\textwidth]{err_const}
+\caption[Error constant and its dependence on $p$.]{Error constant and its dependence on $p$. }
+\label{fig:err p dep}
+\end{figure}
 
 \subsection{Stable evaluation of the matrix exponential and related functions}
-In \cref{sect:exp rk}, we have presented two exponential Runge-Kutta methods in tableau form and coefficients are combinations of functions of the operator, $\Delta t\L$.  For example, to properly implement ETDRK2, we must compute the functions 
+Finally, we wish to discuss briefly the matter of implementing ETDRK schemes.
+
+In \cref{sect:exp rk}, we have presented two exponential Runge-Kutta methods in tableau form and the entries of these tableaus are functions of the operator, $\Delta t\L$.  For example, to implement ETDRK2, we must compute the functions 
 \begin{align}
 \varphi_1(c\Delta \L) &= (c\Delta t \L)^{-1}(\exp(c\Delta t \L) - 1),
 \\
@@ -128,57 +178,9 @@ In \cref{sect:exp rk}, we have presented two exponential Runge-Kutta methods in 
 \end{align}
 for $c \in [0,1]$, or be able to efficiently evaluate the related matrix-vector multiplications without explicit construction.
 
-Difficulties with the evaluation of the matrix exponential and related functions of the form \cref{phi functions} are well-known and well-studied, eg.\ \cite{moler2003nineteen,higham2002accuracy,higham2008functions,hochbruck1997krylov}. In fact, struggles with the accurate and stable evaluation of the matrix exponential put a damper on the research into these methods and it was only with recent improvements and development of new techniques \cite{hochbruck1997krylov,sidje1998expokit,kassam2005fourth,simoncini2007recent,higham2008functions} that interest has revived and caught fire.
+Difficulties with the evaluation of the matrix exponential and related functions of the form \cref{phi functions} are well-known and well-studied, eg.\ \cite{moler2003nineteen,higham2002accuracy,higham2008functions,hochbruck1997krylov}. Thus widespread adoption of exponential time differencing methods must first contend with the developement of stable and efficient algorithms for computing the matrix exponential. 
 
-In all our examples, we follow the direction of Kassam and Trefethen \cite{kassam2005fourth}. They take a contour integral approach for the evaluation of functions in the form of \cref{phi functions} coupled with the trapezoidal rule for fast, accurate, and stable computations. Moreover, to avoid the unpleasantness of boundary conditions (and the subsequent complications), our domain will be periodic when using ETDRK2 or ETDRK4.
+In our examples, we follow the direction of Kassam and Trefethen \cite{kassam2005fourth}. They take a contour integral approach to the evaluation of functions in the form of \cref{phi functions} coupled with the trapezoidal rule for fast, accurate, and stable computations. Moreover, to avoid the unpleasantness of boundary conditions (and the subsequent complications), our domain will be periodic when using ETDRK2 or ETDRK4. 
 
-\subsection{Numerical convergence test}
+Lastly, let us mention that there are other popular approaches. Amongst these are those based on scaling and squaring, Pad\'{e} approximants \cite{moler2003nineteen,higham2008functions}, and Krylov subspace methods  \cite{hochbruck1997krylov,sidje1998expokit,simoncini2007recent}.
 
-
-\clearpage
-\section{Notes}
-
-
-% \begin{align} 
-% \begin{tabular}{c|cccc}
-% $0$ 
-% &  
-% \\
-% \num{1/2} 
-% & $\frac{1}{2}\varphi_{1,2}$ 
-% &
-% \\ 
-% \num{1/2} 
-% & $\frac{1}{2}\varphi_{1,3} - \varphi_{2,3}$ 
-% & $\varphi_{2,3}$ 
-% & 
-% \\
-% \num{1} 
-% & $\varphi_{1,4} - 2\varphi_{2,4}$ 
-% & 0 
-% & $2\varphi_{2,4}$ 
-% & 
-% \\ \hline 
-% & $\varphi_1 - 3\varphi_2 + 4\varphi_3$ 
-% & $2\varphi_2 - 4\varphi_3$ 
-% & $2\varphi_2 - 4\varphi_3$ 
-% & $4\varphi_3 - \varphi_2$ 
-% \end{tabular}\raisepunct{.}
-% \label{krogstad butcher}
-% \end{align}
-
-Talk about parameter restriction for each scheme, stability plots, and maybe a little about damping at infinity.
-
-These schemes also suck with large p. Can it be salvaged? What about exponential multistep methods? No, exponential multistep does not extend to high order.
-
-We emphasize that our purpose is merely to demonstrate the potential of linear stabilization with ETD schemes and not a comprehensive survey.
-
-+ Strengths of these schemes? Difficulties? 
-
-+ Modified test equation
-
-+ Numerical Results with 2D periodic mean curvature motion problem  
-
-+ Compare with results from IMEX schemes
-
-+ Computing time comparison
