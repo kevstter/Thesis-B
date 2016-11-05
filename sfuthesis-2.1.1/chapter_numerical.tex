@@ -187,7 +187,7 @@ We will demonstrate the effectiveness of our schemes on similar examples to that
 \end{align}
 An analysis similar to \cref{p1 estimate inpaint 1,p1 estimate inpaint 2} gives $p\geq p_0$ to be sufficient for unconditional stability.
 
-Let us point out a key difference between this problem and the inpainting problem of the previous section. In the inpainting problem, we drive the system to steady state.  As such, we were afforded a range of time step-sizes where the solution method performed well. The step-size did not affect the accuracy of the solution, only the computing time. With mean curvature flow, the step-size influences the accuracy of the solution, so we are really only interested in large time step-sizes if they maintain an acceptable level of accuracy.
+Let us point out a key difference between this problem and the inpainting problem of the previous section. In the inpainting problem, we drive the system to steady state.  As such, we were afforded a range of time step-sizes where the solution method performed well. The step-size did not affect the accuracy of the solution, only the computing time. For mean curvature flow, the step-size influences the accuracy of the solution, so we are really only interested in step-sizes that maintain an acceptable level of accuracy.
 
 \subsection{Shrinking dumbbell in 2D and 3D}
 Our first example is a shrinking dumbbell-shaped curve in 2D. In \cref{fig:mcm 2d dumbbell} we show the shrinking of this curve under mean curvature flow. The solution to this problem at time $T=1.25$ with an explicit Runge-Kutta method, on a $256\times 512$ periodic grid with second order centred differences, costs $\O(10^4)$ time steps for stability.
@@ -232,13 +232,13 @@ In \cref{fig:mcm 2d conv}, we show the convergence of SBDF1, SBDF2, CNAB, EIN, E
 \begin{minipage}{0.48\textwidth}
         \includegraphics[width=0.96\textwidth]{erk4_conv}
 \end{minipage}
-\caption[Convergence of linearly stabilized schemes to a shrinking dumbbell problem.]{Convergence of various linearly stabilized time stepping to a 2D mean curvature flow problem. In the column to the left from top to bottom, we have SBDF1, SBDF2, and CNAB. In the column to the right from top to bottom, we have EIN, ETDRK2, and ETDRK4.}
+\caption[Convergence of linearly stabilized schemes to a shrinking dumbbell problem.]{Convergence of various linearly stabilized time stepping to a 2D mean curvature flow problem. In the column to the left from top to bottom, we have SBDF1, SBDF2, and CNAB. In the column to the right from top to bottom, we have EIN, ETDRK2, and ETDRK4. Within each plot, each curve is the solution using the number of time steps, $n$, as indicated.}
 \label{fig:mcm 2d conv}
 \end{figure}
 
-The most disappointing of these is CNAB, for which a minimum of 400 time steps to get a reasonable looking solution and needs 800 to present a solution competitive with the other methods. SBDF2 likewise faired poorly in that regards. 
+The most disappointing of these is CNAB, for which a minimum of 400 time steps was needed to get a reasonable looking solution and needs close to 800 time steps to present a solution competitive with the other methods. SBDF2 likewise faired poorly in that regards. 
 
-On the other hand, the ETDRK schemes and the EIN method appears to do well at even 50-100 time steps. Recall that these are the schemes that have strong damping at infinity (see \cref{fig:damp fac at inf}). Zoom-ins to the solution by these schemes are provided in \cref{fig:mcm zoom in 1,fig:mcm zoom in 2}. The zoom-ins show that the ETDRK schemes converge nicely even at few time steps. The EIN method, however, is again hampered by slow convergence, and in this respect, its performance is worse than that of SBDF2 and CNAB. 
+On the other hand, the ETDRK schemes and the EIN method appears to do well at even 50-100 time steps. Recall that these are the schemes that have strong damping at infinity (see \cref{fig:damp fac at inf etd}). Zoom-ins to the solution by these schemes are presented in \cref{fig:mcm zoom in 1,fig:mcm zoom in 2}. The zoom-ins show that the ETDRK schemes converge nicely even with few time steps. The EIN method, however, is again hampered by slow convergence, and in this respect, its performance is worse than that of SBDF2 and CNAB. 
 
 \begin{figure}[htb!]
         \centering
@@ -264,7 +264,7 @@ On the other hand, the ETDRK schemes and the EIN method appears to do well at ev
 \label{fig:mcm zoom in 2}
 \end{figure}
 
-Next, we take this example into 3D. Here, the advantages of our schemes are further magnified. In 2D, one could argue that the computations can be completed using standard explicit schemes within reasonable computing times. In 3D, doing so would mean trade offs in the grid size, or computing only over very short time periods. 
+Next, we take this example into 3D. Here, the advantages of our schemes are further magnified. In 2D, one could argue that the computations can be completed using standard explicit schemes within reasonable computing times. In 3D, doing so may require trade offs in the grid size, or computing only over very short time periods. 
 
 Setting the initial condition to be the dumbbell-shaped curve of the top left image in \cref{fig:mcm 3d dumbbell}, the curve is then evolved by mean curvature flow. We use a periodic grid of size $256\times 128\times 128$ and solved till time $T=0.75$. With forward Euler, we needed $3000$ time steps for stability, and this computation took over 28 minutes in \textsc{Matlab} 2014b on an Intel\textsuperscript{\textregistered}Core\textsuperscript{\texttrademark}i5-4570 CPU@3.20GHz workstation running Linux. With the linearly stabilized ETDRK2, we solved the same problem using 75 time steps in 103 seconds.
 
@@ -294,7 +294,7 @@ Setting the initial condition to be the dumbbell-shaped curve of the top left im
 
 
 \subsection{Anisotropic mean curvature motion}
-So far, the motion law considered may be more appropriately described as isotropic mean curvature motion. In \cite{oberman2011aniso}, Oberman et at., present a method for anisotropic mean curvature flow: 
+So far, the motion law considered may be more appropriately stated as isotropic mean curvature motion. In \cite{oberman2011aniso}, Oberman et at., present a method for anisotropic mean curvature flow: 
 \begin{align}
         u_t = (\gamma(\omega) + \gamma''(\omega))\abs{\nabla u} \nabla \cdot \left( \frac{\nabla u}{\abs{\nabla u}} \right),
 \end{align}
@@ -305,7 +305,7 @@ where $\omega = \arctan(u_y/u_x)$, and
 = \frac{1}{n^2+1}(n^2 + 1 - \sin(n\omega)), 
 \quad\text{for } n = 0,2,4,8.
 \end{align}
-For our methods, the added factor of $\gamma(\omega) + \gamma''(\omega)$ presents no additional difficulty at all. Setting $n=4$ and on a periodic grid of size $256\times 256$, we take 500 time steps with a linearly stabilized ETDRK2 to produce the solution presented in \cref{fig:aniso mcm}. 
+For our methods, the added factor of $\gamma(\omega) + \gamma''(\omega)$ presents no additional difficulty at all. Setting $n=4$, $p=(1+(n^2-1)/(n^2+1))p_0$, and on a periodic grid of size $256\times 256$, we take 500 time steps with a linearly stabilized ETDRK2 to produce the solution presented in \cref{fig:aniso mcm}. 
 \begin{figure}
         \centering
 \begin{minipage}{0.44\textwidth}
@@ -325,7 +325,7 @@ For our methods, the added factor of $\gamma(\omega) + \gamma''(\omega)$ present
 \end{figure}
 
 \section{Phase Separation Models on Moo Surfaces}
-For our last batch of experiments, we will evolve in time phase separation models defined on rectangular grids in 2D, and on surface in 3D using the closest point method \cite{ruuth2008simple,macdonald2009implicit}.
+For our last batch of experiments, we will evolve in time phase separation models defined on rectangular grids in 2D, and on surfaces in 3D using the closest point method \cite{ruuth2008simple,macdonald2009implicit}.
 
 \subsection{Cahn-Hilliard on surface using the closest point method}
 
