@@ -59,7 +59,7 @@ Finally, we note that the spatial discretization is by second order centred diff
 \end{figure}
 
 \subsection{TV inpainting}
-We first show that the TV inpainting model can easily be handled by our methods. In this model, there are two terms on the righthand side, both potentially stiff.  The second term is stabilized by adding and subtracting $-p_2\lambda_0 u$, and we determined $p_2=p_0$, where $p_0$ is the minimum value required for unconditional stability that we find from applying the time stepping method to the modified test equation. For the first term we stabilize by adding and subtracting $p_1\Delta u$. To determined $p_1$, we first bound the first term as 
+We first show that the TV inpainting model can easily be handled by our methods. In this model, there are two terms on the right-hand side, both potentially stiff.  The second term is stabilized by adding and subtracting $-p_2\lambda_0 u$, and we determined $p_2=p_0$, where $p_0$ is the minimum value required for unconditional stability that we find from applying the time stepping method to the modified test equation. For the first term we stabilize by adding and subtracting $p_1\Delta u$. To determined $p_1$, we first bound the first term as 
 \begin{align}
 \begin{split}
         \nabla \cdot \left(\frac{\nabla u}{\sqrt{\abs{\nabla u}^2 + \epsilon^2}} \right) 
@@ -72,7 +72,7 @@ We first show that the TV inpainting model can easily be handled by our methods.
 \end{split}
 \label{p1 estimate inpaint 1}
 \end{align}
-We then consider the auxilliary equation $u_t = u_{xx} + u_{yy} + u_{xy}$ discretized by centred differences in space and forward Euler in time to apply a von Neumann analysis with $u^n_{jk} = \xi^n \exp(i\omega_1jh)\exp(i\omega_2kh)$ to get 
+We then consider the auxiliary equation $u_t = u_{xx} + u_{yy} + u_{xy}$ discretized by centred differences in space and forward Euler in time to apply a von Neumann analysis with $u^n_{jk} = \xi^n \exp(i\omega_1jh)\exp(i\omega_2kh)$ to get 
 \begin{align}
         \frac{\xi  - 1}{\Delta t} 
 = \frac{1}{h^2}(-4 + 2\cos(\omega_1 h) + 2\cos(\omega_2 h) - \sin(\omega_1 h)\sin(\omega_2h))
@@ -237,7 +237,7 @@ In \cref{fig:mcm 2d conv}, we show the convergence of SBDF1, SBDF2, CNAB, EIN, E
 \label{fig:mcm 2d conv}
 \end{figure}
 
-The most disappointing of these is CNAB, for which a minimum of 400 time steps was needed to get a solution that goes with the frame we have chosen and further needs close to 800 time steps to present a solution competitive with the other methods in accuracy. SBDF2 likewise faired poorly in that regards, needing close to 800 time steps for a solution competitive with the other methods in accuracy. 
+The most disappointing of these is CNAB, for which a minimum of 400 time steps was needed to get a solution that goes with the frame we have chosen and further needs close to 800 time steps to present a solution competitive with the other methods in accuracy. SBDF2 likewise fared poorly in that regards, needing close to 800 time steps for a solution competitive with the other methods in accuracy. 
 
 On the other hand, the ETDRK schemes and the EIN method appears to do well at even 50-100 time steps. Recall that these are the schemes that have strong damping at infinity (see \cref{fig:damp fac at inf etd}). Zoom-ins to the solution by these methods are presented in \cref{fig:mcm zoom in 1,fig:mcm zoom in 2}. These show that the ETDRK schemes offer good accuracy and convergence at just 50 time steps. The EIN method, however, is again hampered by slow convergence. This is especially clear in \cref{fig:mcm zoom in 1}. If we further factor in computing time, then both CNAB and SBDF2 would outperform the EIN method.
 
@@ -246,7 +246,7 @@ On the other hand, the ETDRK schemes and the EIN method appears to do well at ev
 \includegraphics[width=0.65\textwidth]{ein_zoom1}
 \includegraphics[width=0.65\textwidth]{erk2_zoom1}
 \includegraphics[width=0.65\textwidth]{erk4_zoom1}
-\caption[{A zoom-in over $ [0.0,0.2]\times [0.475,0.54]$ to inspect convergence.}]{A zoom-in over $[0.0, 0.2]\times [0.475, 0.54]$. From top to bottom we have the EIN method, ETDRK2, and ETDRK4. We see slow convergence of the EIN method, and good convergence of the ETDRK schemes.}
+\caption[{A zoom-in over $ [0.0,0.20]\times [0.475,0.54]$ to inspect convergence.}]{A zoom-in over $[0.0, 0.20]\times [0.475, 0.54]$. From top to bottom we have the EIN method, ETDRK2, and ETDRK4. We see slow convergence of the EIN method, and good convergence of the ETDRK schemes.}
 \label{fig:mcm zoom in 1}
 \end{figure}
 
@@ -261,7 +261,7 @@ On the other hand, the ETDRK schemes and the EIN method appears to do well at ev
 \begin{minipage}{0.30\textwidth}
         \includegraphics[width=0.92\textwidth]{erk4_zoom2}
 \end{minipage}
-\caption[{A zoom-in over $[1.3,1.41]\times [0.0, 0.3]$ to inspect convergence.}]{A zoom-in over $[1.3,1.41]\times [0.0, 0.3]$. From left to right we have the EIN method, ETDRK2, and ETDRK4. We see slow convergence of the EIN method, and good convergence of the ETDRK schemes.}
+\caption[{A zoom-in over $[1.30,1.41]\times [0.0, 0.30]$ to inspect convergence.}]{A zoom-in over $[1.30,1.41]\times [0.0, 0.30]$. From left to right we have the EIN method, ETDRK2, and ETDRK4. We see slow convergence of the EIN method, and good convergence of the ETDRK schemes.}
 \label{fig:mcm zoom in 2}
 \end{figure}
 
@@ -289,7 +289,7 @@ Setting the initial condition to be the dumbbell-shaped curve of the top left im
 \begin{minipage}{0.48\textwidth}
         \includegraphics[width=0.96\textwidth]{dumbbell_3d075}
 \end{minipage}
-\caption[Mean curvature flow of a dumbbell-shaped curve in 3D.]{Mean curvature flow of a dumbbell-shaped curve in 3D. From the left to right, top to bottom, the plots show the evolution at times $t=0$, $0.1$, $0.3$, $0.525$, $0.55$, $0.75$.}
+\caption[Mean curvature flow of a dumbbell-shaped curve in 3D.]{Mean curvature flow of a dumbbell-shaped curve in 3D. From the left to right, top to bottom, the plots show the evolution at times $t=0$, $0.10$, $0.30$, $0.525$, $0.55$, $0.75$.}
 \label{fig:mcm 3d dumbbell}
 \end{figure}
 
@@ -325,7 +325,7 @@ For our methods, the added factor of $\gamma(\omega) + \gamma''(\omega)$ present
 \begin{minipage}{0.44\textwidth}
        \includegraphics[width=0.96\textwidth]{aniso016}
 \end{minipage}
-\caption[Anisotropic mean curvature flow.]{Anisotropic mean curvature flow in 2D. The plots show the evolution of the curve at times $t=0$, $0.01$, $0.06$, $0.16$. The initial curve gradually shrinks to a curve exhibiting four-fold symmetry as it collapses to a point.}
+\caption[Anisotropic mean curvature flow.]{Anisotropic mean curvature flow in 2D. The plots show the evolution of the curve at times $t=0$, $0.01$, $0.06$, $0.16$. The initial curve smooths and shrinks to a curve exhibiting four-fold symmetry as it collapses to a point.}
 \label{fig:aniso mcm}
 \end{figure}
 
@@ -340,7 +340,7 @@ u_t = -\epsilon^2 \Delta_\S^2 u + \Delta_\S(u^3- u),
 \end{align}
 where $\epsilon>0$ is a small parameter that determines interfacial thickness, $\S$ is a surface in $\bR^3$, and the solution $u$ indicates the domains of the separating binary fluid.
 
-We assume initially that the solution is well-mixed and thus the initial conditions are chosen uniformly at random from $[-\epsilon,\epsilon]$, and for our experiments below, $\epsilon=0.10$. As time progress, the initially well-mixed solution aggregates into homogeneous zones separated by transition layers of thickness $\O(\epsilon)$. Within the homogeneous zones, $u$ takes on the value 1 or $-1$. 
+We assume initially that the solution is well-mixed and thus the initial conditions are chosen uniformly at random from $[-\epsilon,\epsilon]$.. As time progress, the initially well-mixed solution aggregates into homogeneous zones separated by transition layers of thickness $\O(\epsilon)$. Within the homogeneous zones, $u$ takes on the value 1 or $-1$. 
 
 To discretize the surface operators, we use the closest point method of Ruuth and Merriman \cite{ruuth2008simple}. Their approach is to extend the solution off the surface into the embedding space at each time step in a way that allows them to replace the surface operators with its Cartesian analog. It then becomes a matter of selecting from standard finite difference methods for the discretization of the spatial operators. We must also mention the work of Macdonald and Ruuth \cite{macdonald2009implicit} that opened up the possibility of implicit time stepping with the closest point method.
 
@@ -366,19 +366,19 @@ p \geq (3\bar u^2 - 1)p_0,
 \end{align}
 where $\bar u = \sup_\S \abs{u^n}$. For simplicity, we use $p=2p_0$ as $u$ takes values in $[-1,1]$.  
 
-\cref{fig:ch torus,fig:ch cow} show the solution to \cref{ch} on two different surfaces at time $T=100$. In both examples, the spatial grid is uniform, with $h=???$ for the torus and $h=???$ for the cow. Time stepping is done with SBDF2 and for the time step-size, we have chosen $\Delta t = 0.5h$ in the example with the torus and $\Delta t = 1$ in the example with the cow. 
+\cref{fig:ch torus,fig:ch cow} show the solution to \cref{ch} on two different surfaces at time $T=100$. In both examples, the spatial grid is uniform, with $h=0.14$ for the torus and $h=0.075$ for the cow. We then set $\epsilon=2h$. Time stepping is done with SBDF2 and for the time step-size, we have chosen $\Delta t = 0.5h$ in the example with the torus and $\Delta t = 1$ in the example with the cow. 
 
 The latter is to illustrate that we may choose the step-size reflecting the dynamics of the solution. For the Cahn-Hilliard, the dynamics may be broadly split into two stages \cite{sun2000dynamics}. The first is a fast coarsening stage in which a pattern of internal layers is formed from the initial state in an $\O(1)$ time interval. This is then followed by an exponentially slow coarsening during which the internal layers may collapse together to reach a stable/energy minimizing state. It is during this slow phase that our schemes provide the greatest benefit. 
 
 \begin{figure}[htb!]
 	\centering
-\includegraphics[width=0.65\textwidth]{}
+\includegraphics[width=0.65\textwidth]{ch_torus}
 \caption[Cahn-Hilliard on a torus.]{Cahn-Hilliard on a torus.}
 \label{fig:ch torus}
 \end{figure}
 \begin{figure}[htb!]
 	\centering
-\includegraphics[width=0.65\textwidth]{}
+\includegraphics[width=0.65\textwidth]{ch_cow}
 \caption[Cahn-Hilliard on a cow-shaped surface.]{Cahn-Hilliard on a cow-shaped surface.}
 \label{fig:ch cow}
 \end{figure}
@@ -403,12 +403,12 @@ The experiments in \cref{fig:mchp energy minimizers}  show that our methods can 
 
 \begin{figure}[htb!]
         \centering
-\begin{minipage}{0.46\textwidth}
-       \includegraphics[width=0.98\textwidth]{lamellae}
+\begin{minipage}{0.45\textwidth}
+       \includegraphics[width=0.84\textwidth]{lamellae}
 \end{minipage}
-\begin{minipage}{0.46\textwidth}
-       \includegraphics[width=0.98\textwidth]{hex_pack}
+\begin{minipage}{0.45\textwidth}
+       \includegraphics[width=0.84\textwidth]{hex_pack}
 \end{minipage}
-\caption[{Energy minimizing patterns of the nonlocal Cahn-Hilliard \cref{mch}.}]{Energy minimizing patterns of the nonlocal Cahn-Hilliard \cref{mch}. On the left, the parameters set were $(\epsilon, m) = (0.10,0)$. On the right, the parameters set were $(\epsilon,m)=(0.10,0.40)$.}
+\caption[{Energy minimizing patterns of the nonlocal Cahn-Hilliard \cref{mch}.}]{Energy minimizing patterns of the nonlocal Cahn-Hilliard \cref{mch}. Left: Lamellae, with $(\epsilon,m)=(0.10,0)$. Right: Hexagonally packed spots, with $(\epsilon,m)=(0.10,0.40)$.}
 \label{fig:mchp energy minimizers}
 \end{figure}
