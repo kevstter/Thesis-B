@@ -178,7 +178,7 @@ In \cref{sect:exp rk}, we have presented two exponential Runge-Kutta methods in 
 \end{align}
 for $c \in [0,1]$, or be able to efficiently evaluate the related matrix-vector multiplications without explicit construction.
 
-Difficulties with the evaluation of the matrix exponential and related functions of the form \cref{phi functions} are well-known and well-studied, eg.\ \cite{moler2003nineteen,higham2002accuracy,higham2008functions,hochbruck1997krylov}. Thus widespread adoption of exponential time differencing methods must first contend with the developement of stable and efficient algorithms for computing the matrix exponential. 
+Difficulties with the evaluation of the matrix exponential and related functions of the form \cref{phi functions} are well-known and well-studied, eg.\ \cite{moler2003nineteen,higham2002accuracy,higham2008functions,hochbruck1997krylov}. Thus widespread adoption of exponential time differencing methods must first contend with the development of stable and efficient algorithms for computing the matrix exponential. 
 
 In our examples, we follow the direction of Kassam and Trefethen \cite{kassam2005fourth}. They take a contour integral approach to the evaluation of functions in the form of \cref{phi functions} coupled with the trapezoidal rule for fast, accurate, and stable computations. Moreover, to avoid the unpleasantness of boundary conditions (and the subsequent complications), our domain will be periodic when using ETDRK2 or ETDRK4. 
 

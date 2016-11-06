@@ -1,6 +1,6 @@
 \chapter{IMEX Linear Multistep Methods}
 \label{LMM}
-For equations whose righthand side comprise of a stiff linear component and a nonstiff nonlinear part, a popular class of methods to apply are the implicit-explicit linear multistep methods\footnote{We will refer to these simply as IMEX methods.}. The simplest of these is the semi-implicit Euler -- forward Euler to the nonlinear component and backward Euler to the linear, stiff component -- a scheme that we reviewed in Chapter 2. 
+For equations whose right-hand side comprise of a stiff linear component and a nonstiff nonlinear part, a popular class of methods to apply are the implicit-explicit linear multistep methods\footnote{We will refer to these simply as IMEX methods.}. The simplest of these is the semi-implicit Euler -- forward Euler to the nonlinear component and backward Euler to the linear, stiff component -- a scheme that we reviewed in Chapter 2. 
 
 In this chapter, we investigate the use of IMEX methods within the linear stabilization framework. Implicit solution of the added linear term provides the needed stability, and the remaining terms, including the stiff nonlinear term, are solved explicitly.
 
@@ -106,7 +106,7 @@ The resulting polynomials from applying an $n$th order IMEX scheme to the modifi
 \end{theorem}
 
 \subsection{Amplification polynomials of second order IMEX schemes}
-We start by applying CNAB \eqref{cnab} to the modified test equation \eqref{mte}. Combined with the anzatz $u^n = \xi^n$ and setting $z=\lambda\Delta t$, we get the amplification polynomial
+We start by applying CNAB \eqref{cnab} to the modified test equation \eqref{mte}. Combined with the ansatz $u^n = \xi^n$ and setting $z=\lambda\Delta t$, we get the amplification polynomial
 \begin{align}
 \Phi_2(\xi) 
 = \left(1 - \frac{1}{2}zp\right)\xi^2
@@ -177,12 +177,12 @@ Other IMEX schemes are analyzed in the same way. The amplification polynomials o
 \label{table:amp poly 2}
 \end{table}
 
-\subsection{Amplification polynomials of third and fourth order IMEX LMMs}
+\subsection{Amplification polynomials of third and fourth order IMEX methods}
 We continue with the analysis for higher order IMEX schemes. Again, amplification polynomials and parameter restrictions are derived. Because the expressions and manipulations quickly become cumbersome and tedious for higher order methods, the computer algebra system, \textsc{Maple}\texttrademark, was used to for the majority of the calculations.
 
 \begin{table}[htb!]
 	\centering
-	\caption[Amplification polynomials of third and fourth order IMEX]{Amplification polynomial and choice of parameter when applying high order IMEX LMMs to the modified test equation for unconditional stability.}
+	\caption[Amplification polynomials of third and fourth order IMEX]{Amplification polynomial and choice of parameter when applying high order IMEX methods to the modified test equation for unconditional stability.}
 	\begin{tabular}{lll}
 		\toprule[1.25pt] 
 		\head{Method} 
@@ -290,7 +290,7 @@ Results of the numerical convergence study are shown in \cref{lmm conv test}. Ea
 \begin{figure}
         \centering
 \includegraphics[width=0.65\textwidth]{lmm_conv_ammc}
-\caption[Numerical convergence study with IMEX LMMs]{Numerical convergence study to \cref{ammc pmpm} with IMEX methods. Convergence of EIN is also included for comparison. The test with mCNAB is omitted, but would otherwise overlap with CNAB.}
+\caption[Numerical convergence study with IMEX methods.]{Numerical convergence study to \cref{ammc pmpm} with IMEX methods. Convergence of EIN is also included for comparison. The test with mCNAB is omitted, but would otherwise overlap with CNAB.}
 \label{lmm conv test}
 \end{figure}
 
@@ -333,7 +333,7 @@ or equivalently
 \max_{1\leq j\leq N}\frac{7}{8(1 + (D_1\bar u^n_j)^2)} \leq p 
 \leq \min_{1\leq j\leq N}\frac{2}{1 + (D_1 \bar u^n_j)^2}.
 \end{align}
-Failure of the method is due to being unable to satisfy the parameter constraint at every grid node simultaneously. From \cref{fig:ammc sol}, we see that $\max_j (D_1 \bar u^n_j)^2$ is increasing as the solution evolves and is most extreme near the boundaries. Thus we expect instabilities to develop, and to develop in those regions first. This analysis is corroborated by \cref{fig:sbdf3 instab}, where we see instabilities developing near the righthand boundary.
+Failure of the method is due to being unable to satisfy the parameter constraint at every grid node simultaneously. From \cref{fig:ammc sol}, we see that $\max_j (D_1 \bar u^n_j)^2$ is increasing as the solution evolves and is most extreme near the boundaries. Thus we expect instabilities to develop, and to develop in those regions first. This analysis is corroborated by \cref{fig:sbdf3 instab}, where we see instabilities developing near the right-hand boundary.
 \begin{figure}[htb!]
         \centering
 \begin{minipage}{0.45\textwidth}
@@ -342,7 +342,7 @@ Failure of the method is due to being unable to satisfy the parameter constraint
 \begin{minipage}{0.45\textwidth}
        \includegraphics[width=0.95\textwidth]{sbdf3_instabilities_zoom}
 \end{minipage}
-\caption[Instabilities using SBDF3.]{Instabilities using SBDF3. With $p=1.675$ and $\Delta t=\num{9.2e-4}$, we observe instabilities developing near the righthand boundary of the gray dashed curve. The figure on the right is a zoom-in to the righthand boundary.}
+\caption[Instabilities using SBDF3.]{Instabilities using SBDF3. With $p=1.675$ and $\Delta t=\num{9.2e-4}$, we observe instabilities developing near the right-hand boundary of the gray dashed curve. The figure on the right is a zoom-in to the right-hand boundary.}
 \label{fig:sbdf3 instab}
 \end{figure}
 
@@ -414,7 +414,7 @@ We offer an explanation. In the simple case of the modified test equation \cref{
 \end{align}
 This expression deviates from the exact solution, $\exp(z)$, in the $z^3$ term  and shows a quadratic dependence on $p$. That is to say, the leading error term may be large if $p$ is large and $\Delta t$ is not sufficiently small to control the error. That is exactly what is observed in \cref{fig:nl5 conv}.
 
-On the other hand, the methods we have proposed all show only a linear dependence on $p$ under the same analysis, and do not suffer catastropically when $p$ is large.
+On the other hand, the methods we have proposed all show only a linear dependence on $p$ under the same analysis, and do not suffer catastrophically when $p$ is large.
 
 \subsection{Amplification factors at infinity}
 In the last section, we discovered a deficiency of the EIN method. The leading error term, which is $\O(\Delta t^3)$, has a coefficient that is quadratic in $p$, which we argued lead to a reduced observed order of accuracy. Thus it appears that an effective linearly stabilized time stepping scheme must have this error coefficient small with respect to $p$. 
