@@ -170,27 +170,28 @@ CNAB & 0.10 & 108 & 0.64 & 347
 
 
 \section{Motion by Mean Curvature}
-In this section, we study the problem of computing motion by mean curvature flow. The level set equation for mean curvature flow is 
+In this section, we study the problem of interface evolution under mean curvature flow. The level set equation for motion by mean curvature is 
 \begin{align}
         u_t 
 = \kappa\abs{\nabla u} 
 = \abs{\nabla u} \nabla \cdot \left(\frac{\nabla u}{\abs{\nabla u}} \right).
+\label{mcm}
 \end{align}
-In these problems, the interest is in the time evolution of the interface, $\Gamma=\Gamma(t)$, typically described by the zero level set of the function $u$,
+Our interest is in the time evolution of the interface, $\Gamma=\Gamma(t)$, described by the zero level set of the function $u$,
 \begin{align}
         \Gamma(t) = \{x \in \bR^d \mid u(x,t) =0\}.
 \end{align}
 
-We will demonstrate the effectiveness of our schemes on similar examples to that of Smereka \cite{smereka2003semi}. In his paper, he uses a linearly stabilized schemes to take large, stable time steps. In fact, it is also suggested in his paper that Richardson extrapolation may be used for second order, but was not implemented. We follow the example set in \cite{smereka2003semi} and stabilize with a Laplacian term $p\Delta u$ to get 
+We will demonstrate the effectiveness of our schemes on examples similar to that of Smereka \cite{smereka2003semi}. In \cite{smereka2003semi}, he uses what we call linearly stabilized SBDF1 to take large, stable time steps. In fact, in the same paper it was also suggested that Richardson extrapolation may be used to attain second order convergence, but was not implemented. We follow the example set in \cite{smereka2003semi} and stabilize \cref{mcm} with a Laplacian term, $p\Delta u$, to get 
 \begin{align}
         u_t = \kappa \abs{\nabla u} - p\Delta u + p\Delta u.
 \end{align}
-An analysis similar to \cref{p1 estimate inpaint 1,p1 estimate inpaint 2} gives $p\geq p_0$ to be sufficient for unconditional stability.
+An analysis similar to \cref{p1 estimate inpaint 1,p1 estimate inpaint 2} yields $p\geq p_0$ to be sufficient for unconditional stability.
 
-Let us point out a key difference between this problem and the inpainting problem of the previous section. In the inpainting problem, we drive the system to steady state.  As such, we were afforded a range of time step-sizes where the solution method performed well. The step-size did not affect the accuracy of the solution, only the computing time. For mean curvature flow, the step-size influences the accuracy of the solution, so we are really only interested in step-sizes that maintain an acceptable level of accuracy.
+Let us point out a key difference between this problem and the inpainting problem of the previous section. In the inpainting problem, the system was to be driven to steady state. As such, we were afforded a range of time step-sizes where the solution method performed well in terms of speed. Visually, the step-size did not affect the accuracy. For mean curvature flow, computing time and accuracy are directly related to the choice of step-size. Thus we are interested in large step-sizes only if an acceptable level of accuracy is maintained.
 
 \subsection{Shrinking dumbbell in 2D and 3D}
-Our first example is a shrinking dumbbell-shaped curve in 2D. In \cref{fig:mcm 2d dumbbell} we show the shrinking of this curve under mean curvature flow. The solution to this problem at time $T=1.25$ with an explicit Runge-Kutta method, on a $256\times 512$ periodic grid with second order centred differences, costs $\O(10^4)$ time steps for stability.
+Our first example is evolution of a dumbbell-shaped curve in 2D. \cref{fig:mcm 2d dumbbell} plots the motion of this curve under mean curvature flow. From the initial dumbbell shape, the corners smooth out and then the curve shrinks as shown, until it eventually collapses down to a point. These were generated with an explicit Runge-Kutta method solving to time $T=1.25$. On a periodic grid of size $256\times 512$ and approximating the spatial derivatives using second order centred differences, the number of time steps needed for stability is $\O(10^4)$.
 
 \begin{figure}[htb!]
         \centering
@@ -210,7 +211,7 @@ Our first example is a shrinking dumbbell-shaped curve in 2D. In \cref{fig:mcm 2
 \label{fig:mcm 2d dumbbell}
 \end{figure}
 
-In \cref{fig:mcm 2d conv}, we show the convergence of SBDF1, SBDF2, CNAB, EIN, ETDRK2, ETDRK4 to the problem of shrinking a dumbbell-shaped curve by mean curvature flow at time $T=1.25$ in the positive quadrant only. As shown, each scheme is stable and convergent  using a number of time steps much smaller than $10^4$. However, amongst the schemes, there is a major difference as to the number of time steps needed to achieve an acceptable level of accuracy. 
+In \cref{fig:mcm 2d conv}, we show the convergence of SBDF1, SBDF2, CNAB, EIN, ETDRK2, ETDRK4 to the same problem, but plotting in the positive quadrant only. As shown, each scheme is stable and convergent  using a number of time steps much smaller than $10^4$. However, it is important to note that amongst the schemes, the number of time steps needed to achieve an acceptable level of accuracy ranges from 50 to 800. 
 
 \begin{figure}[htb!]
         \centering
@@ -232,13 +233,13 @@ In \cref{fig:mcm 2d conv}, we show the convergence of SBDF1, SBDF2, CNAB, EIN, E
 \begin{minipage}{0.48\textwidth}
         \includegraphics[width=0.96\textwidth]{erk4_conv}
 \end{minipage}
-\caption[Convergence of linearly stabilized schemes to a shrinking dumbbell problem.]{Convergence of various linearly stabilized time stepping to a 2D mean curvature flow problem. In the column to the left from top to bottom, we have SBDF1, SBDF2, and CNAB. In the column to the right from top to bottom, we have EIN, ETDRK2, and ETDRK4. Within each plot, each curve is the solution using the number of time steps, $n$, as indicated.}
+\caption[Convergence of linearly stabilized schemes to a shrinking dumbbell problem.]{Convergence of various linearly stabilized time stepping methods to the mean curvature flow of a dumbbell-shaped curve in 2D. In the column to the left from top to bottom, we have SBDF1, SBDF2, and CNAB. In the column to the right from top to bottom, we have EIN, ETDRK2, and ETDRK4. Within each plot, each curve is the solution using the number of time steps, $n$, as indicated.}
 \label{fig:mcm 2d conv}
 \end{figure}
 
-The most disappointing of these is CNAB, for which a minimum of 400 time steps was needed to get a reasonable looking solution and needs close to 800 time steps to present a solution competitive with the other methods. SBDF2 likewise faired poorly in that regards. 
+The most disappointing of these is CNAB, for which a minimum of 400 time steps was needed to get a solution that goes with the frame we have chosen and further needs close to 800 time steps to present a solution competitive with the other methods in accuracy. SBDF2 likewise faired poorly in that regards, needing close to 800 time steps for a solution competitive with the other methods in accuracy. 
 
-On the other hand, the ETDRK schemes and the EIN method appears to do well at even 50-100 time steps. Recall that these are the schemes that have strong damping at infinity (see \cref{fig:damp fac at inf etd}). Zoom-ins to the solution by these schemes are presented in \cref{fig:mcm zoom in 1,fig:mcm zoom in 2}. The zoom-ins show that the ETDRK schemes converge nicely even with few time steps. The EIN method, however, is again hampered by slow convergence, and in this respect, its performance is worse than that of SBDF2 and CNAB. 
+On the other hand, the ETDRK schemes and the EIN method appears to do well at even 50-100 time steps. Recall that these are the schemes that have strong damping at infinity (see \cref{fig:damp fac at inf etd}). Zoom-ins to the solution by these methods are presented in \cref{fig:mcm zoom in 1,fig:mcm zoom in 2}. These show that the ETDRK schemes offer good accuracy and convergence at just 50 time steps. The EIN method, however, is again hampered by slow convergence. This is especially clear in \cref{fig:mcm zoom in 1}. If we further factor in computing time, then both CNAB and SBDF2 would outperform the EIN method.
 
 \begin{figure}[htb!]
         \centering
@@ -264,9 +265,9 @@ On the other hand, the ETDRK schemes and the EIN method appears to do well at ev
 \label{fig:mcm zoom in 2}
 \end{figure}
 
-Next, we take this example into 3D. Here, the advantages of our schemes are further magnified. In 2D, one could argue that the computations can be completed using standard explicit schemes within reasonable computing times. In 3D, doing so may require trade offs in the grid size, or computing only over very short time periods. 
+Next, we take this example into 3D. Here, the advantages of our schemes are further magnified. In 2D, one could argue that the computations can be completed using standard explicit schemes within reasonable computing times. In 3D, doing so may require trade offs in the grid size, or computing only over short time periods. 
 
-Setting the initial condition to be the dumbbell-shaped curve of the top left image in \cref{fig:mcm 3d dumbbell}, the curve is then evolved by mean curvature flow. We use a periodic grid of size $256\times 128\times 128$ and solved till time $T=0.75$. With forward Euler, we needed $3000$ time steps for stability, and this computation took over 28 minutes in \textsc{Matlab} 2014b on an Intel\textsuperscript{\textregistered}Core\textsuperscript{\texttrademark}i5-4570 CPU@3.20GHz workstation running Linux. With the linearly stabilized ETDRK2, we solved the same problem using 75 time steps in 103 seconds.
+Setting the initial condition to be the dumbbell-shaped curve of the top left image in \cref{fig:mcm 3d dumbbell}, the curve is then evolved by mean curvature flow. We use a periodic grid of size $256\times 128\times 128$ and solve to time $T=0.75$. With forward Euler, we needed $3000$ time steps for stability, and this computation took over 28 minutes in \textsc{Matlab} 2014b on an Intel\textsuperscript{\textregistered}Core\textsuperscript{\texttrademark}i5-4570 CPU@3.20GHz workstation running Linux. With the linearly stabilized ETDRK2, we solved the same problem using 75 time steps in 103 seconds.
 
 \begin{figure}[htb!]
         \centering
@@ -297,6 +298,7 @@ Setting the initial condition to be the dumbbell-shaped curve of the top left im
 So far, the motion law considered may be more appropriately stated as isotropic mean curvature motion. In \cite{oberman2011aniso}, Oberman et at., present a method for anisotropic mean curvature flow: 
 \begin{align}
         u_t = (\gamma(\omega) + \gamma''(\omega))\abs{\nabla u} \nabla \cdot \left( \frac{\nabla u}{\abs{\nabla u}} \right),
+\label{aniso mcm}
 \end{align}
 where $\omega = \arctan(u_y/u_x)$, and 
 \begin{align}
@@ -304,8 +306,11 @@ where $\omega = \arctan(u_y/u_x)$, and
 = \gamma_n(\omega) 
 = \frac{1}{n^2+1}(n^2 + 1 - \sin(n\omega)), 
 \quad\text{for } n = 0,2,4,8.
+\label{aniso mcm gamma}
 \end{align}
-For our methods, the added factor of $\gamma(\omega) + \gamma''(\omega)$ presents no additional difficulty at all. Setting $n=4$, $p=(1+(n^2-1)/(n^2+1))p_0$, and on a periodic grid of size $256\times 256$, we take 500 time steps with a linearly stabilized ETDRK2 to produce the solution presented in \cref{fig:aniso mcm}. 
+Under isotropic mean curvature motion, a simple, smooth closed contour in 2D has a circular limiting shape as it reduces to a point. Under \cref{aniso mcm,aniso mcm gamma}, the limiting shape will have $n$-fold rotational symmetry.
+
+For our methods, the added factor of $\gamma(\omega) + \gamma''(\omega)$ presents no additional difficulty at all. Again, we can stabilize with $p\Delta u$, with $p=(1+(n^2-1)/(n^2+1))p_0$. Setting $n=4$, and on a periodic grid of size $256\times 256$, we take 500 time steps with a linearly stabilized ETDRK2 to produce the solution presented in \cref{fig:aniso mcm}. 
 \begin{figure}
         \centering
 \begin{minipage}{0.44\textwidth}
@@ -320,37 +325,81 @@ For our methods, the added factor of $\gamma(\omega) + \gamma''(\omega)$ present
 \begin{minipage}{0.44\textwidth}
        \includegraphics[width=0.96\textwidth]{aniso016}
 \end{minipage}
-\caption[Anisotropic mean curvature flow.]{Anisotropic mean curvature flow in 2D. The plots show the evolution of the curve at times $t=0$, $0.01$, $0.06$, $0.16$. The initial curve gradually shrinks to a curve exhibiting four-fold symmetry before collapsing to a point.}
+\caption[Anisotropic mean curvature flow.]{Anisotropic mean curvature flow in 2D. The plots show the evolution of the curve at times $t=0$, $0.01$, $0.06$, $0.16$. The initial curve gradually shrinks to a curve exhibiting four-fold symmetry as it collapses to a point.}
 \label{fig:aniso mcm}
 \end{figure}
 
-\section{Phase Separation Models on Moo Surfaces}
-For our last batch of experiments, we will evolve in time phase separation models defined on rectangular grids in 2D, and on surfaces in 3D using the closest point method \cite{ruuth2008simple,macdonald2009implicit}.
+\section{Phase Separation on Moo Surfaces}
+For our last batch of experiments, we will define and evolve phase separation models on rectangular grids in 2D, and on surfaces in 3D using the closest point method \cite{ruuth2008simple,macdonald2009implicit}.
 
 \subsection{Cahn-Hilliard on surface using the closest point method}
+In this section, the model equation is 
+\begin{align}
+u_t = -\epsilon^2 \Delta_\S^2 u + \Delta_\S(u^3- u),
+\label{ch}
+\end{align}
+where $\epsilon>0$ is a small parameter that determines interfacial thickness, $\S$ is a surface in $\bR^3$, and the solution $u$ indicates the domains of the separating binary fluid.
 
+We assume initially that the solution is well-mixed and thus the initial conditions are chosen uniformly at random from $[-\epsilon,\epsilon]$, and for our experiments below, $\epsilon=0.10$. As time progress, the initially well-mixed solution aggregates into homogeneous zones separated by transition layers of thickness $\O(\epsilon)$. Within the homogeneous zones, $u$ takes on the value 1 or $-1$. 
 
-\subsection{A Cahn-Hilliard with nonlocal interactions}
-In this section, we evolve 
+To discretize the surface operators, we use the closest point method of Ruuth and Merriman \cite{ruuth2008simple}. Their approach is to extend the solution off the surface into the embedding space at each time step in a way that allows them to replace the surface operators with its Cartesian analog. It then becomes a matter of selecting from standard finite difference methods for the discretization of the spatial operators. We must also mention the work of Macdonald and Ruuth \cite{macdonald2009implicit} that opened up the possibility of implicit time stepping with the closest point method.
+
+To use a linearly stabilized method for time stepping, we must determine $p$, and in order to determine $p$, we will linearize \cref{ch}. Substituting with $u = u^n + \delta v$, we have 
+\begin{align}
+\begin{split} 
+(u^n + \delta v)_t 
+&= -\epsilon^2\Delta_\S^2 (u^n + \delta v) 
++ \Delta_\S((u^n + \delta v)^3 - u^n - \delta v) 
+\\
+&= -\epsilon^2\delta\Delta_\S^2 v
++ \delta^3\Delta_\S v^3 + 3\delta^2u^n \Delta_\S v^2 + 3\delta (u^n)^2 \Delta_\S v - \delta \Delta_\S v. 
+\end{split} 
+\label{ch linearize}
+\end{align}
+Differentiating with respect to $\delta$ and then setting $\delta = 0$, we arrive at the linearized equation 
+\begin{align}
+v_t = -\epsilon^2\Delta_\S^2 v + (3(u^n)^2-1) \Delta_\S v. 
+\end{align}
+Thus if we are to stabilize with $p\Delta_\S u$, then we may choose $p$ as 
+\begin{align}
+p \geq (3\bar u^2 - 1)p_0, 
+\end{align}
+where $\bar u = \sup_\S \abs{u^n}$. For simplicity, we use $p=2p_0$ as $u$ takes values in $[-1,1]$.  
+
+\cref{fig:ch torus,fig:ch cow} show the solution to \cref{ch} on two different surfaces at time $T=100$. In both examples, the spatial grid is uniform, with $h=???$ for the torus and $h=???$ for the cow. Time stepping is done with SBDF2 and for the time step-size, we have chosen $\Delta t = 0.5h$ in the example with the torus and $\Delta t = 1$ in the example with the cow. 
+
+The latter is to illustrate that we may choose the step-size reflecting the dynamics of the solution. For the Cahn-Hilliard, the dynamics may be broadly split into two stages \cite{sun2000dynamics}. The first is a fast coarsening stage in which a pattern of internal layers is formed from the initial state in an $\O(1)$ time interval. This is then followed by an exponentially slow coarsening during which the internal layers may collapse together to reach a stable/energy minimizing state. It is during this slow phase that our schemes provide the greatest benefit. 
+
+\begin{figure}[htb!]
+	\centering
+\includegraphics[width=0.65\textwidth]{}
+\caption[Cahn-Hilliard on a torus.]{Cahn-Hilliard on a torus.}
+\label{fig:ch torus}
+\end{figure}
+\begin{figure}[htb!]
+	\centering
+\includegraphics[width=0.65\textwidth]{}
+\caption[Cahn-Hilliard on a cow-shaped surface.]{Cahn-Hilliard on a cow-shaped surface.}
+\label{fig:ch cow}
+\end{figure}
+
+\subsection{A modified Cahn-Hilliard with nonlocal interactions}
+As our last example, we solve 
 \begin{align}
         u_t = -\epsilon^2 \Delta^2 u + \Delta (u^3 + 3mu^2 - (1-3m^2)u) - u, 
-\quad (x,y)\in[0,4\pi]^2,
+\quad (x,y)\in[-2\pi,2\pi]^2,
 \quad t>0,
 \label{mch}
 \end{align}
-with periodic boundary conditions and uniform random perturbations in $[-1,1]$ for the initial condition, and where $\epsilon>0, m\geq 0$ are parameters that characterize the behaviour of the solution. As noted in \cite{choksi2009phase,choksi20112d}, this equation is of interest for its connections to the self-assembly of diblock copolymers. They describe how different regions in the parameter space $(\epsilon, m)$ give rise to the formation of different energy-minimizing patterns and also address the difficulties one faces in generating these energy-minimizing states numerically. One such difficulty that we look to treat is the mix of extremely fast dynamics at the beginning of the evolution with rapidly slowing dynamics at we inch towards steady state.  
+with periodic boundary conditions and uniform random perturbations in $[-\epsilon,\epsilon]$ for the initial condition. In this model, $\epsilon>0, m\geq 0$ are parameters that characterize the steady state behaviour of the solution \cite{choksi2009phase,choksi20112d}. As described in \cite{choksi2009phase}, \cref{mch} is of interest for its connections to the self-assembly of diblock copolymers. They examine how different regions in the parameter space $(\epsilon, m)$ dictate the formation of distinct energy-minimizing patterns from an initial well-mixed state. They also address the difficulties one expects when numerically generating these energy-minimizing states. As in the previous example, we propose our methods for handling the exponentially slowing dynamics that take place as the solution inches toward steady state. We will show that our methods are stable and can quickly advance the solution to access the minimizing states. 
 
-For an efficient implementation, we would suggest using a fast, cheap explicit method to simulate the initial fast dynamics of this equation, before switching to our linearly stabilized scheme to handle the late dynamics. The experiments we perform here are only to show that our methods are stable and can quickly advance the solution to access the minimizing states. 
-
-To stabilize \cref{mch}, we first need an estimate on the term $\Delta(u^3 + 3mu^2-(1-3m^2)u)$. Linearizing, we find
+To stabilize \cref{mch}, we first need an estimate on the term $\Delta(u^3 + 3mu^2-(1-3m^2)u)$. We proceed as in \cref{ch linearize} to find the linearized form
 \begin{align}
-        \norm{\Delta(3\bar u^2 + 6m\bar u - (1-3m^2))}_2 
-\leq \abs{2+6m+3m^2}\norm{\Delta}_2.
+v_t = -\epsilon^2\Delta^2 v - v + (3(u^n)^2 + 6mu^n - (1-3m^2) \Delta v.
 \end{align}
-So if we stabilize with $p\Delta u$, choosing $p \geq (2+6m+3m^2)p_0$ will be sufficient for guaranteeing unconditional stability.
+Thus if we stabilize with $p\Delta u$, choosing $p \geq (2+6m+3m^2)p_0$ will be sufficient to guaranteeing unconditional stability.
 
-Our experiments in [figure] shows our methods can be used to access the energy-minimizing states of \cref{mte}. 
-We note that to more easily access the energy-minimizing states, we also adopt the strategy of spectral filtering described in \cite{choksi20112d}. 
+The experiments in \cref{fig:mchp energy minimizers}  show that our methods can be used to access the energy-minimizing states of \cref{mch}. As a final note, we mention that we adopt the strategy of spectral filtering that was proposed in \cite{choksi20112d}.
 
 \begin{figure}[htb!]
         \centering
@@ -363,9 +412,3 @@ We note that to more easily access the energy-minimizing states, we also adopt t
 \caption[{Energy minimizing patterns of the nonlocal Cahn-Hilliard \cref{mch}.}]{Energy minimizing patterns of the nonlocal Cahn-Hilliard \cref{mch}. On the left, the parameters set were $(\epsilon, m) = (0.10,0)$. On the right, the parameters set were $(\epsilon,m)=(0.10,0.40)$.}
 \label{fig:mchp energy minimizers}
 \end{figure}
-
-
-
-\section{notes}
-+ why are the problems different?
-
