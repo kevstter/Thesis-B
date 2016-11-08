@@ -7,7 +7,7 @@ Our derivations for new linearly stabilized schemes also begins by ensuring that
 
 \section{Linear Stability Analysis}
 \subsection{Stability and the scalar test equation}
-Linear stability analysis is a method of analysis predicated on requiring that the numerical solution replicate properties inherent in the exact solution to the test equation,
+Linear stability analysis is a method of analysis predicated on requiring that the numerical solution replicates properties inherent in the exact solution to the test equation,
 % Linear stability analysis is predicated finding the constraints necessary on the time step-size so that the numerical solution generated using that particular time stepping method applied to the test equation, 
 \begin{align}
 u' = \lambda u, 
@@ -51,7 +51,7 @@ This time, imposing $\abs{\xi_{BE}}<1$ adds no new constraint to the time step-s
 More generally, to determine the stability constraint of any one-step method, we apply the method to the test equation, rearrange as $u^{n+1} = \xi(\lambda\Delta t) u^n$, and impose $\abs{\xi(\lambda\Delta t)} < 1$. The quantity $\xi(\lambda\Delta t)$ is commonly referred to as the amplification factor, and the region, $\{\lambda\Delta t \in \bC \mid \abs{\xi(\lambda\Delta t)} < 1\}$, the stability region. In other words, for stability, we require that the magnitude of the amplification factor is less than one.
  
 \subsection{Stability contours}
-A stability contour plot is a graphical device for understanding the stability constraint of a method. It offers a way for us to verify calculations done analytically, or to visualize the stability region of a numerical method where an analytic solution is infeasible. Stability contours plots in this thesis all show contours of the amplification factor $\xi(\lambda\Delta t)$ plotted over a subset of the region $\{\lambda\Delta t \in \bC \mid \Im(\lambda\Delta t) \geq 0\}$, with a focus on the left half plane and the negative real line. \cref{fig:FE BE stab cont} shows stability contours of the forward Euler and the backward Euler method. Note that the regions are symmetric with respect to the real axis and thus only $\Im(\lambda\Delta t) \geq 0$ will be plotted.
+A stability contour plot is a graphical device for understanding the stability constraint of a method. It offers a way for us to verify calculations done analytically, or to visualize the stability region of a numerical method where an analytic solution is infeasible. Stability contour plots in this thesis all show contours of the amplification factor $\xi(\lambda\Delta t)$ plotted over a subset of the region $\{\lambda\Delta t \in \bC \mid \Im(\lambda\Delta t) \geq 0\}$, with a focus on the left half plane and the negative real line. \cref{fig:FE BE stab cont} shows stability contours of the forward Euler and the backward Euler method. Note that the regions are symmetric with respect to the real axis and thus only $\Im(\lambda\Delta t) \geq 0$ will be plotted.
 
 \begin{figure}[htb!]
 	\centering
@@ -118,13 +118,14 @@ Suppose we are approximating some quantity, $q$, via a rule $\bar q$ that is dep
 Observe that if we evaluate both $\bar q(h)$ and $\bar q(h/2)$, then we can eliminate the leading order error term,
 \begin{align}
         q-q^*(h) = q-\frac{2^k \bar q(h/2)  -\bar q(h)}{2^k-1} 
-= Ch^{k+1} + \cdots .
+= Ch^{k+1} + \cdots ,
 \end{align}
+to achieve higher order accuracy.
 
 \section{Overview}
 In Chapter 2, we formally introduce the notion of linear stabilization. Motivation for this technique is supplied by the need to handle a 1D stiff nonlinear PDE describing axisymmetric mean curvature flow and leads us to the well-known first order linearly stabilized time integrator and the EIN method of Duchemin and Eggers. Following that, the framework in which we analyze the stability of linearly stabilized schemes is set. 
 
-In Chapter 3 we investigate implicit-explicit (IMEX) linear multistep methods within the linear stabilization framework. A detailed comparison of the schemes based on IMEX multistep schemes and the EIN method is conducted. Our experiments suggest criteria in addition to unconditional stability are necessary for practical linearly stabilized schemes. This in turn eliminates third order and higher multistep based linearly stabilized schemes from use. 
+In Chapter 3 we investigate implicit-explicit (IMEX) linear multistep methods within the linear stabilization framework. A detailed comparison of the schemes based on IMEX multistep schemes and the EIN method is conducted. Our experiments suggest criteria in addition to unconditional stability are necessary for practical linearly stabilized schemes. This in turn eliminates third and higher order multistep-based linearly stabilized schemes from use. 
 
 In Chapter 4, we explore the use of exponential Runge-Kutta methods to mend this deficiency. A second order and a fourth order exponential Runge-Kutta method are verified to exhibit unconditional stability over an unbounded parameter range. (Coming back to this after I have chapter 4 written)
 

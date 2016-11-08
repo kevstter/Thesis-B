@@ -60,7 +60,7 @@ u^n_j = \bar u(j\Delta x, n\Delta t)
 + \xi^n e^{ikj\Delta x}
 = \bar u^n_j + \xi^n e^{ikj\Delta x}.
 \end{align}
-Recording the result term-by term, we have 
+Recording the result term-by-term, we have 
 \begin{subequations}
 	\begin{align}
 	\frac{u^{n+1}_j - u^n_j}{\Delta t} 
@@ -146,7 +146,7 @@ This last relation is satisfied on the assumption that $\Delta x \ll \bar u^n_j$
 Since each term is positive without restriction, we have that $w+2 > 0$, and thus $\abs{\xi} < 1$ for all $\Delta t > 0$.
 
 \subsection{Second order by Richardson extrapolation}
-As stated at the outset, the time stepping procedure in \eqref{ammc sbdf1} is only first order. The work of Duchemin and Eggers \cite{duchemin2014explicit} (and as was suggested but not implemented in \cite{smereka2003semi},) extends the method to second order by Richardson extrapolation.  Moreover, they generalized the approach with a free parameter, $p$, i.e.,
+As stated at the outset, the time stepping procedure in \eqref{ammc sbdf1} is only first order. The work of Duchemin and Eggers \cite{duchemin2014explicit} (and as was suggested but not implemented in \cite{smereka2003semi}) extends the method to second order by Richardson extrapolation.  Moreover, they generalized the approach with a free parameter, $p$, i.e.,
 \begin{align}
 u_t = \frac{u_{xx}}{1 + u_x^2} - \frac{1}{u} - pu_{xx} + pu_{xx}, 
 \label{ammc p}

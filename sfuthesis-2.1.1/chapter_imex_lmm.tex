@@ -82,7 +82,7 @@ The resulting polynomials from applying an $n$th order IMEX scheme to the modifi
         The polynomial $\phi$ is a von Neumann polynomial if all its roots, $r_q$, satisfy $\abs{r_q}\leq 1$.
 \end{definition}
 \begin{definition}
-	The polynomial $\phi$ is a simple von Neumann polynomial is $\phi$ is a von Neumann polynomial and its roots on the unit circle are simple roots.
+	The polynomial $\phi$ is a simple von Neumann polynomial if $\phi$ is a von Neumann polynomial and its roots on the unit circle are simple roots.
 \end{definition}
 \begin{definition}
 	For any polynomial $\phi(\xi) = \sum^n_{j=0} a_j\xi^j$, we define the polynomial $\phi^*$ by $\phi^*(\xi) = \sum^n_{j=0} a^*_{n-j} \xi^j$, where $^*$ on the coefficient denotes the complex conjugate.
@@ -178,7 +178,7 @@ Other IMEX schemes are analyzed in the same way. The amplification polynomials o
 \end{table}
 
 \subsection{Amplification polynomials of third and fourth order IMEX methods}
-We continue with the analysis for higher order IMEX schemes. Again, amplification polynomials and parameter restrictions are derived. Because the expressions and manipulations quickly become cumbersome and tedious for higher order methods, the computer algebra system, \textsc{Maple}\texttrademark, was used to for the majority of the calculations.
+We continue with the analysis for higher order IMEX schemes. Again, amplification polynomials and parameter restrictions are derived. Because the expressions and manipulations quickly become cumbersome and tedious for higher order methods, the computer algebra system, \textsc{Maple}\texttrademark, was used for the majority of the calculations.
 
 \begin{table}[htb!]
 	\centering
@@ -213,15 +213,15 @@ We continue with the analysis for higher order IMEX schemes. Again, amplificatio
 	\label{table:amp poly 34}
 \end{table}
 
-Listed in Table \ref{table:amp poly 34} are respectively the amplification factor and the parameter restriction for SBDF3 and SBDF4. We must point out a crucial difference. In contrast to the second order methods, the derived parameter restriction leaves only a finite interval.  This will be addressed further in the subsequent section where it is demonstrated that this detail renders the linearly stabilized SBDF3 and SBDF4 ineffective.
+Listed in Table \ref{table:amp poly 34} are respectively the amplification factor and the parameter restriction for SBDF3 and SBDF4. We must point out a crucial difference. In contrast to the second order methods, the derived parameter restriction leaves only a finite interval.  This will be addressed further in \cref{sect:failure} where it is demonstrated that this detail renders the linearly stabilized SBDF3 and SBDF4 ineffective.
 
 \section{Convergence of Linearly Stabilized IMEX Methods}
-We present in this section numerical tests to support our claims. Stability contours are shown and a numerical convergence test to \cref{ammc} is conducted. We then provide an answer as to why linearly stabilized SBDF3 and SBDF4 fails. 
+We present in this section numerical tests to support our claims. Stability contours are shown and a numerical convergence test to \cref{ammc} is conducted. We then provide an answer as to why linearly stabilized SBDF3 and SBDF4 fail. 
 
 \subsection{Stability contours}
 Presented in \cref{cnab contours,mcnab contours,cnlf contours,sbdf2 contours} are the stability contours for the second order IMEX schemes, \cref{cnab,mcnab,cnlf,sbdf2}, applied to the modified test equation, \cref{mte}. For each, we provide stability contours with $p$ set at $0.95p_0$, $p_0$, $1.5p_0$, where $p_0$ is the minimum required for unconditional stability (\cref{table:amp poly 2}, rightmost column). 
 
-In \cref{sbdf3 contours} are the stability contours for SBDF3 \cref{sbdf3}, and in \cref{sbdf4 contours} are the stability contours for SBDF4 \cref{sbdf4}. In each, we plot four instances to capture finite range where unconditional stability is observed.
+In \cref{sbdf3 contours} are the stability contours for SBDF3 \cref{sbdf3}, and in \cref{sbdf4 contours} are the stability contours for SBDF4 \cref{sbdf4}. In each, we plot four instances to capture the transition from conditional to unconditional stabilized and back.
 \begin{figure}[htb!]
         \centering
 %\includegraphics[width=0.65\textwidth]{cnab_stab_contour}
@@ -268,7 +268,7 @@ In \cref{sbdf3 contours} are the stability contours for SBDF3 \cref{sbdf3}, and 
 \end{figure}
 
 \subsection{Numerical convergence test}
-Convergence of the proposed schemes will be tested on the 1D mean curvature motion problem, which we restate below:
+Convergence of the proposed schemes will be tested on the 1D curvature motion problem, which we restate below:
 \begin{subequations}
 \begin{align}
         u_t = \frac{u_{xx}}{1 + u_x^2} - \frac{1}{u} - pu_{xx} + pu_{xx},
@@ -283,7 +283,7 @@ u(0,t) = u(10,t) = 1.
 \label{ammc pmpm}
 \end{subequations}
 
-As in \cref{ein conv test}, we solve to time $T=0.35$ with $N=2048$ spatial grid nodes. A reference solution is generated using a third order Runge-Kutta method with time step-size $\Delta t = \num{1.46e-5}$, and a max norm relative error calculated. Starting values necessary for the multistep methods are found using a third order Runge-Kutta method with small time step. The values of $p$ used for each scheme are as indicated in \cref{lmm conv test}.
+As in \cref{ein conv test}, we solve to time $T=0.35$ with $N=2048$ spatial grid nodes. A reference solution is generated using Heun's third order Runge-Kutta method \cite{hundsdorfer2013numerical} with time step-size $\Delta t = \num{1.46e-5}$, and a max norm relative error is calculated. Starting values necessary for the multistep methods are found using the same third order Runge-Kutta method. The values of $p$ used for each scheme are as indicated in \cref{lmm conv test}.
 
 Results of the numerical convergence study are shown in \cref{lmm conv test}. Each of the second order methods converge with the order of accuracy as expected, with SBDF2 having the largest errors, followed by CNAB/mCNAB (identical performance), CNLF, and then EIN. SBDF3 converges nicely with $p=0.875$. SBDF4 does not exhibit fourth order convergence and in fact fails at both $\Delta t =\num{6.84e-04}$ and $\Delta t=\num{3.42e-04}$. We discuss next why SBDF4 fails, and show also that SBDF3 suffers from the same defect.
 
@@ -295,6 +295,7 @@ Results of the numerical convergence study are shown in \cref{lmm conv test}. Ea
 \end{figure}
 
 \subsection{Failure with high order IMEX methods}
+\label{sect:failure}
 First, let us tabulate the observed (non)convergence of SBDF3 at various values of $p$. In \cref{table: sbdf3 nonconvergence}, we document three cases. The first case is the one shown in \cref{lmm conv test}. The second case exhibits a drastic drop in the observed convergence rate and in the third case the method diverges as the time step-size is reduced. We attribute the divergence of SBDF3 and SBDF4 to the fact that their parameter restriction is a finite interval.
 
 \begin{table}[htb!]
