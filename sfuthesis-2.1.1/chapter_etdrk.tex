@@ -99,7 +99,7 @@ We refer to this pair of exponential Runge-Kutta methods as ETDRK2 and ETDRK4, r
 \section{Linearly stabilized ETDRK2 and ETDRK4}
 In the last chapter, we identified some useful criteria for quickly assessing the practicality of newly constructed linearly stabilized methods. 
 
-First, we apply the schemes \cref{etdrk2 butcher,etdrk4 butcher} to the modified test equation \cref{mte} and imposed unconditional stability. The resulting parameter restriction must be unbounded, otherwise we stop. For ETDRK2 and ETDRK4, with the help of the computer algebra system, \textsc{Maple}\textsuperscript{\texttrademark}, we determined the parameter restriction to be $[1/2, \infty)$ in both cases. In \cref{fig:etdrk2 stab,fig:etdrk4 stab} are stability contour plots that support this claim.
+First, we apply the schemes \cref{etdrk2 butcher,etdrk4 butcher} to the modified test equation \cref{mte} and imposed unconditional stability. We are only interested in schemes with an unbounded parameter restriction. For ETDRK2 and ETDRK4, with the help of the computer algebra system, \textsc{Maple}\textsuperscript{\texttrademark}, we determined the parameter restriction to be $[1/2, \infty)$ in both cases. In \cref{fig:etdrk2 stab,fig:etdrk4 stab} are stability contour plots that support this claim.
 
 \begin{figure}[htb!]
 	\centering
@@ -117,7 +117,7 @@ First, we apply the schemes \cref{etdrk2 butcher,etdrk4 butcher} to the modified
 \label{fig:etdrk4 stab}
 \end{figure}
 
-We then also considered two other factors that affected the performance. The first is a proxy to the error constant of the numerical scheme, and the second is to consider the amplification factor at infinity. The latter is plotted in \cref{fig:damp fac at inf etd} for both ETDRK2 and ETDRK4. It shows that the ETDRK schemes provide strong damping at infinity for a wide range of $p$ and may be a good candidate for taking large time steps. For the proxy to the error constant, what we did before was we took the amplification factors and found its series expansion at $z=0$,
+Two other factors were considered that affect the performance. The first is the amplification factor as $z\to\infty$, and the second is a proxy to the error constant of the numerical scheme. The former is plotted in \cref{fig:damp fac at inf etd} for both ETDRK2 and ETDRK4. It shows that the ETDRK schemes provide strong damping at infinity for a wide range of $p$ and may be a good candidate for taking large time steps. For the proxy to the error constant, we have previously considered series expansion at $z=0$ of the amplification factors:
 \begin{align}
         \xi_{ETDRK2} = 1+ z + \frac{z^2}{2} + \left(-\frac{1}{4}p^2 + \frac{5}{12}p \right) z^3 + \cdots ,
 \end{align}
@@ -156,9 +156,9 @@ and for the EIN method we have
 \label{fig:damp fac at inf etd}
 \end{figure}
 
-Recall from before that the observed convergence rate of EIN was reduced and we reasoned that that was because the error constant is large whenever $p$ is large, and thus the step-size had to be chosen much smaller than desirable before observing second order convergence.
+Recall from before that the observed convergence rate of EIN was less than we expected from the truncation error. We reasoned that the source of this discrepancy was that the error constant is large whenever $p$ is large. Thus, the step-size had to be chosen to be very small before observing second order convergence.
 
-The situation is similar with the ETDRK schemes. The error term has quadratic and quartic polynomials in $p$ for ETDRK2 and ETDRK4 respectively, and thus we expect these schemes to fair poorly when $p$ is large. That being said, we do find in \cref{chap:num experiments} that these scheme can outperform SBDF2 and CNAB when $p$ is small and the step-size is coarse. To this end, we provide \cref{fig:err p dep} that shows $\delta_1$, $\delta_2$, and $\delta_3$ plotted against $p$. Also plotted are the analogous expressions for SBDF2 and CNAB. As was suggested, there may be a range of $p$ for which these ETDRK schemes are workable. A careful error analysis on fully nonlinear problems would be of some interest and is left as future work.
+The situation is similar with the ETDRK schemes. The error term has quadratic and quartic polynomials in $p$ for ETDRK2 and ETDRK4 respectively, and thus we expect these schemes to fare poorly when $p$ is large. Nonetheless, \cref{chap:num experiments} demonstrates that these schemes can outperform SBDF2 and CNAB when $p$ is small and the step-size is coarse. To this end, \cref{fig:err p dep} provides a plot that shows $\delta_1$, $\delta_2$, and $\delta_3$ against $p$. Also plotted are the analogous expressions for SBDF2 and CNAB. As was suggested, there may be a range of $p$ for which these ETDRK schemes are workable. A careful error analysis on fully nonlinear problems would be of some interest and is left as future work.
 
 \begin{figure}[htb!]
         \centering
@@ -170,7 +170,7 @@ The situation is similar with the ETDRK schemes. The error term has quadratic an
 \subsection{Stable evaluation of the matrix exponential and related functions}
 Finally, we wish to discuss briefly the matter of implementing ETDRK schemes.
 
-In \cref{sect:exp rk}, we have presented two exponential Runge-Kutta methods in tableau form and the entries of these tableaus are functions of the operator, $\Delta t\L$.  For example, to implement ETDRK2, we must compute the functions 
+\cref{sect:exp rk} presents two exponential Runge-Kutta methods in tableau form. The entries of these tableaus are functions of the operator, $\Delta t\L$. For example, to implement ETDRK2, we must compute the functions 
 \begin{align}
 \varphi_1(c\Delta \L) &= (c\Delta t \L)^{-1}(\exp(c\Delta t \L) - 1),
 \\
@@ -178,9 +178,9 @@ In \cref{sect:exp rk}, we have presented two exponential Runge-Kutta methods in 
 \end{align}
 for $c \in [0,1]$, or be able to efficiently evaluate the related matrix-vector multiplications without explicit construction.
 
-Difficulties with the evaluation of the matrix exponential and related functions of the form \cref{phi functions} are well-known and well-studied, eg.\ \cite{moler2003nineteen,higham2002accuracy,higham2008functions,hochbruck1997krylov}. Thus widespread adoption of exponential time differencing methods must first contend with the development of stable and efficient algorithms for computing the matrix exponential. 
+Difficulties with the evaluation of the matrix exponential and related functions of the form \cref{phi functions} are well-known and well-studied, eg.\ \cite{moler2003nineteen,higham2002accuracy,higham2008functions,hochbruck1997krylov}. Thus widespread adoption of exponential time differencing methods requires the development of stable and efficient algorithms for computing the matrix exponential. 
 
-In our examples, we follow the direction of Kassam and Trefethen \cite{kassam2005fourth}. They take a contour integral approach to the evaluation of functions in the form of \cref{phi functions} coupled with the trapezoidal rule for fast, accurate, and stable computations. Moreover, to avoid the unpleasantness of boundary conditions (and the subsequent complications), our domain will be periodic when using ETDRK2 or ETDRK4. 
+In our examples, we follow the direction of Kassam and Trefethen \cite{kassam2005fourth}. They take a contour integral approach to the evaluation of functions in the form of \cref{phi functions} coupled with the trapezoidal rule for fast, accurate, and stable computations. To avoid the unpleasantness of boundary conditions (and the subsequent complications), we choose our domain to be periodic when using ETDRK2 or ETDRK4. 
 
-Lastly, let us mention that there are other popular approaches. Amongst these are those based on scaling and squaring, Pad\'{e} approximants \cite{moler2003nineteen,higham2008functions}, and Krylov subspace methods  \cite{hochbruck1997krylov,sidje1998expokit,simoncini2007recent}.
+Lastly, let us mention that there are other popular approaches. Amongst these are methods based on scaling and squaring, Pad\'{e} approximants \cite{moler2003nineteen,higham2008functions}, and Krylov subspace methods  \cite{hochbruck1997krylov,sidje1998expokit,simoncini2007recent}.
 

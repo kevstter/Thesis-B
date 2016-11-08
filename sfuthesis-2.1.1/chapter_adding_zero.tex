@@ -1,5 +1,5 @@
 \chapter{Adding Zero, Unconditional Stability and a Modified Test Equation}
-To time step for stiff, nonlinear problems, we set out two key design principles. Firstly, we want to handle the nonlinearity simply and inexpensively. Secondly, we must be free to select time step-sizes reflecting the accuracy requirement, rather than step-sizes that are primarily constrained by stability. Linearly stabilized schemes, as we will see, adhere to both principles and are remarkably easy to implement.
+To construct time integration schemes for stiff, nonlinear PDEs, we set out two key design principles. Firstly, we want to handle the nonlinearity simply and inexpensively. Secondly, we must be free to select time step-sizes reflecting the accuracy requirement, rather than step-sizes that are primarily constrained by stability. Linearly stabilized schemes, as we will see, adhere to both principles and are remarkably easy to implement.
 
 \section{Prototype 1D Problem}
 As a prototype, let us consider the following 1D mean curvature motion problem \cite{duchemin2014explicit}: 
@@ -250,7 +250,7 @@ p > \frac{2}{3}(1 + (D_1 \bar u^n_j)^2)^{-1}.
 We present in this section some numerical tests to support our claims.
 
 \subsection{Stability contours}
-Stability contours plots are shown in \cref{sbdf1 contours,ein contours} as a verification of the earlier analysis of the SBDF1 and the EIN method. In the first case, we found the parameter restriction to be $p\geq 0.5$, and this is in agreement with \cref{sbdf1 contours}. When we set $p=0.45$, the stable range along the negative real axis is clearly bounded. But at $p=0.50$ and greater, it is stability region includes the entirety of the negative real axis.
+Stability contours plots are shown in \cref{sbdf1 contours,ein contours} as a verification of the earlier analysis of the SBDF1 and the EIN method. In the first case, we found the parameter restriction to be $p\geq 0.5$, and this is in agreement with \cref{sbdf1 contours}. When we set $p=0.45$, the stable range along the negative real axis is clearly bounded. But at $p=0.50$ and greater, its stability region includes the entirety of the negative real axis.
 \begin{figure}[htb!]
         \centering
 %\includegraphics[width=0.65\textwidth,height=0.36\textheight]{sbdf1_stab_contour}

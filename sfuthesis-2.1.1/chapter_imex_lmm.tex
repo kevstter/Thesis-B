@@ -285,7 +285,7 @@ u(0,t) = u(10,t) = 1.
 
 As in \cref{ein conv test}, we solve to time $T=0.35$ with $N=2048$ spatial grid nodes. A reference solution is generated using Heun's third order Runge-Kutta method \cite{hundsdorfer2013numerical} with time step-size $\Delta t = \num{1.46e-5}$, and a max norm relative error is calculated. Starting values necessary for the multistep methods are found using the same third order Runge-Kutta method. The values of $p$ used for each scheme are as indicated in \cref{lmm conv test}.
 
-Results of the numerical convergence study are shown in \cref{lmm conv test}. Each of the second order methods converge with the order of accuracy as expected, with SBDF2 having the largest errors, followed by CNAB/mCNAB (identical performance), CNLF, and then EIN. SBDF3 converges nicely with $p=0.875$. SBDF4 does not exhibit fourth order convergence and in fact fails at both $\Delta t =\num{6.84e-04}$ and $\Delta t=\num{3.42e-04}$. We discuss next why SBDF4 fails, and show also that SBDF3 suffers from the same defect.
+Results of the numerical convergence study are shown in \cref{lmm conv test}. Each of the second order methods converge with the order of accuracy expected, with SBDF2 having the largest errors, followed by CNAB/mCNAB (identical performance), CNLF, and finally EIN. SBDF3 converges nicely with $p=0.875$. SBDF4 does not exhibit fourth order convergence and in fact fails at both $\Delta t =\num{6.84e-04}$ and $\Delta t=\num{3.42e-04}$. We discuss next why SBDF4 fails, and show also that SBDF3 suffers from the same defect.
 
 \begin{figure}
         \centering
@@ -347,14 +347,14 @@ Failure of the method is due to being unable to satisfy the parameter constraint
 \label{fig:sbdf3 instab}
 \end{figure}
 
-With SBDF4, the issue is only worse as the restriction is tighter. The results in \cref{lmm conv test} only appeared acceptable at coarse step-sizes because the low number of time steps did not allow for the instabilities to amplify and dominate the solution. We conclude that linear stabilization with SBDF3 and SBDF4  is not recommended. 
+With SBDF4, the issue is worse as the restriction is tighter. The results in \cref{lmm conv test} only appeared acceptable at coarse step-sizes because the low number of time steps did not allow for the instabilities to amplify to the extent that they dominate the solution. We conclude that linear stabilization with SBDF3 and SBDF4  is not recommended. 
 
-A natural follow-up is then to ask if all third and fourth order IMEX schemes are unsuited for combination with linear stabilization. To this we provide a partial answer in the negative. Third order, three step schemes form a three parameter family, and likewise for the fourth order, four step schemes \cite{ascher1995implicit}. An extensive search through the parameter space so far has yielded no positives, nor is there any evidence suggesting we may find one with unbounded $p$-parameter restriction.
+A natural follow-up to ask is if all third and fourth order IMEX schemes are unsuited for combination with linear stabilization. To this we provide a partial answer. Third order, three step schemes form a three parameter family, and fourth order, four step schemes form a four parameter family \cite{ascher1995implicit}. An extensive search through the parameter space so far has yielded no evidence of schemes with an unbounded $p$-parameter restriction.
 
-This leaves us a number of competing second order methods. Our next task is to compare the performance of our IMEX based schemes vs.\ the EIN method of \cite{duchemin2014explicit}.
+This leaves us a number of competing second order methods to consider. Our next task is to compare the performance of our IMEX based schemes vs.\ the EIN method of \cite{duchemin2014explicit}.
 
 \section{Comparison of the Second Order Methods}
-Of the methods that we have proposed, only the second order variants remain. Along with the EIN method, we have a total of five second order linearly stabilized schemes to consider. We now proceed with a comparison of the methods.
+Of the methods that we have proposed, only the second order variants allow for unconditional stability. Along with the EIN method, we have a total of five second order linearly stabilized schemes to consider. We now proceed with a comparison of the methods.
 
 \subsection{A 2D test problem}
 Let us consider as a test problem, the following nonlinear PDE from \cite{vdHouwen1982on}:
@@ -390,10 +390,10 @@ The parameter $p$ will then be chosen according to the ratio
 \approx \frac{-8p/h^2}{-64(1+t)/h^2}
 = \frac{p}{8(1+t)}.
 \end{align}
-Let us remark on the importance of this test problem. In the analysis of \cref{ammc p}, we performed a von Neumann analysis to obtain precise eigenvalue estimates that are independent of $t$. On the contrary, the interval \cref{nl5 eigs} grows with $t$. Nevertheless, $p$ is never updated. It is chosen once and fixed at that value as we time step. Consequently, $p$ may be substantially greater than necessary. Moreover, to compensate for the fact that the operator we introduced to stabilize is less stiff than the nonlinear term, we are forced to select a relatively large value for $p$. We expect the situations just described to be common in applications and thus it is of interest to investigate performance of the methods and behaviour of its discretization errors.
+Let us remark on the importance of this test problem. In the analysis of \cref{ammc p}, we performed a von Neumann analysis to obtain precise eigenvalue estimates that are independent of $t$. On the contrary, the interval \cref{nl5 eigs} grows with $t$. Nevertheless, $p$ is never updated; it is chosen once and fixed at that value as we time step. Consequently at early times, $p$ may be substantially greater than necessary. Moreover, to compensate for the fact that the operator we introduced to stabilize is less stiff than the nonlinear term, we are forced to select a relatively large value for $p$. Such situations are common in applications making this an interesting problem to investigate performance and the behaviour of discretization errors.
 
 \subsection{Loss of accuracy with EIN}
-We test our second order methods on \cref{nl5 p} with initial and boundary conditions set by \cref{nl5b}. We solve to time $T=0.40$ with spatial grid size $\Delta x = \Delta y = h =0.015$. As a reference solution, we use an explicit third order Runge-Kutta method with time step-size $\Delta t=\num{6.25e-6}$. (Typical explicit methods demand step-sizes comparable for stability.) With the linearly stabilized schemes, we will solve \cref{nl5 p} with time step-sizes as large as $\Delta t = \num{1.25e-2}$. We show the max norm relative error.
+We test our second order methods on \cref{nl5 p} with initial and boundary conditions set by \cref{nl5b}. We solve to time $T=0.40$ with spatial grid size $\Delta x = \Delta y = h =0.015$. As a reference solution, we use an explicit third order Runge-Kutta method with time step-size $\Delta t=\num{6.25e-6}$. (Typical explicit methods demand comparable step-sizes for stability.) With the linearly stabilized schemes, we will solve \cref{nl5 p} with a variety of time step-sizes up to $\Delta t = \num{1.25e-2}$ and compute the max norm relative error.
 
 \begin{figure}[htb!]
         \centering
@@ -402,27 +402,27 @@ We test our second order methods on \cref{nl5 p} with initial and boundary condi
 \label{fig:nl5 conv}
 \end{figure}
 
-Results of the numerical convergence test is plotted in \cref{fig:nl5 conv} and it paints a grim picture for the EIN method and for CNLF. We will first discuss the horrific performance of the EIN method, after which we comment on the relative performance of the IMEX based schemes. 
+Results of the numerical convergence test are plotted in \cref{fig:nl5 conv}. These paint a grim picture for the EIN method and for CNLF. We will first discuss the horrific performance of the EIN method, after which we comment on the relative performance of the IMEX based schemes. 
 
-Contrasting the performance of EIN in \cref{lmm conv test} and \cref{fig:nl5 conv}, we observe a drastic reduction in the order of accuracy. In the former, EIN converged with second order accuracy and recorded, amongst the second order methods, the lowest error at any fixed $\Delta t$ (although an analysis of error vs.\ computing time would treat it less favorably). In our latest test problem, we do not (yet) observe second order convergence. Further testing shows that the EIN method only begins to demonstrate full second order rate of convergence as we dip below $\Delta t=\num{1e-5}$.
+Comparing the performance of EIN in \cref{lmm conv test} and \cref{fig:nl5 conv}, we observe a drastic reduction in the order of accuracy. In the former, EIN converged with second order accuracy and recorded, amongst the second order methods, the lowest error at any fixed $\Delta t$ (although an analysis of error vs.\ computing time would treat it less favorably). In the plot for the latter problem, we do not (yet) observe second order convergence. Indeed, further testing shows that the EIN method only begins to demonstrate full second order rate of convergence for time steps $\Delta t$ below $\num{1e-5}$.
 
 In fact, we argue that this behaviour can already be observed in the original paper by Duchemin and Eggers \cite{duchemin2014explicit}. In their experiments with Hele-Shaw interface flow and with the Kuramoto-Sivashinsky equation, they fail to accurately reproduce the reference figures taken from prior publications \cite{hou1994removing,kassam2005fourth}. In both cases, a large value of $p$ was necessary to obtain the desired stability. 
 
-We offer an explanation. In the simple case of the modified test equation \cref{mte}, we can apply the EIN method and derive the amplification factor \cref{ein amp fac}. A series expansion at $z=0$ gives 
+We offer an explanation. In the simple case of the modified test equation \cref{mte}, we can apply the EIN method and derive the amplification factor \cref{ein amp fac}. A series expansion at $z=0$ yields
 \begin{align}
         \xi_{EIN}
 = 1 + z + \frac{z^2}{2} + \frac{1}{2}(p-p^2)z^3 + \O(p^3z^4).
 \end{align}
-This expression deviates from the exact solution, $\exp(z)$, in the $z^3$ term  and shows a quadratic dependence on $p$. That is to say, the leading error term may be large if $p$ is large and $\Delta t$ is not sufficiently small to control the error. That is exactly what is observed in \cref{fig:nl5 conv}.
+This expression deviates from the exact solution, $\exp(z)$, in the $z^3$ term and exhibits a quadratic dependence on $p$. Thus, the leading error term will be large if $p$ is large and $\Delta t$ is not sufficiently small to control the error. That is exactly what is observed in \cref{fig:nl5 conv}.
 
-On the other hand, the methods we have proposed all show only a linear dependence on $p$ under the same analysis, and do not suffer catastrophically when $p$ is large.
+On the other hand, the new multistep methods we have proposed all show only a linear dependence on $p$ under the same analysis, and do not suffer catastrophically when $p$ is large.
 
 \subsection{Amplification factors at infinity}
-In the last section, we discovered a deficiency of the EIN method. The leading error term, which is $\O(\Delta t^3)$, has a coefficient that is quadratic in $p$, which we argued lead to a reduced observed order of accuracy. Thus it appears that an effective linearly stabilized time stepping scheme must have this error coefficient small with respect to $p$. 
+In the last section, we discovered a deficiency of the EIN method. The leading error term, which is $\O(\Delta t^3)$, has a coefficient that is quadratic in $p$, which degrades the observed order of accuracy. Thus an effective linearly stabilized time stepping scheme should have an error coefficient that is linear with respect to $p$. 
 
-That, however, does not explain the equally horrific performance of CNLF or the sharp dip in the observed convergence of CNAB  near $\Delta t = \num{1e-2}$ (see \cref{fig:nl5 conv}). To posit an explanation, we must think back to our discussion on stability and amplification factors. In that discussion, explicit schemes were said to be ill-suited to stiff problems because they are conditionally stable and this imposes a severe step-size restriction. Time steps violating this restriction will excite instabilities and energize high frequencies. A closer look at our schemes shows that we do exactly this. At each time step, there is an explicit calculation of a stiff nonlinear term and the other half of the ``adding zero'' term. Although we have guaranteed that our schemes are stable, the presence of slow decaying instabilities and persistent high frequency modes can drive up the error and force us to use smaller time steps to adequately damp and get the expected convergence order.
+The form of the error constant does not explain the equally horrific performance of CNLF or the sharp dip in the observed convergence of CNAB  near $\Delta t = \num{1e-2}$ (see \cref{fig:nl5 conv}). To posit an explanation, we think back to our discussion on stability and amplification factors. In that discussion, explicit schemes were said to be ill-suited to stiff problems because they are conditionally stable which imposes a severe step-size restriction. Although we have now guaranteed that our schemes are stable, the accumulation of slow decaying high frequency error modes can drive up the error and force us to use smaller time steps to adequately damp and get the expected convergence order.
 
-To explore this aspect, we consider the result of the method's amplification factor as $\lambda\Delta t \to -\infty$. For example, with the EIN method, we found the amplification factor in \cref{ein amp fac}. As $z\to -\infty$, we find 
+To explore this aspect, we consider the method's amplification factor as $\lambda\Delta t \to -\infty$. For example, with the EIN method, consider the amplification factor in \cref{ein amp fac}. As $z\to -\infty$, we find 
 \begin{align}
         \lim_{z\to-\infty} \abs{\xi_{EIN}} = \abs{\frac{p^2-3p+2}{p^2}}.
 \end{align}
@@ -431,12 +431,12 @@ For the multistep schemes, we first find the limiting expression of the amplific
         \lim_{z\to-\infty} \frac{\Phi_2}{z}
 = -\frac{1}{2}p\xi^2-\left(\frac{3}{2}-p\right)\xi-\frac{1}{2}p+\frac{1}{2}.
 \end{align}
-The amplification factor at infinity for CNAB is then 
+The amplification factor for CNAB is thus 
 \begin{align}
 \max\left\{ \frac{\abs{p-1+\sqrt{-2p+1}}}{p}, \frac{\abs{1-p+\sqrt{-2p+1}}}{p}\right\}
 \end{align}
 
-\cref{fig:damp fac at inf} shows the amplification factor at infinity for all of our second order schemes as well as SBDF1, and explains the behaviour of CNLF. It is known that CNLF is weakly damping at high frequencies and should not be used for diffusive problems \cite{ascher1995implicit}. This is equally true in the linear stabilization framework. Selecting coarse time steps with this scheme gives very poorly damping and it is necessary to take small time steps to combat this deficiency.
+\cref{fig:damp fac at inf} shows the amplification factor (as $z\to\infty$) for all of our second order schemes as well as SBDF1, and explains the behaviour of CNLF. It is known that CNLF is weakly damping at high frequencies and should not be used for diffusive problems \cite{ascher1995implicit}. This is equally true in the linear stabilization framework. Unless very small time steps are taken with this scheme, it gives very poor damping of high frequency error modes.
 
 \begin{figure}[htb!]
 	\centering 
@@ -445,11 +445,11 @@ The amplification factor at infinity for CNAB is then
 \label{fig:damp fac at inf}
 \end{figure}
 
-Out of our schemes, SBDF2 provides the most damping. CNAB (and mCNAB) may suffer from large errors at the coarsest time steps, but remains an useful alternative to SBDF2 as it exhibits lower errors as $\Delta t\to 0$. The scheme mCNAB was derived in \cite{ascher1995implicit} as an alternative to CNAB with stronger high frequency damping, however, in our framework, they perform identically. Thus there is little reason to consider mCNAB over CNAB.
+Of the schemes we consider, SBDF2 provides the most damping. CNAB (and mCNAB) may suffer from large errors at the coarsest time steps, but remains a useful alternative to SBDF2 as it has a smaller error constant as $\Delta t\to 0$. The scheme mCNAB was derived in \cite{ascher1995implicit} as an alternative to CNAB with stronger high frequency damping, however, in our framework, both schemes perform identically. Thus there is little reason to consider mCNAB over CNAB.
 
-Finally, let us remark on the plotting range along the horizontal axis and how it pertains to the implementation of linearly stabilized schemes. For one, we have chosen to plot in a normalized parameter space. There are many reasons for this, but the most compelling is from the point of view of how we use these schemes. Implementation of linearly stabilized schemes start by choosing $p$ to satisfy the constraint 
+Finally, let us remark on the plotting range along the horizontal axis and how it pertains to the implementation of linearly stabilized schemes. First note that we have chosen to plot in a normalized parameter space. There are several reasons for this, but the most compelling arises from how we use these schemes. Implementation of linearly stabilized schemes start by choosing $p$ to satisfy the constraint 
 \begin{align}
       \frac{p\lambda_\L}{\lambda_\N}  \geq p_0 
 \iff  \frac{p}{p_0} \geq \frac{\lambda_\N}{\lambda_\L},
 \end{align}
-where $p_0$ is the lower limit of the parameter restriction that guarantees unconditional stability, and where $\lambda_\L, \lambda_\N$ are the largest absolute eigenvalues of linear and nonlinear operators. The quantity $\lambda_\N/\lambda_\L$ is independent of the choice of time stepping method and if this quantity were overestimated in our solution procedure, the effect on $p/p_0$ is equal irrespective of the scheme. We have also plotted over a large range of parameter values. The reason is again rooted in the implementation. In our derivations, we operate as if we can access the exact eigenvalues at every time step. This is impractical and impossible. In practice, the ratio of eigenvalues will be an overestimate, and the value of $p$ is fixed throughout the time evolution (or at least for a great number of time steps.) Therefore it necessary to chart the behaviour of the methods over a wide range of $p$.
+where $p_0$ is the lower limit of the parameter restriction that guarantees unconditional stability, and where $\lambda_\L, \lambda_\N$ are the largest absolute eigenvalues of linear and nonlinear operators. The quantity $\lambda_\N/\lambda_\L$ is independent of the choice of time stepping method and if this quantity were overestimated in our solution procedure, the effect on $p/p_0$ is equal irrespective of the scheme. Note also that we have plotted over a large range of parameter values. The reason is again rooted in the implementation. In our derivations, we operate as if we can access the exact eigenvalues at every time step. This is impractical and impossible. In practice, the ratio of eigenvalues will be an overestimate, and the value of $p$ is fixed throughout the time evolution (or at least for a great number of time steps.) Therefore it is necessary to chart the behaviour of the methods over a wide range of $p$.
