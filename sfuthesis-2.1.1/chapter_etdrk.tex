@@ -117,7 +117,7 @@ First, we apply the schemes \cref{etdrk2 butcher,etdrk4 butcher} to the modified
 \label{fig:etdrk4 stab}
 \end{figure}
 
-Two other factors were considered that affect the performance. The first is the amplification factor as $z\to\infty$, and the second is a proxy to the error constant of the numerical scheme. The former is plotted in \cref{fig:damp fac at inf etd} for both ETDRK2 and ETDRK4. It shows that the ETDRK schemes provide strong damping at infinity for a wide range of $p$ and may be a good candidate for taking large time steps. For the proxy to the error constant, we have previously considered series expansion at $z=0$ of the amplification factors:
+Two other factors were considered that affect the performance. The first is the amplification factor as $z\to-\infty$, and the second is a proxy to the error constant of the numerical scheme. The former is plotted in \cref{fig:damp fac at inf etd} for both ETDRK2 and ETDRK4. It shows that the ETDRK schemes provide strong damping as $z\to-\infty$ for a wide range of $p$ and may be a good candidate for taking large time steps. For the proxy to the error constant, we have previously considered series expansion at $z=0$ of the amplification factors:
 \begin{align}
         \xi_{ETDRK2} = 1+ z + \frac{z^2}{2} + \left(-\frac{1}{4}p^2 + \frac{5}{12}p \right) z^3 + \cdots ,
 \end{align}
@@ -152,7 +152,7 @@ and for the EIN method we have
 \begin{figure}[htb!]
         \centering
 \includegraphics[width=0.65\textwidth]{damp_at_inf_2}
-\caption[Amplification factors at infinity with ETDRK schemes.]{Amplification factors at infinity with ETDRK schemes. Included also for the purpose of comparison are some second order schemes from the last chapter. The normalization along the horizontal axis is with respect to the lower limit of the parameter restriction of each scheme.}
+\caption[Amplification factors as $z\to-\infty$ with ETDRK schemes.]{Amplification factors as $z\to-\infty$ with ETDRK schemes. Included also for the purpose of comparison are some second order schemes from the last chapter. The normalization along the horizontal axis is with respect to the lower limit of the parameter restriction of each scheme.}
 \label{fig:damp fac at inf etd}
 \end{figure}
 

@@ -239,7 +239,7 @@ In \cref{fig:mcm 2d conv}, we show the convergence of SBDF1, SBDF2, CNAB, EIN, E
 
 The most disappointing of these is CNAB, for which a minimum of 400 time steps was needed to get a solution profile that fits within the frame we have chosen. Furthermore, it needs close to 800 time steps to present a solution competitive with the other methods in accuracy. SBDF2 likewise fared poorly in that regards, needing close to 800 time steps for a solution competitive with the other methods in accuracy. 
 
-We now take a more careful look at the ETDRK schemes and the EIN method. Recall that these are the schemes that have strong damping at infinity (see \cref{fig:damp fac at inf etd}). Zoom-ins to the solution by these methods are presented in \cref{fig:mcm zoom in 1,fig:mcm zoom in 2}. These show that the ETDRK schemes offer good accuracy and convergence using just 50 time steps. The EIN method, however, is again hampered by slow convergence. This is especially clear in \cref{fig:mcm zoom in 1}. If we further factor in computing time, then both CNAB and SBDF2 outperform the EIN method.
+We now take a more careful look at the ETDRK schemes and the EIN method. Recall that these are the schemes that have strong damping as $z\to-\infty$ (see \cref{fig:damp fac at inf etd}). Zoom-ins to the solution by these methods are presented in \cref{fig:mcm zoom in 1,fig:mcm zoom in 2}. These show that the ETDRK schemes offer good accuracy and convergence using just 50 time steps. The EIN method, however, is again hampered by slow convergence. This is especially clear in \cref{fig:mcm zoom in 1}. If we further factor in computing time, then both CNAB and SBDF2 outperform the EIN method.
 
 \begin{figure}[htb!]
         \centering
@@ -329,7 +329,7 @@ For our methods, the added factor of $\gamma(\omega) + \gamma''(\omega)$ present
 \label{fig:aniso mcm}
 \end{figure}
 
-\section{Phase Separation on Moo Surfaces}
+\section{Phase Separation on Surfaces}
 For our last batch of experiments, we will define and evolve phase separation models on rectangular grids in 2D, and on surfaces in 3D using the closest point method \cite{ruuth2008simple,macdonald2009implicit}.
 
 \subsection{Cahn-Hilliard on surfaces using the closest point method}
@@ -403,12 +403,13 @@ Thus if we stabilize with $p\Delta u$, choosing $p \geq (2+6m+3m^2)p_0$ will be 
 
 \begin{figure}[htb!]
         \centering
-\begin{minipage}{0.45\textwidth}
-       \includegraphics[width=0.84\textwidth]{lamellae}
+\begin{minipage}{0.46\textwidth}
+       \includegraphics[width=0.94\textwidth]{lamellae}
 \end{minipage}
-\begin{minipage}{0.45\textwidth}
-       \includegraphics[width=0.84\textwidth]{hex_pack}
+\begin{minipage}{0.46\textwidth}
+\centering
+       \includegraphics[width=0.94\textwidth]{hex_pack}
 \end{minipage}
-\caption[{Energy minimizing patterns of the nonlocal Cahn-Hilliard \cref{mch}.}]{Energy minimizing patterns of the nonlocal Cahn-Hilliard \cref{mch}. Left: Lamellae, with $(\epsilon,m)=(0.10,0)$. Right: Hexagonally packed spots, with $(\epsilon,m)=(0.10,0.40)$.}
+\caption[{Energy minimizing patterns of the nonlocal Cahn-Hilliard.}]{Energy minimizing patterns of the nonlocal Cahn-Hilliard \cref{mch}. Left: Lamellae, with $(\epsilon,m)=(0.10,0)$. Right: Hexagonally packed spots, with $(\epsilon,m)=(0.10,0.40)$.}
 \label{fig:mchp energy minimizers}
 \end{figure}

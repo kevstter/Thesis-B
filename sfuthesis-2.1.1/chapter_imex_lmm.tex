@@ -436,12 +436,12 @@ The amplification factor for CNAB is thus
 \max\left\{ \frac{\abs{p-1+\sqrt{-2p+1}}}{p}, \frac{\abs{1-p+\sqrt{-2p+1}}}{p}\right\}
 \end{align}
 
-\cref{fig:damp fac at inf} shows the amplification factor (as $z\to\infty$) for all of our second order schemes as well as SBDF1, and explains the behaviour of CNLF. It is known that CNLF is weakly damping at high frequencies and should not be used for diffusive problems \cite{ascher1995implicit}. This is equally true in the linear stabilization framework. Unless very small time steps are taken with this scheme, it gives very poor damping of high frequency error modes.
+\cref{fig:damp fac at inf} shows the amplification factor (as $z\to-\infty$) for all of our second order schemes as well as SBDF1, and explains the behaviour of CNLF. It is known that CNLF is weakly damping at high frequencies and should not be used for diffusive problems \cite{ascher1995implicit}. This is equally true in the linear stabilization framework. Unless very small time steps are taken with this scheme, it gives very poor damping of high frequency error modes.
 
 \begin{figure}[htb!]
 	\centering 
 \includegraphics[width=0.65\textwidth]{damp_at_inf}
-\caption[Amplification factors at infinity.]{Amplification factors at infinity. The normalization along the horizontal axis is with respect to the lower limit of the parameter restriction of each scheme.}
+\caption[Amplification factors as $z\to-\infty$.]{Amplification factors as $z\to-\infty$. The normalization along the horizontal axis is with respect to the lower limit of the parameter restriction of each scheme.}
 \label{fig:damp fac at inf}
 \end{figure}
 
