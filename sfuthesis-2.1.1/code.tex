@@ -1,111 +1,107 @@
 \chapter{Code}
+\section{Time integration of the Cahn-Hilliard equation using linearly stabilized time stepping schemes}
 \begin{verbatim}
-function[]=CHp_1D()
-% Solve the Cahn-Hilliard in 1d,
-%   u_t = -ep^2*u_{xxxx} + (u^3-u)_xx, x\in [0,2*pi], t>0,
+function[]=CHp_2D()
+% Solve the Cahn-Hilliard in 2d,
+%   u_t = -ep^2*L^2(u) + L(u^3-u), (x,y)\in [0,2*pi]^2, t>0,
 % with spectral method in space and a linearly stabilized method in time.
+% For 3d, change wave numbers to the commented line. Adjust LR and the
+% means in the ETDRK schemes. Adjust visualization commands.
 
-%% Parameters 
-% Spatial 
-N=256;  L=2*pi; dx=L/N; x=(1:N)'*dx;
-% Temporal
-T0=0; Tf=10; nt=400; dt=(Tf-T0)/nt; meth='etdrk2'; meth=upper(meth);
-% Model
-epsilon=0.1; ep2=epsilon^2; 
-% Visualization
-vis_update=40;
+%% Parameters: spatial, temporal, model, visualization
+  N=256;  L=2*pi;
+  T0=0; Tf=10; nt=400; dt=(Tf-T0)/nt; meth='cnab'; meth=upper(meth);
+  epsilon=0.1; ep2=epsilon^2; 
+  vis_update=40;
 
 %% Initial condition and storage
-u=0.35*sin(2*x) + 0.7*sin(6*x); v=fft(u);
-uu=zeros(length(u),ceil(nt/vis_update)+1); uu(:,1)=u; jplt=2;
-tt=zeros(1,size(uu,2));
-
+  rng('default'); u=2*epsilon*(rand(N,N)-0.50); v=fftn(u);
+  
 %% System for inversion
 % Wave numbers
-k=[0:N/2-1 0 -N/2+1:-1]'*(2*pi/L); k=-k.^2; kdt=dt*k;
+  k=[0:N/2-1 0 -N/2+1:-1]'*(2*pi/L); k=-k.^2; 
+  k=bsxfun(@plus,k,k'); 
+%   k=bsxfun(@plus,bsxfun(@plus,k,k'),reshape(k,1,1,N));
+  kdt=dt*k;
 % Choose method
-switch meth
-case 'SBDF1'
-fignum=1; p=1.0; A=1-p*kdt+(dt*ep2)*k.^2;
-
-case 'SBDF2'
-fignum=2; p=1.5; A=1+(2/3)*(-p*kdt+(dt*ep2)*k.^2);
-
-case 'CNAB'
-fignum=3; p=2; A=1+(0.5)*(-p*kdt+(dt*ep2)*k.^2); 
-B=(1-0.5*(-p*kdt+(dt*ep2)*k.^2))./A;
-
-case 'ETDRK4'
-fignum=4; p=1.0; 
-Ln=p*kdt-(dt*ep2)*k.^2; E=exp(Ln); E2=exp(0.5*Ln);
-M=16; r=exp(1i*pi*((1:M)-0.5)/M);
-LR=Ln(:,ones(M,1))+r(ones(N,1),:);
-Q=kdt.*real(mean((exp(0.5*LR)-1)./LR,2));
-b1=kdt.*real(mean((-4-LR+exp(LR).*(4-3*LR+LR.^2))./LR.^3,2));
-b2=2*kdt.*real(mean((2+LR+exp(LR).*(-2+LR))./LR.^3,2));
-b4=kdt.*real(mean( (-4-3*LR-LR.^2+exp(LR).*(4-LR))./LR.^3,2));
-
-case 'ETDRK2'
-fignum=5; p=1.0;
-Ln=p*kdt-(dt*ep2)*k.^2; E=exp(Ln); 
-M=16; r=exp(1i*pi*((1:M)-0.5)/M);
-LR=Ln(:,ones(M,1))+r(ones(N,1),:);
-Q1=kdt.*real(mean((exp(LR)-1)./LR,2));
-Q2=kdt.*real(mean((exp(LR)-LR-1)./LR.^2,2)); 
-end
-
+  switch meth
+    case 'SBDF1'
+      fignum=1; p=1.0; A=1-p*kdt+(dt*ep2)*k.^2;
+      
+    case 'SBDF2'
+      fignum=2; p=1.5; A=1+(2/3)*(-p*kdt+(dt*ep2)*k.^2);
+      
+    case 'CNAB'
+      fignum=3; p=2; A=1+(0.5)*(-p*kdt+(dt*ep2)*k.^2); 
+      B=(1-0.5*(-p*kdt+(dt*ep2)*k.^2))./A;
+      
+    case 'ETDRK4'
+      fignum=4; p=1.0; 
+      Ln=p*kdt-(dt*ep2)*k.^2; E=exp(Ln); E2=exp(0.5*Ln);
+      M=16; r=exp(1i*pi*((1:M)-0.5)/M);
+      LR=bsxfun(@plus,Ln(:,:,ones(M,1)),reshape(r,1,1,M));
+      A=kdt.*real(mean((exp(0.5*LR)-1)./LR,3));
+      b1=kdt.*real(mean((-4-LR+exp(LR).*(4-3*LR+LR.^2))./LR.^3,3));
+      b2=2*kdt.*real(mean((2+LR+exp(LR).*(-2+LR))./LR.^3,3));
+      b4=kdt.*real(mean( (-4-3*LR-LR.^2+exp(LR).*(4-LR))./LR.^3,3));
+  
+    case 'ETDRK2'
+      fignum=5; p=1.0;
+      Ln=p*kdt-(dt*ep2)*k.^2; E=exp(Ln); 
+      M=16; r=exp(1i*pi*((1:M)-0.5)/M);
+      LR=bsxfun(@plus,Ln(:,:,ones(M,1)),reshape(r,1,1,M));
+      A1=kdt.*real(mean((exp(LR)-1)./LR,3));
+      A2=kdt.*real(mean((exp(LR)-LR-1)./LR.^2,3)); 
+  end
+  fg=figure(100+fignum);
+  
 %% Begin time stepping
-for kt=1:nt,
-switch meth
-case 'SBDF1'
-rhs=v+kdt.*fft(u.^3-(1+p)*u); v=rhs./A;
-
-case 'SBDF2'
-if kt==1, 
-v1=v; f1=kdt.*fft(u.^3-(1+p)*u);
-v=(v1+f1)./(1-p*kdt+(dt*ep2)*k.^2);
-else 
-f=kdt.*fft(u.^3-(1+p)*u); 
-u=((4/3)*v-(1/3)*v1+(2/3)*(2*f-f1))./A; 
-v1=v; f1=f; v=u;
-end
-
-case 'CNAB'
-if kt==1,
-f1=kdt.*fft(u.^3-(1+p)*u); 
-v=(v+f1)./(1-p*kdt+(dt*ep2)*k.^2);
-else
-f=kdt.*fft(u.^3-(1+p)*u);
-v=B.*v+0.5*(3*f-f1)./A;
-f1=f; 
-end
-
-case 'ETDRK4'
-f=fft(u.^3-(1+p)*u); a=E2.*v+Q.*f; ar=real(ifft(a));
-fa=fft(ar.^3-(1+p)*ar); b=E2.*v+Q.*fa; br=real(ifft(b));
-fb=fft(br.^3-(1+p)*br); c=E2.*a+Q.*(2*fb-f); cr=real(ifft(c));
-fc=fft(cr.^3-(1+p)*cr);
-v=E.*v + b1.*f + b2.*(fa+fb) + b4.*fc;
-
-case 'ETDRK2'
-f=fft(u.^3-(1+p)*u); a=E.*v+Q1.*f; ar=real(ifft(a));
-fa=fft(ar.^3-(1+p)*ar); 
-v=a+Q2.*(fa-f);
-end
-u=real(ifft(v));
-
-% Save for plots
-if mod(kt,vis_update)==0 || kt==nt,
-uu(:,jplt)=u; tt(jplt)=dt*kt; jplt=jplt+1; 
-end
-end
-
-%% Visualize results
-fg=figure(100+fignum); 
-surf(tt,x,uu); shading interp; lighting phong; axis tight;
-view([0 90]); set(gca,'zlim',[-1.05 1.05]);
-light('color',[1 1 0],'position',[-1,2,2]);
-material([0.30 0.60 0.60 40.00 1.00]);
-title(['CH by ',meth,', dt=',num2str(dt,'%10.2e')]);
+  for kt=1:nt,
+    switch meth
+      case 'SBDF1'
+        rhs=v+kdt.*fftn(u.^3-(1+p)*u); v=rhs./A;
+        
+      case 'SBDF2'
+        if kt==1, 
+          v1=v; f1=kdt.*fftn(u.^3-(1+p)*u);
+          v=(v1+f1)./(1-p*kdt+(dt*ep2)*k.^2);
+        else 
+          f=kdt.*fftn(u.^3-(1+p)*u); 
+          u=((4/3)*v-(1/3)*v1+(2/3)*(2*f-f1))./A; 
+          v1=v; f1=f; v=u;
+        end
+        
+      case 'CNAB'
+        if kt==1,
+          f1=kdt.*fftn(u.^3-(1+p)*u); 
+          v=(v+f1)./(1-p*kdt+(dt*ep2)*k.^2);
+        else
+          f=kdt.*fftn(u.^3-(1+p)*u);
+          v=B.*v+0.5*(3*f-f1)./A;
+          f1=f; 
+        end
+        
+      case 'ETDRK4'
+        f=fftn(u.^3-(1+p)*u); a=E2.*v+A.*f; ar=real(ifftn(a));
+        fa=fftn(ar.^3-(1+p)*ar); b=E2.*v+A.*fa; br=real(ifftn(b));
+        fb=fftn(br.^3-(1+p)*br); c=E2.*a+A.*(2*fb-f); cr=real(ifftn(c));
+        fc=fftn(cr.^3-(1+p)*cr);
+        v=E.*v + b1.*f + b2.*(fa+fb) + b4.*fc;
+        
+      case 'ETDRK2'
+        f=fftn(u.^3-(1+p)*u); a=E.*v+A1.*f; ar=real(ifftn(a));
+        fa=fftn(ar.^3-(1+p)*ar); 
+        v=a+A2.*(fa-f);
+    end
+    u=real(ifftn(v));
+    
+  % Plots
+    if kt==nt || mod(kt,vis_update)==0,
+      set(0,'currentfigure',fg); drawnow;
+      pcolor(u); shading('interp'); axis('equal','off'); 
+      title(['CH by ',meth,' with dt=',num2str(dt,'%10.2g'), ...
+        ' at T=',num2str(dt*kt,'%10.2g')]); 
+    end
+  end
 end
 \end{verbatim}
