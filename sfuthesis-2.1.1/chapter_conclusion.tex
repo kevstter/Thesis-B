@@ -1,38 +1,14 @@
 \chapter{Conclusion}
 In this thesis, we gave details of a framework for developing effective linearly stabilized time stepping methods. As was already known, unconditional stability is required. In our work, we further deduced that the parameter restriction over which we enjoy unconditional stability must be unbounded. 
 
-Alongside stability, there is the matter of accuracy. As the former dictated the range from which we can select $p$, it was then natural to explore how the discretization error behaves as a function of $p$. For this task, we recommended the simple procedure of applying the numerical method to the modified test equation and looking at its series expansion at $\Delta t = 0$. When the leading error term is $\O(\Delta t^{k+1})$, but the coefficient is large with respect to $p$, e.g.\ a degree $k$ polynomial in $p$, we observed that these schemes will not be generally applicable or competitive.
+Alongside stability, there is the matter of accuracy. As the former dictated the range from which we can select the parameter $p$, it was then natural to explore how the discretization error behaves as a function of $p$. We recommended the simple procedure of applying the numerical method to the modified test equation and examining the series expansion at $\Delta t = 0$. When the coefficient of the leading order error term is a degree two or higher polynomial in $p$, the schemes fared poorly for $p$ large.
 
-We also addressed the feasibility of taking large time step-sizes. We reasoned that the schemes that perform well at with large step-sizes should possess strong damping at infinity. We have shown that this quality, as was with the previous two, is easy to check for any time stepping method.
+We also addressed the feasibility of taking large time step-sizes. The schemes that perform well possess strong damping as $z\to-\infty$. We have shown that this quality, as was with the previous two, is easy to check for any time stepping method.
 
 On the matter of developing linearly stabilized schemes with the aforementioned properties, we have proposed a number of new methods based on IMEX multistep methods and exponential Runge-Kutta methods that perform exceptionally on at least two of the three, but none that perform strongly in all three.
 
-For its ease of use and wide applicability, we recommend SBDF2, although CNAB remains an interesting alternative as it exhibits smaller errors as $\Delta t \to 0$. When the domain is periodic and we have estimated that $p$ can be chosen quite small, then it may be worth trying ETDRK2/ETDRK4 for strong performance at large step-sizes.
+We recommend SBDF2 for its ease of use and its superior damping to CNAB, although CNAB remains a useful alternative as it has a smaller error constant as $\Delta t \to 0$. Implementing these schemes require no more expertise than applying an implicit method to solve a constant coefficient heat equation. 
+When the domain is periodic and  $p$ can be chosen quite small, ETDRK2 and ETDRK4 offer strong performance at large step-sizes.
 Of the existing linearly stabilized methods, SBDF1 and the EIN method, neither are competitive with our schemes due to some combination of slower convergence rate and comparatively high computing times.
 
-A number of interesting questions has been raised throughout this thesis and are worthy of further consideration. As we have just mentioned, it is of practical interest to derive strongly damping, high order methods with error constants that are small with respect to $p$. A study of the discretization error on a fully nonlinear problem would improve our understanding greatly. Adaptivity could also be investigated for both the step-size and for selecting $p$. And finally, we would like to see if our methods are competitive with popular algorithms in applications such as image processing. 
-
-
-
-\clearpage
-
-The conclusion is a good place to summarize our findings.
-
-+emphasize that the inversion is of the same operator at each time step
-	
-+stabilized explicit RK (RKC, ROCK, DUMKA)
-
-\noindent	
-Potential work
-
-+A study of the behaviour of the errors from choosing a (sub)optimal parameter, $p$.
-
-+Study of the error constant and its dependence on p on a fully nonlinear problem 
-
-+Cost/benefit analysis of adapting p
-
-+Adaptive time stepping
-
-+Finding linearly stabilized schemes that do well in all three criteria we've set
-
-+simple, efficient high order methods. ones that are easy to apply like sbdf2, cnab; complicated boundary conditions make etdrk difficult	
+A number of questions have been raised throughout this thesis and are worthy of further consideration. We have identified three properties critical for effective linearly stabilized schemes, and the derivation of high order methods satisfying all three remains open. While the metrics we supplied are easy to compute sufficient as a guide, a study of the discretization error on a fully nonlinear problem would elevate our current level of understanding. Adaptivity could also be investigated for both the step-size and for selecting $p$. Finally, comparing our methods to popular algorithms in applications such as image processing would be of interest.
