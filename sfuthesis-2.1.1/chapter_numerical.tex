@@ -47,14 +47,14 @@ Finally, we note that the spatial discretization is by second order centred diff
 \begin{figure}[htb!]
         \centering 
 \includegraphics[width=0.65\textwidth]{turtle_with_text}
-\caption[Photograph of turtle overwritten with text.]{Photograph of a sea turtle overwritten with text.}
+\caption[Photograph of a sea turtle overwritten with text]{Photograph of a sea turtle overwritten with text.}
 \label{fig:turtle with text}
 \end{figure}
 
 \begin{figure}[htb!]
         \centering 
 \includegraphics[width=0.65\textwidth]{bullfinch_and_fox}
-\caption[Photograph of a bullfinch vandalized by a cartoonish fox.]{Photograph of a bullfinch vandalized with a cartoon fox.}
+\caption[Photograph of a bullfinch vandalized by a cartoonish fox]{Photograph of a bullfinch vandalized with a cartoon fox.}
 \label{fig:bullfinch and fox}
 \end{figure}
 
@@ -94,7 +94,7 @@ The images restored by TV inpainting and SBDF1, SBDF2, and CNAB are shown in \cr
 \begin{minipage}{0.65\textwidth}
 	\includegraphics[width=\textwidth]{bv_bullfinch}
 \end{minipage}
-\caption[Image restoration by TV inpainting.]{Image restoration by TV inpainting using a second order linearly stabilized time stepping method.}
+\caption[Image restoration by TV inpainting]{Image restoration by TV inpainting using a second order linearly stabilized time stepping method.}
 \label{fig:bv inpainting}
 \end{figure}
 
@@ -106,7 +106,7 @@ The images restored by TV inpainting and SBDF1, SBDF2, and CNAB are shown in \cr
 % \end{figure}
 
 \begin{table}[htb!]
-\caption[Iteration counts for TV image restoration.]{Iteration counts for TV image restoration.}
+\caption[Iteration counts for TV image restoration]{Iteration counts for TV image restoration.}
         \centering\begin{tabular}{lll ll} \toprule[1.25pt]
 & \multicolumn{2}{c}{Sea Turtle} & \multicolumn{2}{c}{Bullfinch}
 \\
@@ -147,12 +147,12 @@ As a final note, we mention other interesting developments \cite{bredies2010tota
 \begin{minipage}{0.65\textwidth}
 	\includegraphics[width=\textwidth]{bvhneg_bullfinch}
 \end{minipage}
-\caption[Image restoration by TV-H$^{-1}$ inpainting.]{Image restoration by TV-H$^{-1}$ inpainting using a second order linearly stabilized time stepping method.}
+\caption[Image restoration by TV-H$^{-1}$ inpainting]{Image restoration by TV-H$^{-1}$ inpainting using a second order linearly stabilized time stepping method.}
 \label{fig:bvhneg inpainting}
 \end{figure}
 
 \begin{table}[htb!]
-\caption[Iteration counts for TV-H$^{-1}$ image restoration.]{Iteration counts for TV-H$^{-1}$ image restoration.}
+\caption[Iteration counts for TV-H$^{-1}$ image restoration]{Iteration counts for TV-H$^{-1}$ image restoration.}
         \centering\begin{tabular}{lll ll} \toprule[1.25pt]
 & \multicolumn{2}{c}{Sea Turtle} & \multicolumn{2}{c}{Bullfinch}
 \\
@@ -207,7 +207,7 @@ Our first example is the evolution of a dumbbell-shaped curve in 2D. \cref{fig:m
 \begin{minipage}{0.48\textwidth}
         \includegraphics[width=0.96\textwidth]{dumbbell_125}
 \end{minipage}%
-\caption[Mean curvature flow of a dumbbell-shaped curve in 2D.]{Mean curvature flow of a dumbbell-shaped curve in 2D. From the top left to the bottom right, the plots show the evolution at times $t=0$, $0.01$, $0.5$, $1.25$.}
+\caption[Mean curvature flow of a dumbbell-shaped curve in 2D]{Mean curvature flow of a dumbbell-shaped curve in 2D. From the top left to the bottom right, the plots show the evolution at times $t=0$, $0.01$, $0.5$, $1.25$.}
 \label{fig:mcm 2d dumbbell}
 \end{figure}
 
@@ -233,7 +233,7 @@ In \cref{fig:mcm 2d conv}, we show the convergence of SBDF1, SBDF2, CNAB, EIN, E
 \begin{minipage}{0.48\textwidth}
         \includegraphics[width=0.96\textwidth]{erk4_conv}
 \end{minipage}
-\caption[Convergence of linearly stabilized schemes to a shrinking dumbbell problem.]{Convergence of various linearly stabilized time stepping methods to the mean curvature flow of a dumbbell-shaped curve in 2D. In the column to the left from top to bottom, we have SBDF1, SBDF2, and CNAB. In the column to the right from top to bottom, we have EIN, ETDRK2, and ETDRK4. Within each plot, each curve is the solution using the number of time steps, $n$, as indicated.}
+\caption[Convergence of linearly stabilized schemes to a dumbbell-shaped curve evolved under mean curvature flow]{Convergence of various linearly stabilized time stepping methods to a dumbbell-shaped curve in 2D evolved under mean curvature flow. In the column to the left from top to bottom, we have SBDF1, SBDF2, and CNAB. In the column to the right from top to bottom, we have EIN, ETDRK2, and ETDRK4. Within each plot, each curve is the solution using the number of time steps, $n$, as indicated.}
 \label{fig:mcm 2d conv}
 \end{figure}
 
@@ -246,7 +246,7 @@ We now take a more careful look at the ETDRK schemes and the EIN method. Recall 
 \includegraphics[width=0.65\textwidth]{ein_zoom1}
 \includegraphics[width=0.65\textwidth]{erk2_zoom1}
 \includegraphics[width=0.65\textwidth]{erk4_zoom1}
-\caption[{A zoom-in over $ [0.0,0.20]\times [0.475,0.54]$ to inspect convergence.}]{A zoom-in over $[0.0, 0.20]\times [0.475, 0.54]$. From top to bottom we have the EIN method, ETDRK2, and ETDRK4. We see slow convergence of the EIN method, and good convergence of the ETDRK schemes.}
+\caption[{Zoom-in over $ [0.0,0.20]\times [0.475,0.54]$ to inspect convergence}]{Zoom-in over $[0.0, 0.20]\times [0.475, 0.54]$. From top to bottom we have the EIN method, ETDRK2, and ETDRK4. We see slow convergence of the EIN method, and good convergence of the ETDRK schemes.}
 \label{fig:mcm zoom in 1}
 \end{figure}
 
@@ -261,7 +261,7 @@ We now take a more careful look at the ETDRK schemes and the EIN method. Recall 
 \begin{minipage}{0.30\textwidth}
         \includegraphics[width=0.92\textwidth]{erk4_zoom2}
 \end{minipage}
-\caption[{A zoom-in over $[1.30,1.41]\times [0.0, 0.30]$ to inspect convergence.}]{A zoom-in over $[1.30,1.41]\times [0.0, 0.30]$. From left to right we have the EIN method, ETDRK2, and ETDRK4. We see slow convergence of the EIN method, and good convergence of the ETDRK schemes.}
+\caption[{A zoom-in over $[1.30,1.41]\times [0.0, 0.30]$ to inspect convergence}]{Zoom-in over $[1.30,1.41]\times [0.0, 0.30]$. From left to right we have the EIN method, ETDRK2, and ETDRK4. We see slow convergence of the EIN method, and good convergence of the ETDRK schemes.}
 \label{fig:mcm zoom in 2}
 \end{figure}
 
@@ -289,7 +289,7 @@ Setting the initial condition to be the dumbbell-shaped curve of the top left im
 \begin{minipage}{0.48\textwidth}
         \includegraphics[width=0.96\textwidth]{dumbbell_3d075}
 \end{minipage}
-\caption[Mean curvature flow of a dumbbell-shaped curve in 3D.]{Mean curvature flow of a dumbbell-shaped curve in 3D. From the left to right, top to bottom, the plots show the evolution at times $t=0$, $0.10$, $0.30$, $0.525$, $0.55$, $0.75$.}
+\caption[Mean curvature flow of a dumbbell-shaped curve in 3D]{Mean curvature flow of a dumbbell-shaped curve in 3D. From the left to right, top to bottom, the plots show the evolution at times $t=0$, $0.10$, $0.30$, $0.525$, $0.55$, $0.75$.}
 \label{fig:mcm 3d dumbbell}
 \end{figure}
 
@@ -325,11 +325,11 @@ For our methods, the added factor of $\gamma(\omega) + \gamma''(\omega)$ present
 \begin{minipage}{0.44\textwidth}
        \includegraphics[width=0.96\textwidth]{aniso016}
 \end{minipage}
-\caption[Anisotropic mean curvature flow.]{Anisotropic mean curvature flow in 2D. The plots show the evolution of the curve at times $t=0$, $0.01$, $0.06$, $0.16$. The initial curve smooths and shrinks to a curve exhibiting four-fold symmetry as it collapses to a point.}
+\caption[Anisotropic mean curvature flow]{Anisotropic mean curvature flow in 2D. The plots show the evolution of the curve at times $t=0$, $0.01$, $0.06$, $0.16$. The initial curve smooths and shrinks to a curve exhibiting four-fold symmetry as it collapses to a point.}
 \label{fig:aniso mcm}
 \end{figure}
 
-\section{Phase Separation on Surfaces}
+\section{Phase Separation}
 For our last batch of experiments, we will define and evolve phase separation models on rectangular grids in 2D, and on surfaces in 3D using the closest point method \cite{ruuth2008simple,macdonald2009implicit}.
 
 \subsection{Cahn-Hilliard on surfaces using the closest point method}
@@ -373,13 +373,13 @@ The latter $\Delta t =1$ condition is chosen to emphasize that we may choose the
 \begin{figure}[htb!]
 	\centering
 \includegraphics[width=0.65\textwidth]{ch_torus}
-\caption[Cahn-Hilliard on a torus.]{Cahn-Hilliard on a torus.}
+\caption[Cahn-Hilliard on a torus]{Cahn-Hilliard on a torus.}
 \label{fig:ch torus}
 \end{figure}
 \begin{figure}[htb!]
 	\centering
 \includegraphics[width=0.65\textwidth]{ch_cow}
-\caption[Cahn-Hilliard on a cow-shaped surface.]{Cahn-Hilliard on a cow-shaped surface.}
+\caption[Cahn-Hilliard on a cow-shaped surface]{Cahn-Hilliard on a cow-shaped surface.}
 \label{fig:ch cow}
 \end{figure}
 
@@ -410,6 +410,6 @@ Thus if we stabilize with $p\Delta u$, choosing $p \geq (2+6m+3m^2)p_0$ will be 
 \centering
        \includegraphics[width=0.94\textwidth]{hex_pack}
 \end{minipage}
-\caption[{Energy minimizing patterns of the nonlocal Cahn-Hilliard.}]{Energy minimizing patterns of the nonlocal Cahn-Hilliard \cref{mch}. Left: Lamellae, with $(\epsilon,m)=(0.10,0)$. Right: Hexagonally packed spots, with $(\epsilon,m)=(0.10,0.40)$.}
+\caption[{Energy minimizing patterns of the nonlocal Cahn-Hilliard}]{Energy minimizing patterns of the nonlocal Cahn-Hilliard \cref{mch}. Left: Lamellae, with $(\epsilon,m)=(0.10,0)$. Right: Hexagonally packed spots, with $(\epsilon,m)=(0.10,0.40)$.}
 \label{fig:mchp energy minimizers}
 \end{figure}

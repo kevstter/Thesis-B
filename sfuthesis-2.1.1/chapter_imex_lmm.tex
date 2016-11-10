@@ -70,10 +70,10 @@ The modified test equation is
 \quad\text{where}\quad \lambda < 0\text{, } p>0.
 \label{mtee}
 \end{align*}
-The goal is, for each IMEX scheme, to identify the constraint on the parameter $p$ such that when satisfied, we may freely choose the time step-size without being subject to a stability restriction.
+The goal is, for each IMEX scheme, to identify the restriction on the parameter $p$ such that when satisfied, we may freely choose the time step-size without being subject to a stability constraint.
 
 \subsection{Schur and von Neumann polynomials}
-The resulting polynomials from applying an $n$th order IMEX scheme to the modified test equation will be a degree $n$ polynomial in the amplification factor, $\xi$. The tool of choice for analyzing these amplification polynomials is the theory of von Neumann polynomials \cite[Chapter 4]{strikwerda2004finite}. Below we give the relevant definitions and theorems.
+The resulting polynomial from applying an $n$th order IMEX method to the modified test equation will be a degree $n$ polynomial in the amplification factor, $\xi$. The tool of choice for analyzing these amplification polynomials is the theory of von Neumann polynomials \cite[Chapter 4]{strikwerda2004finite}. Below we give the relevant definitions and theorems.
 
 \begin{definition}
 	The polynomial $\phi$ is a Schur polynomial if all its roots, $r_q$, satisfy $\abs{r_q} < 1$.
@@ -105,7 +105,7 @@ The resulting polynomials from applying an $n$th order IMEX scheme to the modifi
 \label{thm:simple vN}
 \end{theorem}
 
-\subsection{Amplification polynomials of second order IMEX schemes}
+\subsection{Amplification polynomials of second order IMEX methods}
 We start by applying CNAB \eqref{cnab} to the modified test equation \eqref{mte}. Combined with the ansatz $u^n = \xi^n$ and setting $z=\lambda\Delta t$, we get the amplification polynomial
 \begin{align}
 \Phi_2(\xi) 
@@ -113,7 +113,7 @@ We start by applying CNAB \eqref{cnab} to the modified test equation \eqref{mte}
 - \left(1 + z\left(\frac{3}{2}-p \right)\right)\xi + \frac{1}{2}z(1-p).
 \label{amp_cnab}
 \end{align}
-The next series of steps will show that for all $z<0$ (i.e.\ $\lambda < 0$,) \eqref{amp_cnab} is a simple von Neumann polynomial if and only if $p\geq 1$. We do so by showing that \cref{thm:simple vN} holds for $\Phi_2$.
+The next series of steps will show that for all $z<0$ (i.e.\ $\lambda\Delta t < 0$,) \eqref{amp_cnab} is a simple von Neumann polynomial if and only if $p\geq 1$. We do so by showing that \cref{thm:simple vN} holds for $\Phi_2$. This will imply that the amplification factor satisfies $\abs{\xi} < 1$ for all $\lambda\Delta t<0$. 
 
 We first give $\Phi_2^*$ and $\Phi_1$ as defined by the processes in \cref{defn:conj,defn:recurse},  
 \begin{align}
@@ -129,7 +129,7 @@ Next, we verify that if $p\geq 1$, then $\abs{\Phi_2(0)} < \abs{\Phi^*_2(0)}$. R
 \begin{align*}
 \abs{\Phi_2(0)} < \abs{\Phi^*_2(0)} 
 \iff 
-0 < \left(\Phi^*_2(0) \right)^2 - \Phi_2(0)^2
+0 < \left(\Phi^*_2(0) \right)^2 - \Phi^2_2(0)
 = 1 - zp - \frac{1}{2}z^2\left( \frac{1}{2} - p \right),
 \end{align*}
 (and keeping in mind that we ask this inequality to hold only for $z<0$,) we find that the contribution from each term  in the rightmost quadratic is positive, thus verifying the claim.
@@ -145,7 +145,7 @@ Other IMEX schemes are analyzed in the same way. The amplification polynomials o
 
 \begin{table}[htb!]
 	\centering
-	\caption[Amplification polynomials of second order IMEX]{Amplification polynomial of second order IMEX schemes. The rightmost column is the guide for choosing $p$.}
+	\caption[Amplification polynomials of second order IMEX methods]{Amplification polynomial of second order IMEX methods. The rightmost column is the guide for choosing $p$.}
 	\begin{tabular}{lll}
 		\toprule[1.25pt] 
 		\head{Method} 
@@ -182,7 +182,7 @@ We continue with the analysis for higher order IMEX schemes. Again, amplificatio
 
 \begin{table}[htb!]
 	\centering
-	\caption[Amplification polynomials of third and fourth order IMEX]{Amplification polynomial and choice of parameter when applying high order IMEX methods to the modified test equation for unconditional stability.}
+	\caption[Amplification polynomials of third and fourth order IMEX methods]{Amplification polynomial and choice of parameter when applying high order IMEX methods to the modified test equation for unconditional stability.}
 	\begin{tabular}{lll}
 		\toprule[1.25pt] 
 		\head{Method} 
@@ -219,35 +219,35 @@ Listed in Table \ref{table:amp poly 34} are respectively the amplification facto
 We present in this section numerical tests to support our claims. Stability contours are shown and a numerical convergence test to \cref{ammc} is conducted. We then provide an answer as to why linearly stabilized SBDF3 and SBDF4 fail. 
 
 \subsection{Stability contours}
-Presented in \cref{cnab contours,mcnab contours,cnlf contours,sbdf2 contours} are the stability contours for the second order IMEX schemes, \cref{cnab,mcnab,cnlf,sbdf2}, applied to the modified test equation, \cref{mte}. For each, we provide stability contours with $p$ set at $0.95p_0$, $p_0$, $1.5p_0$, where $p_0$ is the minimum required for unconditional stability (\cref{table:amp poly 2}, rightmost column). 
+Presented in \cref{cnab contours,mcnab contours,cnlf contours,sbdf2 contours} are stability contours for the second order IMEX schemes, \cref{cnab,mcnab,cnlf,sbdf2}, applied to the modified test equation, \cref{mte}. For each, we provide stability contours with $p$ set at $0.95p_0$, $p_0$, $1.5p_0$, where $p_0$ is the minimum required for unconditional stability (\cref{table:amp poly 2}, rightmost column). 
 
-In \cref{sbdf3 contours} are the stability contours for SBDF3 \cref{sbdf3}, and in \cref{sbdf4 contours} are the stability contours for SBDF4 \cref{sbdf4}. In each, we plot four instances to capture the transition from conditional to unconditional stabilized and back.
+In \cref{sbdf3 contours} are stability contours for SBDF3 \cref{sbdf3}, and in \cref{sbdf4 contours} are stability contours for SBDF4 \cref{sbdf4}. In each, we plot four instances to capture the transitions from conditional to unconditional stability and from unconditional stability back to conditional stability.
 \begin{figure}[htb!]
         \centering
 %\includegraphics[width=0.65\textwidth]{cnab_stab_contour}
 \includegraphics[width=0.65\textwidth]{cnab_stab_contour2}
-\caption{Stability contours for CNAB at various $p$.}
+\caption[Stability contours for CNAB at various $p$]{Stability contours for CNAB at various $p$.}
 \label{cnab contours}
 \end{figure}
 \begin{figure}[htb!]
         \centering
 %\includegraphics[width=0.65\textwidth]{mcnab_stab_contour}
 \includegraphics[width=0.65\textwidth]{mcnab_stab_contour2}
-\caption{Stability contours for mCNAB at various $p$.}
+\caption[Stability contours for mCNAB at various $p$]{Stability contours for mCNAB at various $p$.}
 \label{mcnab contours}
 \end{figure}
 \begin{figure}[htb!]
         \centering
 %\includegraphics[width=0.65\textwidth]{cnlf_stab_contour}
 \includegraphics[width=0.65\textwidth]{cnlf_stab_contour2}
-\caption{Stability contours for CNLF at various $p$.}
+\caption[Stability contours for CNLF at various $p$]{Stability contours for CNLF at various $p$.}
 \label{cnlf contours}
 \end{figure}
 \begin{figure}[htb!]
         \centering
 %\includegraphics[width=0.65\textwidth]{sbdf2_stab_contour}
 \includegraphics[width=0.65\textwidth]{sbdf2_stab_contour2}
-\caption{Stability contours for SBDF2 at various $p$.}
+\caption[Stability contours for SBDF2 at various $p$]{Stability contours for SBDF2 at various $p$.}
 \label{sbdf2 contours}
 \end{figure}
 
@@ -255,7 +255,7 @@ In \cref{sbdf3 contours} are the stability contours for SBDF3 \cref{sbdf3}, and 
         \centering
 %\includegraphics[width=0.65\textwidth]{sbdf3_stab_contour}
 \includegraphics[width=0.65\textwidth]{sbdf3_stab_contour2}
-\caption{Stability contours for SBDF3 at various $p$.}
+\caption[Stability contours for SBDF3 at various $p$]{Stability contours for SBDF3 at various $p$.}
 \label{sbdf3 contours}
 \end{figure}
 
@@ -263,7 +263,7 @@ In \cref{sbdf3 contours} are the stability contours for SBDF3 \cref{sbdf3}, and 
         \centering
 %\includegraphics[width=0.65\textwidth]{sbdf4_stab_contour}
 \includegraphics[width=0.65\textwidth]{sbdf4_stab_contour2}
-\caption{Stability contours for SBDF4 at various $p$.}
+\caption[Stability contours for SBDF4 at various $p$]{Stability contours for SBDF4 at various $p$.}
 \label{sbdf4 contours}
 \end{figure}
 
@@ -290,7 +290,7 @@ Results of the numerical convergence study are shown in \cref{lmm conv test}. Ea
 \begin{figure}
         \centering
 \includegraphics[width=0.65\textwidth]{lmm_conv_ammc}
-\caption[Numerical convergence study with IMEX methods.]{Numerical convergence study to \cref{ammc pmpm} with IMEX methods. Convergence of EIN is also included for comparison. The test with mCNAB is omitted, but would otherwise overlap with CNAB.}
+\caption[Numerical convergence study with IMEX methods]{Numerical convergence study to \cref{ammc pmpm} with IMEX methods. Convergence of EIN is also included for comparison. The test with mCNAB is omitted, but would otherwise overlap with CNAB.}
 \label{lmm conv test}
 \end{figure}
 
@@ -300,7 +300,7 @@ First, let us tabulate the observed (non)convergence of SBDF3 at various values 
 
 \begin{table}[htb!]
         \centering
-\caption[(Non)convergence of SBDF3 at various $p$.]{(Non)convergence of SBDF3 at various $p$.}
+\caption[(Non)convergence of SBDF3 at various $p$]{(Non)convergence of SBDF3 at various $p$.}
 \begin{tabular}{lccc} \toprule[1.25pt]
 & \multicolumn{3}{c}{Observed convergence rate}
 \\
@@ -343,7 +343,7 @@ Failure of the method is due to being unable to satisfy the parameter constraint
 \begin{minipage}{0.45\textwidth}
        \includegraphics[width=0.95\textwidth]{sbdf3_instabilities_zoom}
 \end{minipage}
-\caption[Instabilities using SBDF3.]{Instabilities using SBDF3. With $p=1.675$ and $\Delta t=\num{9.2e-4}$, we observe instabilities developing near the right-hand boundary of the gray dashed curve. The figure on the right is a zoom-in to the right-hand boundary.}
+\caption[Instabilities using linearly stabilized SBDF3]{Instabilities using linearly stabilized SBDF3. With $p=1.675$ and $\Delta t=\num{9.2e-4}$, we observe instabilities developing near the right-hand boundary of the gray dashed curve. The figure on the right is a zoom-in to the right-hand boundary.}
 \label{fig:sbdf3 instab}
 \end{figure}
 
@@ -398,7 +398,7 @@ We test our second order methods on \cref{nl5 p} with initial and boundary condi
 \begin{figure}[htb!]
         \centering
 \includegraphics[width=0.65\textwidth]{nl5_conv}
-\caption[Numerical convergence study comparing second order methods.]{Numerical convergence study comparing second order methods. Test with mCNAB ($p=9.97$) is omitted, but would otherwise overlap with CNAB.}
+\caption[Numerical convergence study comparing second order methods]{Numerical convergence study comparing second order methods. Test with mCNAB ($p=9.97$) is omitted, but would otherwise overlap with CNAB.}
 \label{fig:nl5 conv}
 \end{figure}
 
@@ -441,7 +441,7 @@ The amplification factor for CNAB is thus
 \begin{figure}[htb!]
 	\centering 
 \includegraphics[width=0.65\textwidth]{damp_at_inf}
-\caption[Amplification factors as $z\to-\infty$.]{Amplification factors as $z\to-\infty$. The normalization along the horizontal axis is with respect to the lower limit of the parameter restriction of each scheme.}
+\caption[Amplification factors as $z\to-\infty$]{Amplification factors as $z\to-\infty$. The normalization along the horizontal axis is with respect to the lower limit of the parameter restriction of each scheme.}
 \label{fig:damp fac at inf}
 \end{figure}
 
