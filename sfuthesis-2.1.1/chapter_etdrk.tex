@@ -1,11 +1,11 @@
 \chapter{Higher Order with Exponential Integrators}
-The investigation with multistep schemes left us with a major question. Since the linearly stabilized schemes derived from SBDF3, SBDF4 were shown to be unsuitable for practical use, is it possible to construct practical high order linearly stabilized time stepping methods? In this chapter, we consider two methods coming from the class of exponential integrators. We will demonstrate that the second and fourth order exponential Runge-Kutta from Cox and Matthews \cite{cox2002exponential} work well within our linear stabilization framework.
+The investigation with IMEX methods left us with a major question. Since the linearly stabilized schemes based on SBDF3 and SBDF4 were shown to be unsuitable for practical use, is it possible to construct practical high order linearly stabilized time stepping methods? In this chapter, we consider two methods coming from the class of exponential integrators. We will demonstrate that the second and fourth order exponential Runge-Kutta from Cox and Matthews \cite{cox2002exponential} work well within our linear stabilization framework.
 
 \section{Exponential Runge-Kutta}
 \label{sect:exp rk}
 Consider the ODE
 \begin{align}
-\dd{u}{t} = \N(u) + \L u.
+u'= \N(u) + \L u.
 \end{align}
 Exponential time differencing, or exponential integrators, is a family of time stepping methods that treats the linear part exactly, and approximates the nonlinear part by some suitable quadrature formula. As an example, the exponential Euler method has the formula
 \begin{align}
@@ -117,7 +117,7 @@ First, we apply the schemes \cref{etdrk2 butcher,etdrk4 butcher} to the modified
 \label{fig:etdrk4 stab}
 \end{figure}
 
-Two other factors were considered that affect the performance. The first is the amplification factor as $z\to-\infty$, and the second is a proxy to the error constant of the numerical scheme. The former is plotted in \cref{fig:damp fac at inf etd} for both ETDRK2 and ETDRK4. It shows that the ETDRK schemes provide strong damping as $z\to-\infty$ for a wide range of $p$ and may be a good candidate for taking large time steps. For the proxy to the error constant, we have previously considered series expansion at $z=0$ of the amplification factors:
+Two other factors were considered that affect the performance. One is the amplification factor as $z\to-\infty$, and the other is a proxy to the error constant of the numerical scheme. The former is plotted in \cref{fig:damp fac at inf etd} for both ETDRK2 and ETDRK4. It shows that the ETDRK schemes provide strong damping as $z\to-\infty$ for a wide range of $p$ and may be a good candidate for taking large time steps. For the proxy to the error constant, we have previously considered series expansion at $z=0$ of the amplification factors:
 \begin{align}
         \xi_{ETDRK2} = 1+ z + \frac{z^2}{2} + \left(-\frac{1}{4}p^2 + \frac{5}{12}p \right) z^3 + \cdots ,
 \end{align}
@@ -158,7 +158,7 @@ and for the EIN method we have
 
 Recall from before that the observed convergence rate of EIN was less than we expected from the truncation error. We reasoned that the source of this discrepancy was that the error constant is large whenever $p$ is large. Thus, the step-size had to be chosen to be very small before observing second order convergence.
 
-The situation is similar with the ETDRK schemes. The error term has quadratic and quartic polynomials in $p$ for ETDRK2 and ETDRK4 respectively, and thus we expect these schemes to fare poorly when $p$ is large. Nonetheless, \cref{chap:num experiments} demonstrates that these schemes can outperform SBDF2 and CNAB when $p$ is small and the step-size is coarse. To this end, \cref{fig:err p dep} provides a plot that shows $\delta_1$, $\delta_2$, and $\delta_3$ against $p$. Also plotted are the analogous expressions for SBDF2 and CNAB. As was suggested, there may be a range of $p$ for which these ETDRK schemes are workable. A careful error analysis on fully nonlinear problems would be of some interest and is left as future work.
+The situation is similar with the ETDRK schemes. The error term has quadratic and quartic polynomials in $p$ for ETDRK2 and ETDRK4, respectively, and thus we expect these schemes to fare poorly when $p$ is large. Nonetheless, experiments in \cref{chap:num experiments} demonstrates that these schemes can outperform SBDF2 and CNAB when $p$ is small and the step-size is large. To this end, \cref{fig:err p dep} provides a plot that shows $\delta_1$, $\delta_2$, and $\delta_3$ against $p$. Also plotted are the analogous expressions for SBDF2 and CNAB. As was suggested, there may be a range of values of $p$ for which these ETDRK schemes are viable. A complete error analysis on fully nonlinear problems would be of some interest and is left as future work.
 
 \begin{figure}[htb!]
         \centering
@@ -172,11 +172,11 @@ Finally, we wish to discuss briefly the matter of implementing ETDRK schemes.
 
 \cref{sect:exp rk} presents two exponential Runge-Kutta methods in tableau form. The entries of these tableaus are functions of the operator, $\Delta t\L$. For example, to implement ETDRK2, we must compute the functions 
 \begin{align}
-\varphi_1(c\Delta \L) &= (c\Delta t \L)^{-1}(\exp(c\Delta t \L) - 1),
+\varphi_1(\Delta \L) &= (\Delta t \L)^{-1}(\exp(\Delta t \L) - 1),
 \\
-\varphi_2(c\Delta \L) &= (c\Delta t\L)^{-2}(\exp(c\Delta t \L)  -1 - c\Delta t \L) ,
+\varphi_2(\Delta \L) &= (\Delta t\L)^{-2}(\exp(\Delta t \L)  -1 - \Delta t \L) ,
 \end{align}
-for $c \in [0,1]$, or be able to efficiently evaluate the related matrix-vector multiplications without explicit construction.
+or be able to efficiently evaluate the related matrix-vector multiplications without explicit construction.
 
 Difficulties with the evaluation of the matrix exponential and related functions of the form \cref{phi functions} are well-known and well-studied, eg.\ \cite{moler2003nineteen,higham2002accuracy,higham2008functions,hochbruck1997krylov}. Thus widespread adoption of exponential time differencing methods requires the development of stable and efficient algorithms for computing the matrix exponential. 
 
