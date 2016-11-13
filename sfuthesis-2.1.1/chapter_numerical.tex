@@ -1,12 +1,12 @@
 \chapter{Numerical Experiments}
 \label{chap:num experiments}
-This chapter is entirely devoted to solving stiff PDEs prevalent in a number of fields. The experiments we demonstrate will fall under three categories: image inpainting, interface motion, and phase separation. For each problem, we will give the PDE model and then discuss how we stabilize and select the parameters. Our experiments will show the feasibility of these schemes in 2D and 3D. 
+This chapter is entirely devoted to solving stiff PDEs prevalent in a number of fields. The experiments we demonstrate will fall under three categories: image inpainting, interface motion, and phase separation. For each type of problem, we will give PDE models and then discuss how we stabilize and select the parameters. Our experiments will show the feasibility of these schemes in 2D and 3D. 
 
 Before proceeding further, we would like to make a few notes on our implementation of these schemes. As stated from the outset, our goal is to provide simple, accurate, and efficient time stepping methods for nonlinear PDEs. Too often, new efficient methods are sufficiently complicated that users resort to simple explicit schemes that require lengthy computing time rather than invest an indeterminate amount of time understanding, implementing, and debugging.
 
 In our implementation, the choice of $p$ is fixed throughout the time evolution. Alternately, one may want to adapt $p$ as the solution evolves to avoid overestimates of $p$ that could lead to larger errors. However, we do not pursue this here. So while our theory speaks of approximating the eigenvalues of the linearized system, we do not incur this cost in our computations. 
 
-Note that a static value of $p$ offers the advantage that the linear system to be solved is the same at each time step, i.e.\ the matrix to be inverted is static. Any expensive preprocessing/factorizing of this matrix needs only be done once.
+Note that a static value of $p$ offers the advantage that the linear system to be solved is the same at each time step, i.e.\ the matrix to be inverted is static. Any expensive preprocessing/factorizing of this matrix needs only to be done once.
 
 \section{Image Inpainting}
 Image inpainting is the task of repairing corrupted images and damaged artwork \cite{bertalmio2000image}. In the inpainting examples to follow, the user identifies in the image the region to be inpainted, and from there, a PDE model is evolved to fill-in the inpainting region using the neighbouring information.
@@ -24,7 +24,7 @@ Two PDE models are selected. The first is a second order model from Shen and Cha
 \end{align}
 We refer to these as TV inpainting and TV-H$^{-1}$ inpainting.
 
-The solution, $u$, is the inpainted image we seek. The quantity, $u_0$, is the initially corrupted image, and $\epsilon > 0$ is a regularization parameter. Denoting the image domain $\Omega$, and the inpainting region, $D$, we then define $\lambda_D$ as 
+In these two inpainting models, the solution, $u$, is the restored image, the quantity, $u_0$, is the initially corrupted image, and $\epsilon > 0$ is a regularization parameter. Denoting the image domain $\Omega$, and the inpainting region $D$, $\lambda_D$ is then defined as 
 \begin{align}
 \lambda_D(x)
 = \begin{cases}
@@ -35,13 +35,13 @@ The solution, $u$, is the inpainted image we seek. The quantity, $u_0$, is the i
 \end{align}
 for some $\lambda_0 > 0$.
 
-As for initial conditions, we have two vandalized images to be restored. The first is \cref{fig:turtle with text} where we have overwritten with text a photograph of a sea turtle. We would like to restore the photograph by removing the text. The second is \cref{fig:bullfinch and fox}, where the fox figure requires removal. Although this may look simpler, it is in fact a more challenging scenario because the thickness of the inpainting region requires correctly extending level lines over long distances \cite{schonlieb2011unconditionally}.
+As for initial conditions, we have two vandalized images to be restored. The first is \cref{fig:turtle with text} where we have overwritten with text a photograph of a sea turtle. We would like to restore the photograph by removing the text. The second is \cref{fig:bullfinch and fox}, where the fox figure requires removal. Although the latter may look simpler, it is in fact a more challenging scenario because the thickness of the inpainting region requires correctly extending level lines over long distances \cite{schonlieb2011unconditionally}.
 
-The image is restored in a channel-by-channel manner. As a stopping criteria, we look at the difference in successive images, 
+The image is restored in a channel-by-channel manner. As a stopping criterion, we choose to iterate until the difference in successive images falls below a certain threshold, 
 \begin{align}
-        \frac{\norm{u^{n+1} - u^n}_2}{\norm{u^{n+1}}_2} < \mathrm{tol},
+        \frac{\norm{u^{n+1} - u^n}_2}{\norm{u^{n+1}}_2} < \mathrm{tol}.
 \end{align}
-where the tolerance is set at $\mathrm{tol}=\num{9e-5}$.  In addition, we also set a maximum of 500 iterations per channel. We report the time step-size and the total number of iterations used for each scheme.
+For the experiments below, $\mathrm{tol}=\num{9e-5}$.  In addition, we also set a maximum of 500 iterations per channel. We report the time step-size and the total number of iterations used for each scheme.
 
 Finally, we note that the spatial discretization is by second order centred differences with uniform spacing, $h$, in both $x$ and $y$.
 \begin{figure}[htb!]
@@ -85,7 +85,7 @@ Combined with the assumption of the extreme case, $\sqrt{u_x^2 + u_y^2 + \epsilo
 p_1 \geq \frac{1}{\epsilon}p_0.
 \end{align}
 
-The images restored by TV inpainting and SBDF1, SBDF2, and CNAB are shown in \cref{fig:bv inpainting}. Parameters were set as $\epsilon=0.10$ and $\lambda_0=20$. \cref{tab:bv iter counts} provides the iteration count required with each method. We observe lower iteration counts and better efficiency with second order methods.
+The images restored by TV inpainting and SBDF1, SBDF2, and CNAB are shown in \cref{fig:bv inpainting}. Parameters were set as $\epsilon=0.10$ and $\lambda_0=20$. \cref{tab:bv iter counts} provides the total number of iterations required with each method. We observe lower iteration counts and better efficiency with second order methods.
 \begin{figure}[htb!]
 \centering
 \begin{minipage}{0.65\textwidth}
@@ -135,7 +135,7 @@ We note $p_0$ is chosen exactly as in TV inpainting. Determination of $p_1$ appl
 \end{align}
 which is also the same as TV inpainting.
 
-Interestingly, in the same paper where they propose \cref{tvhneg inpaint} for image inpainting, the authors offer exactly \cref{tvhneg stabilized} and time stepping with SBDF1 as the solution algorithm. In \cref{tab:bvhneg iter counts}, we chart again the iteration counts required for each of SBDF1, SBDF2, CNAB, with parameters $\epsilon=0.10$ and $\lambda_0=30$. Once again, the second order methods are an improvement over the first order method, with the improvement especially notable in the more difficult example with the bullfinch. 
+Interestingly, in the same paper where they propose \cref{tvhneg inpaint} for image inpainting, the authors offer exactly \cref{tvhneg stabilized} and time stepping with SBDF1 as the solution algorithm. In \cref{tab:bvhneg iter counts}, we chart the iteration counts required for each of SBDF1, SBDF2, CNAB, with parameters $\epsilon=0.10$ and $\lambda_0=30$. Once again, the second order methods are an improvement over the first order method, with the improvement especially notable in the more difficult example with the bullfinch. 
 
 As a final note, we mention other interesting developments \cite{bredies2010total,papafitsoros2014combined,papafitsoros2013combined}. In these papers, a number of image restoration models have been proposed involving high order derivatives interacting nonlinearly. It would be of interest to compare the effectiveness of our schemes with the methods proposed in these papers.
 
@@ -207,11 +207,11 @@ Our first example is the evolution of a dumbbell-shaped curve in 2D. \cref{fig:m
 \begin{minipage}{0.48\textwidth}
         \includegraphics[width=0.96\textwidth]{dumbbell_125}
 \end{minipage}%
-\caption[Mean curvature flow of a dumbbell-shaped curve in 2D]{Mean curvature flow of a dumbbell-shaped curve in 2D. From the top left to the bottom right, the plots show the evolution at times $t=0$, $0.01$, $0.5$, $1.25$.}
+\caption[Mean curvature flow of a dumbbell-shaped curve in 2D]{Mean curvature flow of a dumbbell-shaped curve in 2D. From the top left to the bottom right, the plots show the evolution at times $t=0$, $0.01$, $0.50$, $1.25$.}
 \label{fig:mcm 2d dumbbell}
 \end{figure}
 
-In \cref{fig:mcm 2d conv}, we show the convergence of SBDF1, SBDF2, CNAB, EIN, ETDRK2, ETDRK4 for the same problem, but plotting in the positive quadrant only. As shown, each scheme is stable and convergent using much fewer than $10^4$ time steps. However, it is important to note that amongst the schemes, the number of time steps needed to achieve an acceptable level of accuracy ranges from 50 to 800. 
+In \cref{fig:mcm 2d conv}, we show the convergence of SBDF1, SBDF2, CNAB, EIN, ETDRK2, ETDRK4 for the same problem at $T=1.25$, but plotting in the positive quadrant only. As shown, each scheme is stable and convergent using much fewer than $10^4$ time steps. However, it is important to note that amongst the schemes, the number of time steps needed to achieve an acceptable level of accuracy ranges from 50 to 800. 
 
 \begin{figure}[htb!]
         \centering
@@ -233,11 +233,11 @@ In \cref{fig:mcm 2d conv}, we show the convergence of SBDF1, SBDF2, CNAB, EIN, E
 \begin{minipage}{0.48\textwidth}
         \includegraphics[width=0.96\textwidth]{erk4_conv}
 \end{minipage}
-\caption[Convergence of linearly stabilized schemes to a dumbbell-shaped curve evolved under mean curvature flow]{Convergence of various linearly stabilized time stepping methods to a dumbbell-shaped curve in 2D evolved under mean curvature flow. In the column to the left from top to bottom, we have SBDF1, SBDF2, and CNAB. In the column to the right from top to bottom, we have EIN, ETDRK2, and ETDRK4. Within each plot, each curve is the solution using the number of time steps, $n$, as indicated.}
+\caption[Convergence of linearly stabilized schemes to the problem of a dumbbell-shaped curve evolved under mean curvature flow]{Convergence of various linearly stabilized time stepping schemes to the problem of a dumbbell-shaped curve in 2D evolved under mean curvature flow. In the column to the left from top to bottom, we have SBDF1, SBDF2, and CNAB. In the column to the right from top to bottom, we have EIN, ETDRK2, and ETDRK4. Within each plot, each curve is the solution using the number of time steps, $n$, as indicated.}
 \label{fig:mcm 2d conv}
 \end{figure}
 
-The most disappointing of these is CNAB, for which a minimum of 400 time steps was needed to get a solution profile that fits within the frame we have chosen. Furthermore, it needs close to 800 time steps to present a solution competitive with the other methods in accuracy. SBDF2 likewise fared poorly in that regards, needing close to 800 time steps for a solution competitive with the other methods in accuracy. 
+The most disappointing of these is CNAB, for which a minimum of 400 time steps was needed to get a solution profile that fits within the frame we have chosen. Furthermore, it needs close to 800 time steps to present a solution competitive with the other methods in accuracy. SBDF2 likewise fared poorly in that regard, needing close to 800 time steps for a solution competitive with the other methods in accuracy. 
 
 We now take a more careful look at the ETDRK schemes and the EIN method. Recall that these are the schemes that have strong damping as $z\to-\infty$ (see \cref{fig:damp fac at inf etd}). Zoom-ins to the solution by these methods are presented in \cref{fig:mcm zoom in 1,fig:mcm zoom in 2}. These show that the ETDRK schemes offer good accuracy and convergence using just 50 time steps. The EIN method, however, is again hampered by slow convergence. This is especially clear in \cref{fig:mcm zoom in 1}. If we further factor in computing time, then both CNAB and SBDF2 outperform the EIN method.
 
@@ -267,7 +267,7 @@ We now take a more careful look at the ETDRK schemes and the EIN method. Recall 
 
 Next, we take this example into 3D. Here, the advantages of our schemes are further magnified. In 2D, one could argue that the computations can be completed using standard explicit schemes within reasonable computing times. In 3D, doing so may require trade offs in the grid size, or computing only over short time periods. 
 
-Setting the initial condition to be the dumbbell-shaped curve of the top left image in \cref{fig:mcm 3d dumbbell}, the curve is then evolved by mean curvature flow. We use a periodic grid of size $256\times 128\times 128$ and solve to time $T=0.75$. With forward Euler, we needed $3000$ time steps for stability, which corresponds to over 28 minutes in \textsc{Matlab} 2014b on an Intel\textsuperscript{\textregistered}Core\textsuperscript{\texttrademark}i5-4570 CPU@3.20GHz workstation running Linux. With the linearly stabilized ETDRK2, we solved the same problem using 75 time steps in 103 seconds.
+Setting the initial condition to be the dumbbell-shaped curve of the top left image in \cref{fig:mcm 3d dumbbell}, the curve is then evolved under mean curvature flow. We use a periodic grid of size $256\times 128\times 128$ and solve to time $T=0.75$. With forward Euler, we needed $3000$ time steps for stability, which corresponds to over 28 minutes in \textsc{Matlab} 2014b on an Intel\textsuperscript{\textregistered}Core\textsuperscript{\texttrademark}i5-4570 CPU@3.20GHz workstation running Linux. With the linearly stabilized ETDRK2, we solved the same problem using 75 time steps in 103 seconds.
 
 \begin{figure}[htb!]
         \centering
@@ -308,9 +308,9 @@ where $\omega = \arctan(u_y/u_x)$, and
 \quad\text{for } n = 0,2,4,8.
 \label{aniso mcm gamma}
 \end{align}
-Under isotropic mean curvature motion, a simple, smooth closed contour in 2D has a circular limiting shape as it reduces to a point. Under \cref{aniso mcm,aniso mcm gamma}, the limiting shape will have $n$-fold rotational symmetry.
+Under isotropic mean curvature motion, a simple closed contour in 2D has a circular limiting shape as it reduces to a point. Under \cref{aniso mcm,aniso mcm gamma}, the limiting shape will have $n$-fold rotational symmetry.
 
-For our methods, the added factor of $\gamma(\omega) + \gamma''(\omega)$ presents no additional difficulty at all. Again, we can stabilize with $p\Delta u$, with $p=(1+(n^2-1)/(n^2+1))p_0$. Setting $n=4$, and on a periodic grid of size $256\times 256$, we take 500 time steps with a linearly stabilized ETDRK2 to produce the solution presented in \cref{fig:aniso mcm}. 
+For our methods, the added factor of $\gamma(\omega) + \gamma''(\omega)$ presents no additional difficulty. Again, we can stabilize with $p\Delta u$, setting $p=(1+(n^2-1)/(n^2+1))p_0$. Shown in \cref{fig:aniso mcm} is an example with $n=4$. The solution is generated on a $256\times 256$ periodic grid using linearly stabilized ETDRK2 with 500 time steps.
 \begin{figure}
         \centering
 \begin{minipage}{0.44\textwidth}
@@ -342,7 +342,7 @@ where $\epsilon>0$ is a small parameter that determines interfacial thickness, $
 
 We assume initially that the solution is well-mixed and thus the initial conditions are chosen uniformly at random from $[-\epsilon,\epsilon]$. As time progress, the initially well-mixed solution aggregates into homogeneous zones separated by transition layers of thickness $\O(\epsilon)$. Within the homogeneous zones, $u$ takes on the value 1 or $-1$. 
 
-To discretize the surface operators, we use the closest point method of Ruuth and Merriman \cite{ruuth2008simple}. Their approach is to extend the solution off the surface into the embedding space at each time step in a way that allows them to replace the surface operators with their Cartesian analogs. It then becomes a matter of selecting from standard finite difference methods for the discretization of the spatial operators. We also mention the work of Macdonald and Ruuth \cite{macdonald2009implicit} that provides for implicit time stepping with the closest point method. See \cite{cpmcodes} for open access closest point method software.
+To discretize the surface operators, we use the closest point method of Ruuth and Merriman \cite{ruuth2008simple}. Their approach is to extend the solution off the surface and into the embedding space at each time step in a way that allows them to replace the surface operators with their Cartesian analogs. It then becomes a matter of selecting from standard finite difference methods for the discretization of the spatial operators. We also mention the work of Macdonald and Ruuth \cite{macdonald2009implicit} that provides for implicit time stepping with the closest point method. See \cite{cpmcodes} for open access closest point method software.
 
 To use a linearly stabilized method for time stepping, we must determine $p$. To determine $p$, we linearize \cref{ch}. Substituting with $u = u^n + \delta v$, we have 
 \begin{align}
@@ -364,7 +364,7 @@ Thus if we are to stabilize with $p\Delta_\S u$, then we may choose $p$ as
 \begin{align}
 p \geq (3\bar u^2 - 1)p_0, 
 \end{align}
-where $\bar u = \sup_\S \abs{u^n}$. For simplicity, we use $p=2p_0$ as $u$ takes values in $[-1,1]$.  
+where $\bar u = \sup_\S \abs{u^n}$. For simplicity, we set $p=2p_0$ since $u$ takes values in $[-1,1]$.  
 
 \cref{fig:ch torus,fig:ch cow} show the solution to \cref{ch} on two different surfaces at time $T=100$. In both examples, the spatial grid is uniform, with $h=0.14$ for the torus and $h=0.075$ for the cow. We then set $\epsilon=2h$. Time stepping is done with SBDF2 and for the time step-size, we have chosen $\Delta t = 0.5h$ for the torus and $\Delta t = 1$ for the cow. 
 
@@ -391,15 +391,15 @@ For our last example, we solve
 \quad t>0,
 \label{mch}
 \end{align}
-with periodic boundary conditions and uniform random perturbations in $[-\epsilon,\epsilon]$ for the initial condition. In this model, $\epsilon>0, m\geq 0$ are parameters that characterize the steady state behaviour of the solution \cite{choksi2009phase,choksi20112d}. As described in \cite{choksi2009phase}, \cref{mch} is of interest for its connections to the self-assembly of diblock copolymers. In model \cref{mch}, different regions in the parameter space $(\epsilon, m)$ dictate the formation of distinct energy-minimizing patterns from an initial well-mixed state. Numerically, one expects difficulties generating these energy-minimizing states. As in the previous example, we consider our methods for handling the exponentially slowing dynamics that take place as the solution inches toward steady state. We will show that our methods are stable and can quickly advance the solution to determine the minimizing states. 
+with periodic boundary conditions and uniform random perturbations in $[-\epsilon,\epsilon]$ for the initial condition. In this model, $\epsilon>0, m\geq 0$ are parameters that characterize the steady state behaviour of the solution \cite{choksi2009phase,choksi20112d}. As described in \cite{choksi2009phase}, \cref{mch} is of interest for its connections to the self-assembly of diblock copolymers. In the model \cref{mch}, different regions in the parameter space $(\epsilon, m)$ dictate the formation of distinct energy minimizing patterns from an initial well-mixed state. Numerically, one expects difficulties generating these energy minimizing states. As in the previous example, we consider our methods for handling the exponentially slowing dynamics that take place as the solution inches toward steady state. We will show that our methods are stable and can quickly advance the solution to the energy minimizing state. 
 
-To stabilize \cref{mch}, we first need to estimate the term $\Delta(u^3 + 3mu^2-(1-3m^2)u)$. We proceed as in \cref{ch linearize} to find the linearized form
+To stabilize \cref{mch}, we first linearize the equation to obtain an estimate for $p$. Proceeding as in \cref{ch linearize}, we find the linearized equation to be
 \begin{align}
 v_t = -\epsilon^2\Delta^2 v - v + (3(u^n)^2 + 6mu^n - (1-3m^2) \Delta v.
 \end{align}
 Thus if we stabilize with $p\Delta u$, choosing $p \geq (2+6m+3m^2)p_0$ will be sufficient to guaranteeing unconditional stability.
 
-\cref{fig:mchp energy minimizers} gives experiments showing that our methods can be used to access the energy-minimizing states of \cref{mch}. As a final note, we mention that we adopt the strategy of spectral filtering that was proposed in \cite{choksi20112d}.
+\cref{fig:mchp energy minimizers} gives experiments showing that our methods can be used to access the energy minimizing states of \cref{mch}. As a final note, we mention that we adopt the strategy of spectral filtering that was proposed in \cite{choksi20112d}.
 
 \begin{figure}[htb!]
         \centering

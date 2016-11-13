@@ -5,15 +5,21 @@ Alongside stability, there is the matter of accuracy. As the former dictated the
 
 We also addressed the feasibility of taking large time step-sizes. The schemes that perform well possess strong damping as $z\to-\infty$. We have shown that this quality, as was with the previous two, is easy to check for any time stepping method.
 
-On the matter of developing linearly stabilized schemes with the aforementioned properties, we have proposed a number of new methods based on IMEX multistep methods and exponential Runge-Kutta methods that perform exceptionally on at least two of the three, but none that perform strongly in all three.
+On the matter of developing linearly stabilized schemes with the aforementioned properties, we have proposed a number of new methods based on IMEX multistep methods and exponential Runge-Kutta methods that perform exceptionally on at least two of the three, but it remains to develop higher order variants that excel in all three.
 
-We recommend SBDF2 for its ease of use and its superior damping to CNAB, although CNAB remains a useful alternative as it has a smaller error constant as $\Delta t \to 0$. Implementing these schemes require no more expertise than applying an implicit method to solve a constant coefficient heat equation. 
-When the domain is periodic and  $p$ can be chosen quite small, ETDRK2 and ETDRK4 offer strong performance at large step-sizes.
-Of the existing linearly stabilized methods, SBDF1 and the EIN method, neither are competitive with our schemes due to some combination of slower convergence rate and comparatively high computing times.
+We recommend SBDF2 for its ease of use and its superior damping to CNAB, although CNAB remains a useful alternative as it has a smaller error constant as $\Delta t \to 0$. We have shown that implementing these schemes require no more expertise than applying an implicit method to solve a constant coefficient heat equation. Experiments in image processing, interface motion, and phase separation demonstrate the effectiveness of these schemes.
 
-A number of questions have been raised throughout this thesis and are worthy of further consideration. We have identified three properties critical for effective linearly stabilized schemes, and the derivation of high order methods satisfying all three remains open. While the metrics we supplied are easy to compute sufficient as a guide, a study of the discretization error on a fully nonlinear problem would elevate our current level of understanding. Adaptivity could also be investigated for both the step-size and for selecting $p$. Finally, comparing our methods to popular algorithms in applications such as image processing would be of interest.
+For problems where the domain is periodic and $p$ can be chosen quite small, one may consider ETDRK2 and ETDRK4. These two schemes offer strong performance at large step-sizes and are equally easy to implement.
 
-\section*{notes}
-emphasize that the original equation is solve. there is no linearization, ...
+Of the existing linearly stabilized methods, none are competitive with our schemes. 
+SBDF1 is only first order accurate. The EIN method, although formally second order accurate, exhibited a reduced order of accuracy in many of our numerical experiments due to a large error constant, and its cost per step is also nearly three times that of our multistep versions. 
 
-compare to other nonlinear PDE solvers
+A number of questions have been raised throughout this thesis and are worthy of further consideration. 
+
+We have identified three properties critical to effective linearly stabilized schemes. SBDF2, as we have shown, is a strong candidate, yet it is only second order. The derivation of third and higher order methods excelling in all three remain open.
+
+A study of the discretization error on fully nonlinear problems would also be of interest. While the metrics we supplied are instructive and simple to compute, such a study may provide sharper insight as to when it is advantageous to apply, e.g., ETDRK2. 
+
+Adaptivity could be investigated. Both the time step-size and the parameter $p$ are candidates, although doing so may cost us the efficiency of preprocessing only once. 
+
+Finally, it would be of interest to assess the performance of our methods against popular algorithms for the solution to stiff nonlinear PDEs. 
