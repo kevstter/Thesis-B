@@ -1,6 +1,4 @@
 # Thesis-B
-Masters thesis files
-
 Kevin Chow's Masters thesis. 
 
 Available are the tex files and pdf of the thesis. 
