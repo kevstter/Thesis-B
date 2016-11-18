@@ -1,7 +1,7 @@
 \chapter{Conclusion}
 In this thesis, we gave details of a framework for developing effective linearly stabilized time stepping methods. As was already known, unconditional stability is required. In our work, we further deduced that the restriction on the parameter $p$, over which we enjoy unconditional stability, must be unbounded. 
 
-Alongside stability, there is the matter of accuracy. As the former dictated the range from which we can select $p$, it was then natural to explore how the discretization error behaves as a function of $p$. We recommended the simple procedure of applying the numerical method to the modified test equation and examining the series expansion at $\Delta t = 0$. When the coefficient of the leading order error term is a degree two or higher polynomial in $p$, the schemes fared poorly for $p$ large.
+Alongside stability, there is the matter of accuracy. As the former dictated the range from which one can select $p$, it was then natural to explore how the discretization error behaves as a function of $p$. The simple procedure of applying the numerical method to the modified test equation and examining the series expansion at $\Delta t = 0$ was recommended. When the coefficient of the leading order error term is a degree two or higher polynomial in $p$, the schemes fared poorly for $p$ large.
 
 We also addressed the feasibility of taking large time step-sizes. The schemes that perform well possess strong damping as $z\to-\infty$. Similar to the previous two qualities, we have shown that this quality is easy to check for any time stepping method.
 
@@ -18,7 +18,7 @@ A number of questions have been raised throughout this thesis and are worthy of 
 
 We have identified three properties critical to effective linearly stabilized schemes.  SBDF2, as we have shown, is a strong candidate, yet it is only second order. The derivation of third and higher order methods excelling in all three remain open. Moreover, as non-periodic boundary conditions are not well-handled by exponential time differencing methods, higher order methods that do not require the matrix exponential would be the most compelling.
 
-A study of the discretization error of linearly stabilized schemes on fully nonlinear problems would also be of interest. While the metrics we supplied are instructive and simple to compute, such a study may provide sharper insight as to when it is advantageous to apply a particular scheme, e.g., ETDRK2. 
+A study of the discretization error of linearly stabilized schemes on fully nonlinear problems would also be of interest. While the metrics we supplied are simple to construct and instructive, such a study may provide sharper insight as to when it is advantageous to apply a particular scheme, e.g., ETDRK2. 
 
 Adaptivity also could be investigated. Both the time step-size and the parameter $p$ are candidates for adaptivity in time, although doing so may cost us the efficiency of preprocessing only once. The analysis of test problem \cref{ammc} also suggests adaptivity of $p$ in space may lead to interesting results, although such a procedure likely does not fit within our framework. 
 
