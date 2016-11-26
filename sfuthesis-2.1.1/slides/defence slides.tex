@@ -1,0 +1,424 @@
+\documentclass[hyperref={pdfpagelabels=false}]{beamer}
+\usepackage{lmodern}
+\usetheme{CambridgeUS}
+
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{graphicx}
+
+\title[Linearly Stabilized Schemes]{Linearly Stabilized Schemes for the Time Integration of Stiff Nonlinear PDEs}  
+\author{Kevin Chow} 
+\date{December 9, 2016} 
+\begin{document}
+%\logo{\includegraphics[scale=0.14]{logo-SF}}
+\begin{frame}
+\titlepage
+\end{frame} 
+
+
+\begin{frame}
+\frametitle{Table of contents}
+\tableofcontents
+\end{frame} 
+
+
+\section{Introduction} 
+\begin{frame}
+\frametitle{Introduction}
+\begin{enumerate}
+	\item Focus on time stepping for stiff nonlinear PDEs.
+	\begin{itemize}
+		\item Stability
+		\item Accuracy
+		\item Efficiency
+		\item Simplicity
+	\end{itemize}
+\end{enumerate}
+\end{frame}
+\subsection{Example}
+\begin{frame}
+\frametitle{Example}	
+Consider the heat equation, 
+\begin{align*}
+u_t &= u_{xx}, \quad x \in \Omega, t > 0.
+\end{align*}
+Discretize in space:
+\begin{align*}
+U' &= LU, \quad U \in \mathbb{R}^N, t > 0.
+\end{align*}
+Explicit: $U^{n+1} = G(U^n,U^{n-1},\dots, LU^n, LU^{n-1},\dots)$, but $\Delta t \leq Ch^2$. 
+
+Implicit: $AU^{n+1} = b$; unconditionally stable, but must solve a linear system. 
+\end{frame}
+\begin{frame}
+\frametitle{Example}	
+Now compare with 
+\begin{align*}
+u_t &= \frac{u_{xx}}{1 + u_x^2} - \frac{1}{u}, \quad x \in \Omega, t > 0.
+\end{align*}
+and 
+\begin{align*} 
+U' &= F(U), \quad U \in \mathbb{R}^N, t > 0.
+\end{align*}
+Explicit: $U^{n+1} = G(U^n,U^{n-1},\dots, F(U^n), F(U^{n-1}),\dots)$, but $\Delta t \leq Ch^2$. 
+
+Implicit: $AU^{n+1} = b(U^{n+1})$; unconditionally stable, but must solve a nonlinear system because nonlinearity is in the stiff term. 
+\end{frame}
+\begin{frame}
+	\frametitle{Example}
+	Comparing side-by-side:
+	\begin{columns}
+\begin{column}{0.48\textwidth}
+	\begin{align*} 
+		u_t = u_{xx}, \quad x\in \Omega, t > 0,
+	\end{align*}
+Explicit: $\Delta t \leq Ch^2$
+
+Implicit: unconditionally stable; solution to linear system
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{align*} 
+	u_t = \frac{u_{xx}}{1 + u_x^2} - \frac{1}{u}, \quad x\in \Omega, t > 0,
+\end{align*}
+Explicit: $\Delta t \leq Ch^2$
+
+Implicit: unconditionally stable; solution to nonlinear system
+\end{column}
+	\end{columns}
+\begin{alertblock}{Summary: What We Like}
+	Explicit: simple; handles nonlinear terms with no added difficulty.
+	
+	Implicit: large time steps
+\end{alertblock}	
+\end{frame}
+\begin{frame}
+	\frametitle{Example}
+Modify the equation,
+\begin{align*}
+u_t &= \frac{u_{xx}}{1 + u_x^2} - \frac{1}{u} - u_{xx} + u_{xx}, \quad x\in \Omega, t>0, 
+\\
+&\downarrow 
+\\
+U' &= F(U) - LU + LU, \quad U\in \mathbb{R}^N, t > 0,
+\end{align*}
+and use implicit-explicit time stepping, e.g.
+\begin{align*}
+\frac{U^{n+1} - U^n}{\Delta t} = F(U^n) - LU^n + LU^{n+1}.
+\end{align*}
+\end{frame}
+
+\section{Linear Stability} 
+\begin{frame}
+\frametitle{Linear Stability}
+More generally, from $U'=F(U)$, we can modify as 
+\begin{align*}
+ U' = \underbrace{F(U) - pLU}_{(\star)} + pLU, \quad p > 0,
+\end{align*}
+and apply a time stepping scheme that treats $(\star)$ explicitly.
+
+Key question: Is this unconditionally stable? 	
+\end{frame}
+\subsection{Test equation}
+\begin{frame}
+	\frametitle{Scalar test equation}
+\begin{columns}
+	\begin{column}{0.46\textwidth}
+Standard case:
+\begin{align*} 
+U' = F(U)
+\end{align*} 
+
+Linearize $\to$ Diagonalize $\to$ Test equation: 
+\begin{align*} 
+u' = \lambda u
+\end{align*} 
+	\end{column}
+	\begin{column}{0.46\textwidth}
+With linear modification: 
+\begin{align*} 
+U' = F(U) - pLU + pLU
+\end{align*}
+
+Linearize $\to$ Diagonalize $\to$ Test equation: 
+\begin{align*}
+u' &= \lambda u - p\lambda u + p\lambda u 
+\\
+&= (1-p)\lambda u + p\lambda u 
+\end{align*}
+		\end{column}
+\end{columns}
+Apply time stepping method: 
+\begin{align*} 
+u^{n+1} = \xi(\lambda\Delta t) u^n
+\end{align*} 
+
+Stability constraint: 
+\begin{align*}
+\left\vert \xi(\lambda\Delta t)\right\vert \leq 1
+\end{align*}
+\end{frame}
+\subsection{IMEX Euler}
+\begin{frame}
+	\frametitle{Implicit-explicit Euler} 
+Applied to the test equation $u' = (1-p)\lambda u + p\lambda u$, yields 
+\begin{align*}
+\frac{u^{n+1} - u^n}{\Delta t} = (1-p)\lambda u^n + p\lambda u^{n+1}.
+\end{align*}
+The amplification factor is 
+\begin{align*}
+\xi_1(\lambda\Delta t) 
+= \frac{1 + (1-p)\lambda\Delta t}{1 - p\lambda\Delta t}. 
+\end{align*}
+Impose unconditional stability: 
+\begin{align*}
+\left\vert \xi_1(\lambda\Delta t)\right \vert \leq 1  
+\text{ for all }\lambda \Delta t < 0 \implies p \geq 1/2.
+\end{align*}
+\end{frame}
+\subsection{EIN} 
+\begin{frame}
+	\frametitle{Explicit-implicit-null (EIN)} 
+Use Richardson extrapolation to get second order. The amplification factor is  	
+\begin{align*}
+\xi_{EIN}(\lambda\Delta t) 
+= 2\xi^2_1(\lambda\Delta t/2) - \xi_1(\lambda\Delta t).
+\end{align*}
+and 
+\begin{align*}
+\left\vert \xi_{EIN}(\lambda\Delta t) \right\vert \leq 1 \text{ for all } \lambda\Delta t < 0 \implies p \geq 2/3.
+\end{align*}
+\end{frame}
+\subsection{IMEX Multistep}
+\begin{frame}
+	\frametitle{Implicit-explicit multistep methods}
+An alternative for second and higher order methods: IMEX multistep methods.	
+\begin{table}[htb!]
+	\centering  
+%	\caption{Parameter ranges for select IMEX LMM.}
+	\begin{tabular}{lllr}
+		\toprule
+		Order && Method & $p\in$
+		\\ \midrule 
+%		1 && IMEX-Euler & $(1/2,\infty)$ 
+%		\\ \cmidrule{1-3}
+		\multirow{4}{*}{2} && SBDF2 & $[3/4,\infty)$
+		\\
+		&& CNAB & $[1,\infty)$ 
+		\\
+		&& mCNAB & $[8/9,\infty)$ 
+		\\
+		&& CNLF & $[1/2,\infty)$
+		\\ \cmidrule{1-3}
+		3 && SBDF3 & $[7/8,2]$ 
+		\\ \cmidrule{1-3}
+		4 && SBDF4 & $[11/12,5/4]$
+		\\
+		\bottomrule
+	\end{tabular}
+\end{table}
+\end{frame}
+
+\section{Comparing the Methods} 
+\begin{frame}
+	\frametitle{Comparing the methods}
+Do the methods work as advertised? 	
+
+Examine this with two test problems,
+\begin{align*}
+u_t = \frac{u_{xx}}{1 + u_x^2} - \frac{1}{u}, 
+\end{align*}
+and 
+\begin{align*}
+u_t = \Delta(u^5).
+\end{align*}
+\end{frame}
+
+\subsection{Test Problem 1} 
+\begin{frame}
+	\frametitle{Test Problem 1} 
+First test problem: 
+\begin{align*}
+	u_t = \frac{u_{xx}}{1 + u_x^2} - \frac{1}{u}, 
+	\quad 0 < x < 10,\quad t > 0, 
+\end{align*}
+with initial condition 
+\begin{align*}
+	u(x,0) = 1 + 0.10\sin\left(\frac{\pi}{5}x \right),
+\end{align*}
+and boundary conditions $u(0,t) = 1 = u(10,t)$.
+\end{frame}
+\begin{frame}
+	\frametitle{Numerical convergence test}
+	\begin{figure}[t]
+		\centering
+		%\includegraphics[width=0.65\textwidth]{}
+		\caption{Numerical convergence of linearly stabilized schemes.}
+	\end{figure}
+	Spatial discretization: Uniform grid, centred differences, N=2048.
+	
+	Reference solution: Explicit third order Runge-Kutta, $\Delta t = 1.46\times 10^{-5}$.	
+\end{frame}
+\begin{frame}
+	\frametitle{Failure of SBDF3 and SBDF4}
+
+\end{frame}
+
+\subsection{Test Problem 2}
+\begin{frame}
+	\frametitle{Test Problem 2} 
+Second test problem: 
+\begin{align*}
+u_t = \Delta(u^5), 
+\quad (x,y) \in [0,1]^2, \quad t > 0, 
+\end{align*}
+with initial and boundary conditions set such that the exact solution is 
+\begin{align*}
+u(x,y,t) = \left(\frac{4}{5}(2t+x+y) \right)^{1/4}.
+\end{align*}
+\end{frame}
+\begin{frame}
+	\frametitle{Numerical convergence test}
+	\begin{figure}[t]
+		\centering
+		%\includegraphics[width=0.65\textwidth]{}
+		\caption{Numerical convergence of linearly stabilized schemes.}
+	\end{figure}
+	Spatial discretization: second order centred differences; N=2048.
+	
+	Reference solution: explicit third order Runge-Kutta, $\Delta t = 1.46\times 10^{-5}$.
+\end{frame}
+\begin{frame}
+	\frametitle{Error constant}
+\end{frame}
+
+
+\subsection{Tables}
+\begin{frame}
+\frametitle{Tables}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Date} & \textbf{Instructor} & \textbf{Title} \\
+\hline
+WS 04/05 & Sascha Frank & First steps with  \LaTeX  \\
+\hline
+SS 05 & Sascha Frank & \LaTeX \ Course serial \\
+\hline
+\end{tabular}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Tables with pause}
+\begin{tabular}{c c c}
+A & B & C \\ 
+\pause 
+1 & 2 & 3 \\  
+\pause 
+A & B & C \\ 
+\end{tabular} 
+\end{frame}
+
+
+
+\section{Exponential Runge-Kutta Methods} 
+\subsection{Tables}
+\begin{frame}
+	\frametitle{Tables}
+	\begin{tabular}{|c|c|c|}
+		\hline
+		\textbf{Date} & \textbf{Instructor} & \textbf{Title} \\
+		\hline
+		WS 04/05 & Sascha Frank & First steps with  \LaTeX  \\
+		\hline
+		SS 05 & Sascha Frank & \LaTeX \ Course serial \\
+		\hline
+	\end{tabular}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Tables with pause}
+	\begin{tabular}{c c c}
+		A & B & C \\ 
+		\pause 
+		1 & 2 & 3 \\  
+		\pause 
+		A & B & C \\ 
+	\end{tabular} 
+\end{frame}
+
+
+\section{Numerical Experiments}
+\subsection{blocs}
+\begin{frame}
+\frametitle{blocs}
+
+\begin{block}{title of the bloc}
+bloc text
+\end{block}
+
+\begin{exampleblock}{title of the bloc}
+bloc text
+\end{exampleblock}
+
+
+\begin{alertblock}{title of the bloc}
+bloc text
+\end{alertblock}
+\end{frame}
+
+
+\begin{frame}\frametitle{lists with single pauses}
+	\begin{itemize}
+		\item Introduction to  \LaTeX{}  \pause 
+		\item Course 2 \pause 
+		\item Termpapers and presentations with \LaTeX{}  \pause 
+		\item Beamer class
+	\end{itemize} 
+\end{frame}
+
+\begin{frame}\frametitle{lists with pause}
+	\begin{itemize}[<+->]
+		\item Introduction to  \LaTeX{}  
+		\item Course 2
+		\item Termpapers and presentations with \LaTeX{}  
+		\item Beamer class
+	\end{itemize} 
+\end{frame}
+
+\subsection{Lists II}
+
+\begin{frame}\frametitle{numbered lists}
+	\begin{enumerate}
+		\item Introduction to  \LaTeX{}   
+		\item Course 2 
+		\item Termpapers and presentations with \LaTeX{}  
+		\item Beamer class
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}
+	\frametitle{numbered lists with single pauses}
+	\begin{enumerate}
+		\item Introduction to  \LaTeX{}  \pause 
+		\item Course 2 \pause 
+		\item Termpapers and presentations with \LaTeX{}  \pause 
+		\item Beamer class
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}
+	\frametitle{numbered lists with pause}
+	\begin{enumerate}[<+->]
+		\item Introduction to  \LaTeX{}  
+		\item Course 2
+		\item Termpapers and presentations with \LaTeX{}  
+		\item Beamer class
+	\end{enumerate}
+\end{frame}
+
+
+\section{Conclusion}
+
+
+\end{document}
