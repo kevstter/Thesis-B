@@ -256,11 +256,42 @@ and boundary conditions $u(0,t) = 1 = u(10,t)$.
 	\end{figure}
 	Spatial discretization: Uniform grid, centred differences, N=2048.
 	
-	Reference solution: Explicit third order Runge-Kutta, $\Delta t = 1.46\times 10^{-5}$.	
+	Final time: $T=0.35$. 
+	
+	Reference solution: Explicit third order Runge-Kutta, $\Delta t = 1.46\times 10^{-5}$.
+	
+	Stabilized by adding and subtracting $pu_{xx}$. 	
 \end{frame}
 \begin{frame}
 	\frametitle{Failure of SBDF3 and SBDF4}
+	How did we choose $p$? Consider 
+\begin{align*}
+u' = \lambda u - p\lambda u + p\lambda u
+\end{align*}
+and 
+\begin{align*}
+U' = F(U) - pLU + pLU.
+\end{align*}
+With the test equation, we derived a restriction on $p$. More generally, the restriction applies to $p\lambda_L / \lambda_F$. For test problem 1 with centred differences, we find 
+\begin{align*}
+\frac{p\lambda_L}{\lambda_F} 
+\approx p(1 + (D_1 \bar u^n_j)^2), 
+\end{align*}
 
+\end{frame}
+\begin{frame}
+	\frametitle{Failure of SBDF3 and SBDF4} 
+	The selection of $p$ for SBDF3 is dictated by 
+	\begin{align*}
+	\max_{1\leq j\leq N} \frac{7}{8} \frac{1}{1 + (D_1 \bar u^n_j)^2} 
+	\leq p
+	\leq \min_{1\leq j\leq N} \frac{2}{1 + (D_1 \bar u^n_j)^2}.
+	\end{align*}
+	\begin{figure}
+		\centering 
+%		\includegraphics[width=0.65\textwidth]{name}
+\caption{Development of instabilities using SBDF3, $p=1.625$.}
+	\end{figure}
 \end{frame}
 
 \subsection{Test Problem 2}
@@ -280,73 +311,58 @@ u(x,y,t) = \left(\frac{4}{5}(2t+x+y) \right)^{1/4}.
 	\frametitle{Numerical convergence test}
 	\begin{figure}[t]
 		\centering
-		%\includegraphics[width=0.65\textwidth]{}
+		%\includegraphics[wicontent...dth=0.65\textwidth]{}
 		\caption{Numerical convergence of linearly stabilized schemes.}
 	\end{figure}
 	Spatial discretization: second order centred differences; N=2048.
 	
-	Reference solution: explicit third order Runge-Kutta, $\Delta t = 1.46\times 10^{-5}$.
+	Final time: $T=0.40$. 
+	
+	Reference solution: explicit third order Runge-Kutta, $\Delta t = 6.25\times 10^{-6}$.
+	
+	Stabilized using $p\Delta u$, and 
+	\begin{align*}
+	\frac{p\lambda_L}{\lambda_F} \approx \frac{p}{8(1+t)}.
+	\end{align*}
+	
 \end{frame}
 \begin{frame}
 	\frametitle{Error constant}
+	Discretizing $u' = (1- p)\lambda u + p\lambda u$, we observe that the discretization error grows with $p$.
+	
+	We examine this behaviour by applying the time stepping method and finding the series expansion of the amplification factor at $\Delta t=0$. 
+	
+	For second order methods, leading order error term is $\Delta t^3$. The coefficient indicates how the method behaves. 
+	\begin{table}[b]
+		\centering 
+		\caption{Coefficient of leading order error term as applied to the test equation.}
+		\begin{tabular}{ll} 
+			\toprule 
+	Method & Coefficient 
+\\ \midrule 
+EIN & $\frac{1}{2}(p-p^2)$ 
+\\
+SBDF2 & $p$
+\\ 
+CNAB 
+\\ 
+mCNAB 
+\\ 
+CNLF 
+\\ \bottomrule
+		\end{tabular}
+	\end{table}
 \end{frame}
-
-
-\subsection{Tables}
 \begin{frame}
-\frametitle{Tables}
-\begin{tabular}{|c|c|c|}
-\hline
-\textbf{Date} & \textbf{Instructor} & \textbf{Title} \\
-\hline
-WS 04/05 & Sascha Frank & First steps with  \LaTeX  \\
-\hline
-SS 05 & Sascha Frank & \LaTeX \ Course serial \\
-\hline
-\end{tabular}
+	\frametitle{Amplification factor as $\Delta t\to\infty$}
+	Methods performing well at large time step-sizes have small amplication factor as $\Delta t \to \infty$. 
+	
+	\begin{figure}
+		\centering 
+%		\includegraphics[width=0.65\textwidth]{name}
+\caption{Amplification factor as $\Delta t \to \infty$.}
+	\end{figure}
 \end{frame}
-
-
-\begin{frame}
-\frametitle{Tables with pause}
-\begin{tabular}{c c c}
-A & B & C \\ 
-\pause 
-1 & 2 & 3 \\  
-\pause 
-A & B & C \\ 
-\end{tabular} 
-\end{frame}
-
-
-
-\section{Exponential Runge-Kutta Methods} 
-\subsection{Tables}
-\begin{frame}
-	\frametitle{Tables}
-	\begin{tabular}{|c|c|c|}
-		\hline
-		\textbf{Date} & \textbf{Instructor} & \textbf{Title} \\
-		\hline
-		WS 04/05 & Sascha Frank & First steps with  \LaTeX  \\
-		\hline
-		SS 05 & Sascha Frank & \LaTeX \ Course serial \\
-		\hline
-	\end{tabular}
-\end{frame}
-
-
-\begin{frame}
-	\frametitle{Tables with pause}
-	\begin{tabular}{c c c}
-		A & B & C \\ 
-		\pause 
-		1 & 2 & 3 \\  
-		\pause 
-		A & B & C \\ 
-	\end{tabular} 
-\end{frame}
-
 
 \section{Numerical Experiments}
 \subsection{blocs}
