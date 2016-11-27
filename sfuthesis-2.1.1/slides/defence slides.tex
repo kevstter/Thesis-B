@@ -7,7 +7,7 @@
 \usepackage{graphicx}
 
 \title[Linearly Stabilized Schemes]{Linearly Stabilized Schemes for the Time Integration of Stiff Nonlinear PDEs}  
-\author{Kevin Chow} 
+\author[Kevin Chow]{Kevin Chow} 
 \date{December 9, 2016} 
 \begin{document}
 %\logo{\includegraphics[scale=0.14]{logo-SF}}
@@ -368,16 +368,19 @@ CNLF
 \subsection{Image Inpainting} 
 \begin{frame}
 	\frametitle{Image Inpainting} 
-	In [cite], Sch\"{o}nlieb and Bertozzi proposed the fourth order inpainting model 
+	In Sch\"{o}nlieb and Bertozzi (2011), the authors proposed the fourth order inpainting model 
 	\begin{align*}
 	u_t = -\Delta \nabla \cdot\left( \frac{\nabla u}{\sqrt{\left\vert \nabla u \right\vert^2 + \epsilon^2}} \right) + \lambda (u_0 - u),
 	\end{align*}
-	and solution by the first order accurate method 
+	and numerical solution by the first order accurate method 
 	\begin{align*}
 	\frac{u^{n+1} - u^n}{\Delta t} 
-	=  -\Delta \nabla \cdot\left( \frac{\nabla u^n}{\sqrt{\left\vert \nabla u^n \right\vert^2 + \epsilon^2}} \right) + \lambda (u_0 - u^n) 
-	+ p\Delta^2 u^n 
-	- p\Delta^2 u^{n+1}.
+	&=  -\Delta \nabla \cdot\left( \frac{\nabla u^n}{\sqrt{\left\vert \nabla u^n \right\vert^2 + \epsilon^2}} \right) + \lambda (u_0 - u^n)
+	+ p_0\lambda u^n 
+	+ p_1\Delta^2 u^n
+	\\
+	&\phantom{-\Delta \nabla \cdot\left( \frac{\nabla u^n}{\sqrt{\left\vert \nabla u^n \right\vert^2 + \epsilon^2}} \right) + \lambda (u_0 - u^n)}- p_0\lambda u^{n+1}  
+	- p_1\Delta^2 u^{n+1}.
 	\end{align*}
 \end{frame}
 \begin{frame}
@@ -436,7 +439,7 @@ On a machine with an Intel\textsuperscript{\textregistered}Core\textsuperscript{
 \section{Conclusion}
 \begin{frame}
 	\frametitle{Conclusion}
-	Contributions of this thesis mainly fall into two categories. 
+	Contributions of this thesis mainly fall into two categories:
 \begin{enumerate}
 	\item Further developed linearly stabilized schemes.
 	\begin{itemize}
