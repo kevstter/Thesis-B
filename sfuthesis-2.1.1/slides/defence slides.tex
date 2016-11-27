@@ -365,76 +365,98 @@ CNLF
 \end{frame}
 
 \section{Numerical Experiments}
-\subsection{blocs}
+\subsection{Image Inpainting} 
 \begin{frame}
-\frametitle{blocs}
-
-\begin{block}{title of the bloc}
-bloc text
-\end{block}
-
-\begin{exampleblock}{title of the bloc}
-bloc text
-\end{exampleblock}
-
-
-\begin{alertblock}{title of the bloc}
-bloc text
-\end{alertblock}
+	\frametitle{Image Inpainting} 
+	In [cite], Sch\"{o}nlieb and Bertozzi proposed the fourth order inpainting model 
+	\begin{align*}
+	u_t = -\Delta \nabla \cdot\left( \frac{\nabla u}{\sqrt{\left\vert \nabla u \right\vert^2 + \epsilon^2}} \right) + \lambda (u_0 - u),
+	\end{align*}
+	and solution by the first order accurate method 
+	\begin{align*}
+	\frac{u^{n+1} - u^n}{\Delta t} 
+	=  -\Delta \nabla \cdot\left( \frac{\nabla u^n}{\sqrt{\left\vert \nabla u^n \right\vert^2 + \epsilon^2}} \right) + \lambda (u_0 - u^n) 
+	+ p\Delta^2 u^n 
+	- p\Delta^2 u^{n+1}.
+	\end{align*}
 \end{frame}
-
-
-\begin{frame}\frametitle{lists with single pauses}
-	\begin{itemize}
-		\item Introduction to  \LaTeX{}  \pause 
-		\item Course 2 \pause 
-		\item Termpapers and presentations with \LaTeX{}  \pause 
-		\item Beamer class
-	\end{itemize} 
-\end{frame}
-
-\begin{frame}\frametitle{lists with pause}
-	\begin{itemize}[<+->]
-		\item Introduction to  \LaTeX{}  
-		\item Course 2
-		\item Termpapers and presentations with \LaTeX{}  
-		\item Beamer class
-	\end{itemize} 
-\end{frame}
-
-\subsection{Lists II}
-
-\begin{frame}\frametitle{numbered lists}
-	\begin{enumerate}
-		\item Introduction to  \LaTeX{}   
-		\item Course 2 
-		\item Termpapers and presentations with \LaTeX{}  
-		\item Beamer class
-	\end{enumerate}
-\end{frame}
-
 \begin{frame}
-	\frametitle{numbered lists with single pauses}
-	\begin{enumerate}
-		\item Introduction to  \LaTeX{}  \pause 
-		\item Course 2 \pause 
-		\item Termpapers and presentations with \LaTeX{}  \pause 
-		\item Beamer class
-	\end{enumerate}
+	\frametitle{Image inpainting} 
+	\begin{figure}
+		\centering
+%		\includegraphics[width=0.65\textwidth]{name}
+\caption{A vandalized photograph.} 
+	\end{figure}
+	
+	\begin{table}[b]
+		\centering 
+	\caption{Iteration counts for TV-H$^{-1}$ image restoration.}
+		\begin{tabular}{lll}
+			\toprule 
+			& $\Delta t$ & Iterations 
+			\\ \midrule 
+		SBDF1 & 0.30 & 1002 
+		\\ 
+		SBDF2 & 0.54 & 401 
+		\\ 
+		CNAB & 0.64 & 347
+		\\ \bottomrule
+		\end{tabular}
+	\end{table} 
 \end{frame}
 
+\subsection{Motion by Mean Curvature}
 \begin{frame}
-	\frametitle{numbered lists with pause}
-	\begin{enumerate}[<+->]
-		\item Introduction to  \LaTeX{}  
-		\item Course 2
-		\item Termpapers and presentations with \LaTeX{}  
-		\item Beamer class
-	\end{enumerate}
-\end{frame}
+	\frametitle{Motion by mean curvature}
+We evolve the level set equation for motion by mean curvature, 
+\begin{align*}
+u_t 
+= \kappa \left\vert \nabla u \right\vert 
+= \left\vert \nabla u \right\vert \nabla \cdot \left(\frac{\nabla u}{\left\vert \nabla u \right\vert} 
+\right)
+\end{align*}
+on an initial dumbbell-shaped curve in 3D. We solve to time $T=0.75$ on a $256\times 128\times 128$ periodic grid.
 
+On a machine with an Intel\textsuperscript{\textregistered}Core\textsuperscript{\texttrademark}i5-4570 CPU@3.20GHz running \textsc{Matlab} 2014b: 
+\begin{itemize}
+	\item Forward Euler: 3000 time steps $\to$ over 28 minutes.
+	
+	\item SBDF2: 75 time steps $\to$ under 100 seconds.
+\end{itemize}
+\end{frame}
+\begin{frame}
+	\frametitle{Motion by mean curvature} 
+	\begin{figure}
+		\centering
+%		\includegraphics[width=0.65\textwidth]{file}
+\caption{Dumbbell-shaped curve under mean curvature flow.}
+	\end{figure}
+\end{frame}
 
 \section{Conclusion}
+\begin{frame}
+	\frametitle{Conclusion}
+	Contributions of this thesis mainly fall into two categories. 
+\begin{enumerate}
+	\item Further developed linearly stabilized schemes.
+	\begin{itemize}
+		\item Set out a framework for developing new methods of this type. 
+		
+		\item Identified properties necessary for effective schemes. 
+	\end{itemize}
+	
+	\item Proposed new methods that outperform existing ones. 
+	\begin{itemize}
+		\item IMEX multistep methods and exponential time differencing methods. 
+	\end{itemize}
+\end{enumerate}	
 
+Future work: 
+\begin{enumerate}
+	\item Development higher order methods without the deficiencies exhibited by ETD methods.
+	
+	\item Detailed comparison with popular algorithms for nonlinear stiff PDEs.
+\end{enumerate}
+\end{frame}
 
 \end{document}
