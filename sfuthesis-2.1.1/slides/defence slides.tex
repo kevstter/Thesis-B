@@ -156,9 +156,10 @@ Apply time stepping method:
 		u^{n+1} = \xi(\lambda\Delta t) u^n.
 	\end{align*} 
 
-Stability constraint: 
+Unconditional stability: 
 	\begin{align*}
-		\left\vert \xi(\lambda\Delta t)\right\vert \leq 1.
+		\left\vert \xi(\lambda\Delta t)\right\vert \leq 1
+		\quad\text{for all}\quad \lambda\Delta t < 0.
 	\end{align*}
 \end{frame}
 
@@ -177,7 +178,7 @@ The amplification factor is
 Impose unconditional stability: 
 	\begin{align*}
 		\left\vert \xi_1(\lambda\Delta t)\right \vert \leq 1  
-		\text{ for all }\lambda \Delta t < 0 \implies p \geq 1/2.
+		\text{ for all }\lambda \Delta t < 0 \iff p \geq 1/2.
 	\end{align*}
 \end{frame}
 
@@ -191,7 +192,7 @@ Duchemin and Eggers (2014) use Richardson extrapolation to get second order. The
 	\end{align*}
 and 
 	\begin{align*}
-		\left\vert \xi_{EIN}(\lambda\Delta t) \right\vert \leq 1 \text{ for all } \lambda\Delta t < 0 \implies p \geq 2/3.
+		\left\vert \xi_{EIN}(\lambda\Delta t) \right\vert \leq 1 \text{ for all } \lambda\Delta t < 0 \iff p \geq 2/3.
 	\end{align*}
 \end{frame}
 
@@ -317,6 +318,8 @@ with initial and boundary conditions set such that the exact solution is
 	\begin{align*}
 		u(x,y,t) = \left(\frac{4}{5}(2t+x+y) \right)^{1/4}.
 	\end{align*}
+	
+Stabilize with $p\Delta u$; $p\lambda_L/\lambda_F \approx p/(8(1+t))$.
 \end{frame}
 
 \begin{frame}
@@ -332,9 +335,9 @@ with initial and boundary conditions set such that the exact solution is
 	\frametitle{Error constant}
 Discretizing $u' = (1- p)\lambda u + p\lambda u$, we observe that the discretization error grows with $p$.
 
-We examine this behaviour by applying the time stepping method and finding the series expansion of the amplification factor at $\Delta t=0$. 
+\textbf{How does the error behave as we increase $p$?}
 
-For second order methods, leading order error term is $\Delta t^3$. The coefficient indicates how the method behaves. 
+Examine the coefficient of the leading order error term.
 \vspace{-11pt}
 \begin{table}[b]
 	\centering 
