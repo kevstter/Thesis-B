@@ -255,6 +255,11 @@ with initial condition
 		u(x,0) = 1 + 0.10\sin\left(\frac{\pi}{5}x \right),
 	\end{align*}
 and boundary conditions $u(0,t) = 1 = u(10,t)$.
+
+Stabilized as 
+\begin{align*}
+u_t = \frac{u_{xx}}{1 + u_x^2} - \frac{1}{u} - pu_{xx} + pu_{xx}.
+\end{align*}
 \end{frame}
 
 \begin{frame}
@@ -388,12 +393,12 @@ We consider two classes of problems to demonstrate the effectiveness of our new 
 	\frametitle{Image Inpainting} 
 	In Sch\"{o}nlieb and Bertozzi (2011), the authors proposed the fourth order inpainting model 
 	\begin{align*}
-	u_t = -\Delta \nabla \cdot\left( \frac{\nabla u}{\sqrt{\left\vert \nabla u \right\vert^2 + \epsilon^2}} \right) + \lambda (u_0 - u),
+	u_t = -\Delta \nabla \cdot\left( \frac{\nabla u}{\sqrt{\left\vert \nabla u \right\vert^2 + \epsilon^2}} \right) + \lambda_0 (u_0 - u),
 	\end{align*}
 	and numerical solution by the first order accurate method 
 	\begin{align*}
 	\frac{u^{n+1} - u^n}{\Delta t} 
-	=  -\Delta \nabla \cdot\left( \frac{\nabla u^n}{\sqrt{\left\vert \nabla u^n \right\vert^2 + \epsilon^2}} \right) &+ \lambda (u_0 - u^n) 
+	=  -\Delta \nabla \cdot\left( \frac{\nabla u^n}{\sqrt{\left\vert \nabla u^n \right\vert^2 + \epsilon^2}} \right) &+ \lambda_0 (u_0 - u^n) 
 \\ +p_1\Delta^2u^n - p_1\Delta^2 u^{n+1} 
 	&+ p_0\lambda u^n  - p_0\lambda u^{n+1}.
 	\end{align*}
@@ -502,5 +507,6 @@ Future work:
 	\item A comparison with popular algorithms for nonlinear stiff PDEs, particularly for image inpainting.
 \end{enumerate}
 \end{frame}
+
 
 \end{document}
