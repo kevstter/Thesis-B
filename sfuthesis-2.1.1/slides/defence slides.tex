@@ -23,15 +23,15 @@
 \section{Introduction} 
 \begin{frame}
 	\frametitle{Introduction}
-\begin{enumerate}
+\begin{itemize}
 	\item Focus on time stepping for stiff nonlinear PDEs.
 	\begin{itemize}
 		\item Stability
 		\item Accuracy
-		\item Efficiency
 		\item Simplicity
+		\item Efficiency
 	\end{itemize}
-\end{enumerate}
+\end{itemize}
 \end{frame}
 
 \subsection{Example}
@@ -109,7 +109,7 @@ Use implicit-explicit time stepping, e.g.
 	\end{align*}
 \end{frame}
 
-\section{Linear Stability} 
+\section{Linear Stability Analysis} 
 \begin{frame}
 	\frametitle{Linear Stability}
 More generally, from $U'=F(U)$, we can modify as 
@@ -182,7 +182,7 @@ Impose unconditional stability:
 	\end{align*}
 \end{frame}
 
-\subsection{EIN} 
+\subsection{Explicit-Implicit-Null (EIN)} 
 \begin{frame}
 	\frametitle{Explicit-implicit-null (EIN)} 
 Duchemin and Eggers (2014) use Richardson extrapolation to get second order. The amplification factor is  
@@ -196,7 +196,7 @@ and
 	\end{align*}
 \end{frame}
 
-\subsection{IMEX Multistep}
+\subsection{IMEX Multistep Methods}
 \begin{frame}
 	\frametitle{Implicit-explicit multistep methods}
 An alternative for second and higher order methods: IMEX multistep methods.
@@ -227,9 +227,9 @@ An alternative for second and higher order methods: IMEX multistep methods.
 \end{table}
 \end{frame}
 
-\section{Comparing the Methods} 
+\section{Understanding the Methods: 3 Key Properties} 
 \begin{frame}
-	\frametitle{Comparing the methods}
+	\frametitle{Understanding the methods: 3 key properties}
 Do the methods work as advertised? 	
 
 Examine this with two test problems,
@@ -272,7 +272,7 @@ u_t = \frac{u_{xx}}{1 + u_x^2} - \frac{1}{u} - pu_{xx} + pu_{xx}.
 \end{frame}
 
 \begin{frame}
-	\frametitle{Failure of SBDF3 and SBDF4}
+	\frametitle{Selecting $p$ for more general problems}
 How did we choose $p$? Consider 
 	\begin{align*}
 		u' = \lambda u - p\lambda u + p\lambda u
@@ -289,7 +289,7 @@ With the test equation, we derived a restriction on $p$. More generally, the res
 \end{frame}
 
 \begin{frame}
-	\frametitle{Failure of SBDF3 and SBDF4} 
+	\frametitle{Rejecting methods with bounded $p$-parameter restrictions} 
 The selection of $p$ for SBDF3 is dictated by 
 	\begin{align*}
 		\max_{1\leq j\leq N} \frac{7}{8} \frac{1}{1 + (D_1 \bar u^n_j)^2} 
@@ -337,7 +337,7 @@ Stabilize with $p\Delta u$; $p\lambda_L/\lambda_F \approx p/(8(1+t))$.
 \end{frame}
 
 \begin{frame}
-	\frametitle{Error constant}
+	\frametitle{Error coefficient and dependence on $p$}
 Discretizing $u' = (1- p)\lambda u + p\lambda u$, we observe that the discretization error grows with $p$.
 
 \textbf{How does the error behave as we increase $p$?}
@@ -362,6 +362,16 @@ CNLF & $p-\frac{1}{6}$
 \\ \bottomrule
 		\end{tabular}
 	\end{table}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Numerical convergence test}
+	\begin{figure}[t]
+		\centering
+		\includegraphics[width=0.55\textwidth]{nl5_conv}
+		\caption{Numerical convergence of linearly stabilized schemes at time $T=0.40$. Compared against a reference solution generated using an explicit 3rd order RK with $\Delta t = 6.25\times 10^{-6}$. Stabilized using $p\Delta u$; $p\lambda_L / \lambda_F \approx p/(8(1+t))$.}
+	\end{figure} 
 \end{frame}
 
 \begin{frame}
@@ -423,7 +433,7 @@ We consider two classes of problems to demonstrate the effectiveness of our new 
 			\toprule 
 			& $\Delta t$ & Iterations 
 			\\ \midrule 
-		SBDF1 & 0.30 & 1002 
+		IMEX Euler & 0.30 & 1002 
 		\\ 
 		SBDF2 & 0.54 & 401 
 		\\ 
@@ -443,7 +453,8 @@ u_t
 = \left\vert \nabla u \right\vert \nabla \cdot \left(\frac{\nabla u}{\left\vert \nabla u \right\vert} 
 \right)
 \end{align*}
-on an initial dumbbell-shaped curve in 3D. We solve to time $T=0.75$ on a $256\times 128\times 128$ periodic grid.
+on an initial dumbbell-shaped curve in 3D. We solve to time $T=0.75$ on a $256\times 128\times 128$ periodic grid over $(-5,5) \times (-2,2) \times (-2,2)$.
+%$\left\{(x,y,z \mid \left\vert x \right\vert < 5, \left\vert y \right\vert < 2, \left\vert z \right\vert < 2)\right\}$.
 \end{frame}
 \begin{frame}
 	\frametitle{Motion by mean curvature} 
