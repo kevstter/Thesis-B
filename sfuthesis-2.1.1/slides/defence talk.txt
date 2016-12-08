@@ -1,0 +1,206 @@
+To Do 
+-----
+slide 13: say more; 
+slide 16: say more; lambda f and lambda l; estimation; get into 
+	practical implementation
+slide 17: new plots (evolution of the solution, contour labels); 	say more about this key property; HIGHLIGHT
+slide 19: say more; highlight superiority of new schemes; EIN 		uses 3 times the dominant cost
+slide 20: HIGHLIGHT!
+slide 21: plot line colours; clarify p0. maybe spend more time 			here
+slide 24, 25; slow down; tell us more; reaction term; connect 23 		and 24
+
+slide 26. [-5 to 5, -2 to 2, -2 to 2]
+
+Highlight the 3 properties. In overview, middle and end
+
+conclusion: 'three' properties; development of ...
+
+
+-------------------------------------------
+The focus of my thesis is on the time integration of stiff nonlinear PDEs using what are called linearly stabilized schemes.
+
+So first an overview: 
+We're going to start with an example that illustrates the difficulties with solving stiff nonlinear PDEs and from there, that motivates the use of linearly stabilized schemes. 
+
+Next, we're going to introduce a number of these schemes, some of which are new, and then show that they are unconditionally stable.
+
+Afterwards, we look at two test problems to determine which schemes perform the best. Along the way we determine three properties necessary for effective linearly stabilized schemes. 
+
+After determining which schemes are best, we'll tackle some bigger applications to highlight the improvements from using our new methods.
+
+-----------------------------------------
+
+There are four main ideas that we are going to touch on as we develop these time stepping methods. Stability and accuracy, we're going to talk about this a lot as we develop the methods. 
+Efficiency and simplicity, that will come into play when we implement these schemes.
+
+---------------------------------------------
+
+Lets look at an example.
+Here we have the heat equation. Its a stiff linear PDE. Suppose we discretize in space, say using centred differences, then we get a linear ODE system, U'=LU. 
+From here, applying an explicit time stepping method would place a stability restriction where the time step-size is constrained by the square of the spatial grid size. 
+If instead we can apply an unconditionally stable implicit method, there's an added cost of solving a linear system, but there's no stability restriction
+So in the explicit case, each time step is cheap, but we're forced to take many more time steps than accuracy dictates. In the implicit case, we're free to choose the step-size to reflect the accuracy requirements and usually the linear system we can preprocess so that each time step is also quite fast.
+
+-------------------------------------------------
+
+Now lets compare that to this next problem.
+Here the uxx term is no longer linear. So what we have is a stiff nonlinear PDE.
+If we discretize in space as before, we have a nonlinear system of ODEs.
+
+So like before we can do this explicitly or implicitly. If its explicit time stepping, we still have to contend with the stability restriction but each step is still fairly cheap.
+The big difference is when we try to do this implicitly. Instead of a linear system that we can preprocess, we need to solve a nonlinear system at each time step
+
+-----------------------------------------------------
+
+So to summarize, if we solve these types of PDEs explicitly, there's nothing tricky about how to handle the nonlinear term, but theres the stability constraint. Solving this implicitly, we like that we can take large time steps, and we're happy with having to solve a linear system at each time step, but not content with having to solve a nonlinear system at each time step.
+
+---------------------------------------------------------
+
+What we've done is we've identified properties that we'd like, and to get these properties, we modify the equation as follows: we subtract and add a linear stiff term.
+Then we discretize in space as before and use implicit-explicit timestepping. Notice that the nonlinear term is computed explicitly, the implicit term here contributes a linear system that needs to be solved at each step.
+
+---------------------------------------------------
+
+More generally, from the ODE system U'=F(U), we can subtract and add a linear term that resembles F and apply a time stepping methods that treats this star term here explicitly. 
+
+So then the question is: is such a procedure unconditionally stable? If this is unconditionally stable, then we have something that handles the nonlinear term easily and requires only a linear system to be solved at each time step.
+Thats what we look at next.
+
+-----------------------------------------------------
+
+To investigate stability, we apply the time stepping schemes to a test equation. 
+In the standard case, from U'=F(U), we linearize, diagonalize, and come up with the test equation u'=lambda u, where lambda is an eigenvalue of the linearize operator. 
+With the linear modification, we get a modified test equation that has this additional parameter p.
+
+What usually happens is we apply the time stepping method to the test equation, and analyze the resulting amplification factor. For unconditional stability, we require that the magnitude of the amplification factor to be at most one for all time step sizes.
+
+--------------------------------------------------------
+
+Now, lets look at applying the implicit-explicit euler method to the test equation. We rearrange for the amplification factor. Then imposing unconditional stability, we get a restriction on the parameter p.
+This means when p is at least a half, 
+What we find is that for implicit-explicit euler, when p is bigger than a half, the scheme is unconditionally stable.
+
+---------------------------------------------------------
+
+So for another example, here a method proposed by duchemin and eggers. what they've done is they've taken the first order scheme from the previous slide and used richardson extrapolation to get second order. Again we can find the amplification factor, and imposing unconditional stability, we get the p >= 2/3.
+
+--------------------------------------------------------------
+
+That covers all the previously existing linearly stabilized schemes. 
+What we're going to do next, is apply higher order implicit explicit multistep methods to the test equation to generate higher order methods. 
+The same ideas apply. We analyze the amplification factors to derive restrictions on p.
+So if we look here, we have the first order method, which has the restriction of 1/2
+We have some popular second order imex methods with their parameter restrictions.
+And then we have a third and a fourth order method. A key difference to notice here is that the parameter restriction is bounded.
+
+-----------------------------------------------------------------
+
+So far, we've discussed a number of schemes as applied to the test equation. The next step is to apply them to some nonlinear stiff PDEs and see which ones are best.
+
+For this, we'll look these at two test problems.
+
+-----------------------------------------------------------
+
+Here's the first test problem. It's stiff like the heat equation, but it is nonlinear in the stiff term.  So what we're going to do is we're going to discretize with centred difference in space and apply the 5 second order methods we have as well as the third and fourth order methods and compare each to a reference solution.
+
+-------------------------------------------------------------
+
+What we see is that each second order methods work well.
+The third order method appears to work well. 
+But the fourth method is not. It is not showing fourth order convergence and in fact it's unstable at some of the smaller step-sizes. 
+So it turns out both the third and the fourth order method suffer from instabilities and are not suited to practical use. To see why this is the case we have to look at how we choose the parameter p for this problem.
+
+--------------------------------------------------------------
+
+Recall that to come up with the parameter restrictions, we applied the methods to 
+Recall that to come up with the parameter restrictions, we applied the methods to a test equation. For a general problem, the eigenvalues from these operators won't be the same. So its more accurate to describe the restriction as it applies to p times the ratio of the eigenvalues.
+For test problem 1, a dependence on the gradient of the solution shows up.
+So what does this mean for the third and fourth order method that we proposed? 
+
+-----------------------------------------------------------
+
+Remember that the third and fourth order methods had bounded parameter ranges? For the third order method, that leads to this expression:
+
+What we notice then is that when the gradient of the solution is large, there is no way to select p to satisfy this condition.
+
+So in the plots, we see a reference solution to test problem 1. We should notice that the gradient of the solution becomes largest near the boundaries and increasing as the solution evolves in time. 
+
+On the right, we show an case where instabilities begin developing near the right hand boundary using the third order linearly stabilized scheme.
+
+What this means is we need to reject methods with bounded parameter ranges.
+
+---------------------------------------------
+
+For this problem, we'll stabilize with p*Laplacian of u. And here we have the estimates for the ratio of the eigenvalues, and because of this estimate, we actually have to choose p quite large for each scheme, and that's important.
+
+----------------------------------------------------
+
+So in the convergence test, there are a couple things to notice. The richardson extrapolation scheme is not showing second order convergence. The CNLF scheme is terrible at large step-sizes. And at the largest step-sizes, SBDF2 method is better than CNAB method.
+
+First, we'll explain why the richardson extrapolation is terrible.
+
+-----------------------------------------------------------
+
+If we take a look at the just the test equation, we should notice that the discretization error must be increasing with increasing p. So the question is how do these schemes behave as we increase p? 
+What we do is we look at the coefficient of the leading order error term. 
+
+What we find is for the richardson extrapolation scheme, the coefficient is quadratic in p, so we need very small time step-sizes before seeing second order convergence.
+For our multistep-based methods, the coefficient is only linear in p, so the observed rate of convergence is not severely degraded.
+
+--------------------------------------------------------------
+
+But that doesn't explain why the CNLF scheme is terrible at large step-sizes or why the SBDF2 method is better than the CNAB method at large time steps either.
+
+To answer this, we look at the amplification factor at large step-sizes. For diffusive problem with rapid transients that we're not resolving accurately, we need them damped since the decay time of the transients is much smaller than the time step-size. 
+
+Unfortunately, for the CNLF scheme, we need very small time steps to get the appropriate damping. We also see that the SBDF2 method provides stronger damping than CNAB method. And thus at the largest step-sizes, SBDF2 is better than CNAB.
+
+What we have, is that the SBDF2 and CNAB are the best schemes we have right now
+
+---------------------------------------------------------------
+
+Now we're going to move on to look at some numerical experiments in 2d and 3d. 
+
+The first will be an application to image inpainting. The second, will be the evolution of a surface in 3d by mean curvature flow
+
+------------------------------------------------------------------
+
+Here, we have a fourth order inpainting model proposed by Scholieb and Bertozzi.
+There are two terms here that are potentially stiff. So we introduce a laplacian squared term to stabilize the first and simple linear term to stabilize the second.
+
+In fact, when they proposed this model, they gave this first order linearly stabilized scheme as a solution method.
+
+So we're going to compare our new second order methods to the first order method they suggested.
+
+------------------------------------------------------------------
+
+Here we have a photograph of a bullfinch that's been vandalized, and to the right is the photo restored by solving the PDE to steady state with the vandalized image as the initial condition.
+
+In the table we can see that our second order method outperform the first order method they proposed, using less than half the number of iterations that the first order method needed.
+
+-------------------------------------------------------------------
+
+For our second example, we evolve the level set equation for mean curvature flow on a dumbbell shaped curve in 3d.
+
+-----------------------------------------------------------------
+
+So what we see is from the initial dumbbell shaped curve, it smooths out, shrinks, and then reaches this state where it pinches off. And then each component eventually shrinks to a point.
+
+------------------------------------------------------------------
+
+For this calculation, an explicit scheme, like forward Euler, would require 3000 time steps for stability and this take over 28 minutes on my workstation. With a linearly stabilized scheme, we can take much larger step-sizes. For example, we can generate the plots in the last slide using 75 time steps in under 100 seconds.
+
+----------------------------------------------------------------
+
+To summarize,
+
+recall that the goal is to provide time stepping method for stiff nonlinear PDEs. And from there we set four guiding principles. 
+There was stability and accuracy, and there was simplicity and efficiency.
+
+For stability and accuracy, we've provided second order linearly stabilized schemes that outperform the existing ones. And these schemes, we showed, are unconditionally stable.
+
+For simplicity and efficiency. For one, these schemes handled the nonlinear term is explicitly, so there's no difficulty when it comes time to implementing the nonlinear term. We're also free to select step-sizes reflecting the accuracy requirement. Then there's the linear system. That we can preprocess once at the beginning so that each step is fast. Implementing this linear system is often no more difficult than implementating for the linear heat equation.
+
+
+As for future work, we could look at deriving higher order methods, and also interesting would be a detailed comparison with popular algorithms for nonlinear stiff PDEs.
+
