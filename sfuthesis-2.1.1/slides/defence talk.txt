@@ -3,13 +3,14 @@ To Do
 slide 13: say more; 
 slide 16: say more; lambda f and lambda l; estimation; get into 
 	practical implementation
-slide 17: new plots (evolution of the solution, contour labels); 	say more about this key property; HIGHLIGHT
-slide 19: say more; highlight superiority of new schemes; EIN 		uses 3 times the dominant cost
+slide 17: new plots (evolution of the solution, contour labels); say more about 
+	this key property; HIGHLIGHT
+slide 19: say more; highlight superiority of new schemes; EIN uses 3 times the 
+	dominant cost
 slide 20: HIGHLIGHT!
-slide 21: plot line colours; clarify p0. maybe spend more time 			here
-slide 24, 25; slow down; tell us more; reaction term; connect 23 		and 24
+slide 21: plot line colours; clarify p0. maybe spend more time here
+slide 24, 25; slow down; tell us more; reaction term; connect 23 and 24
 
-slide 26. [-5 to 5, -2 to 2, -2 to 2]
 
 Highlight the 3 properties. In overview, middle and end
 
@@ -27,6 +28,8 @@ Next, we're going to introduce a number of these schemes, some of which are new,
 Afterwards, we look at two test problems to determine which schemes perform the best. Along the way we determine three properties necessary for effective linearly stabilized schemes. 
 
 After determining which schemes are best, we'll tackle some bigger applications to highlight the improvements from using our new methods.
+
+And finally, we'll summarize the findings of this thesis.
 
 -----------------------------------------
 
