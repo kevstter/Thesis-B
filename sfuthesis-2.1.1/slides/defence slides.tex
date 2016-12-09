@@ -24,7 +24,7 @@
 \begin{frame}
 	\frametitle{Introduction}
 \begin{itemize}
-	\item Focus on time stepping for stiff nonlinear PDEs.
+	\item Goal: time stepping for stiff nonlinear PDEs.
 	\begin{itemize}
 		\item Stability
 		\item Accuracy
@@ -366,7 +366,7 @@ CNLF & $p-\frac{1}{6}$
 
 
 \begin{frame}
-	\frametitle{Numerical convergence test}
+	\frametitle{Large values of $p$ needed to stabilize}
 	\begin{figure}[t]
 		\centering
 		\includegraphics[width=0.55\textwidth]{nl5_conv}
@@ -487,7 +487,7 @@ On a machine with an Intel\textsuperscript{\textregistered}Core\textsuperscript{
 \begin{itemize}
 	\item Forward Euler: 3000 time steps $\to$ over 28 minutes.
 	
-	\item SBDF2: 75 time steps $\to$ under 100 seconds.
+	\item SBDF2: 175 time steps $\to$ under 2 minutes.
 \end{itemize}
 \end{frame}
 
