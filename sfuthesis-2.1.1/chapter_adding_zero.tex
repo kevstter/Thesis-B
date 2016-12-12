@@ -21,14 +21,14 @@ A time evolution of this problem is plotted in \cref{fig:ammc sol}.
 \begin{figure}[htb!]
         \centering
 \includegraphics[width=0.65\textwidth]{ammc_sol}
-\caption[Numerical solution to a 1D axisymmetric mean curvature motion problem]{Time evolution according to \cref{ammc}. The black curve is the initial state. The gray dashed curve at the bottom is the final state at $T=0.35$.}
+\caption[Numerical solution to a 1D axisymmetric mean curvature motion problem]{Time evolution for solution to \cref{ammc}. The black curve is the initial state. The gray dashed curve at the bottom is the final state at $T=0.35$.}
 \label{fig:ammc sol}
 \end{figure}
 
 The presence of the $u_{xx}$ guarantees that \eqref{ammc} is stiff, suggesting that an implicit time stepping scheme would prove more efficient. However, having to additionally handle the factor of $(1+u_x^2)^{-1}$ complicates the linear algebra. Rather than a static linear system for which we could preprocess and solve efficiently, at each time step it is necessary to solve a nonlinear system. Thus we are presented with a scenario where neither an implicit nor an explicit approach proves particularly palatable.
 
 \subsection{A first order linearly stabilized scheme}
-As demonstrated in Duchemin and Eggers \cite{duchemin2014explicit} as well as in an earlier paper by Smereka \cite{smereka2003semi}, an efficient method to handling \eqref{ammc} is to add and subtract a linear Laplacian term to the right-hand side, 
+As demonstrated in Duchemin and Eggers \cite{duchemin2014explicit} as well as in an earlier paper by Smereka \cite{smereka2003semi}, an efficient method for handling \eqref{ammc} is to add and subtract a linear Laplacian term to the right-hand side, 
 \begin{align}
 u_t = \underbrace{\frac{u_{xx}}{1 + u_x^2} 
 - \frac{1}{u} 
@@ -176,7 +176,7 @@ We will discuss next the stability properties of three time stepping methods as 
 Forward Euler is a first order time stepping method that treats the right-hand side explicitly. Application to \eqref{mte} is therefore no different than to the standard test equation. Thus there is no hope of unconditional stability.
 
 \subsection{Linearly stabilized semi-implicit Euler}
-Semi-implicit Euler time stepping was demonstrated on the 1D curvature motion problem \cref{ammc} via \cref{ammc +- uxx,ammc sbdf1}, and its stability further analyzed. In the case of the modified test equation, we identify $\N(u^n) = (1-p)\lambda u^n$ and $\L u^{n+1} = p\lambda u^{n+1}$, to get 
+Semi-implicit Euler time stepping was demonstrated on the 1D curvature motion problem \cref{ammc} via \cref{ammc +- uxx,ammc sbdf1}, and its stability further analyzed \cite{smereka2003semi,duchemin2014explicit}. In the case of the modified test equation, we identify $\N(u^n) = (1-p)\lambda u^n$ and $\L u^{n+1} = p\lambda u^{n+1}$, to get 
 \begin{align}
 \frac{u^{n+1} - u^n}{\Delta t} 
 = (1-p)\lambda u^n + p\lambda u^{n+1} 
