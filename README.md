@@ -18,6 +18,9 @@ And finally, having familiarized yourself with the old and the new methods, and 
 
 That's what I would recommend for a first reading.
 
+## Following the first reading
+Go run some of the codes. And maybe read again. 
+
 ## Thesis template credit
 Thesis template files are available at 
 http://www.lib.sfu.ca/help/publish/thesis/templates#latex-template
