@@ -1,9 +1,10 @@
-# Thesis-B
-Kevin Chow's Masters thesis. 
+# Masters Thesis: Linearly Stabilized Schemes for the Time Integration of Stiff Nonlinear PDEs
 
-Available are the tex files and pdf of the thesis. 
+## Dive right into it
+The file [template.pdf](./template.pdf) is the latest/final version of the thesis.
 
-Note that the figures within the thesis have not been uploaded. Those interested should look over at the Research Codes repository.
+Over in the [Research-Codes](https://github.com/kevstter/Research-Codes) repository are MATLAB scripts using the techniques developed in the thesis to solve problems in image inpainting, mean curvature flow, and phase separation.
 
+## Thesis template credit
 Thesis template files are available at 
 http://www.lib.sfu.ca/help/publish/thesis/templates#latex-template
